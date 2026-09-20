@@ -46,7 +46,7 @@ jobs:
       - name: Confirm no personal git identity leaked
         run: |
           email=$(git log -1 --format='%ae')
-          echo "committer email: \${email}"
+          echo "committer email: ${email}"
           case "$email" in
             *users.noreply.github.com) echo "OK: no-reply address" ;;
             *) echo "FAIL: commit metadata carries a non-noreply address"; exit 1 ;;
