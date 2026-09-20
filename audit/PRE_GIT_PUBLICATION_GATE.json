@@ -1,0 +1,56 @@
+{
+ "generated_by": "audit/_build/pre_git_gate.py",
+ "runs_before": "git init",
+ "verdict": "PASS",
+ "blocking_failures": [],
+ "checks": {
+  "secret_scan": {
+   "status": "PASS",
+   "detail": "147 files clean"
+  },
+  "privacy_scan": {
+   "status": "PASS",
+   "detail": "147 files clean"
+  },
+  "prohibited_artifact_scan": {
+   "status": "PASS",
+   "detail": "no prohibited extensions tracked"
+  },
+  "large_file_scan": {
+   "status": "PASS",
+   "detail": "all files < 1MiB"
+  },
+  "json_validity": {
+   "status": "PASS",
+   "detail": "all parse"
+  },
+  "yaml_validity": {
+   "status": "PASS",
+   "detail": "8 files ok (structural fallback)"
+  },
+  "required_files": {
+   "status": "PASS",
+   "detail": "30 required files present"
+  },
+  "publication_manifest": {
+   "status": "PASS",
+   "detail": "95 manifest entries match"
+  },
+  "readme_links": {
+   "status": "PASS",
+   "detail": "15 links resolve"
+  },
+  "provenance_gate": {
+   "status": "PASS",
+   "detail": "88 files, all byte-identical with declared provenance"
+  },
+  "license_gate": {
+   "status": "PASS",
+   "detail": "Apache-2.0 for original code; no third-party code included"
+  },
+  "documentation_state": {
+   "status": "PASS",
+   "detail": "all required documents present; status claim present"
+  }
+ }
+}

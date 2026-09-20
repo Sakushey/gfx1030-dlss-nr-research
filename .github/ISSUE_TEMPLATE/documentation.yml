@@ -1,0 +1,37 @@
+name: Documentation issue
+description: Report a document that is wrong, unclear, or missing something.
+title: "[Docs] "
+labels:
+  - documentation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Documentation accuracy matters here as much as code accuracy: a document
+        that overstates the project's status is a defect, not a wording
+        preference.
+
+  - type: input
+    id: affected_document
+    attributes:
+      label: Affected document
+      description: The file or page that needs correcting, with a section or heading if you can point to one.
+      placeholder: "Example: README.md, status section"
+    validations:
+      required: true
+
+  - type: textarea
+    id: requested_correction
+    attributes:
+      label: Requested correction
+      description: What the document says now, and what it should say instead. Quote the current text if it helps.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: Why the correction is needed — what is wrong, misleading, missing, or inconsistent with the evidence.
+    validations:
+      required: true

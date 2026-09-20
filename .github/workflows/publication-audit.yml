@@ -1,0 +1,63 @@
+name: Publication audit
+
+# Periodic and on-demand audit of what is actually tracked.
+#
+# This is the gate that answers "did anything get committed that should not
+# have?" It scans the committed tree — not the working tree — for secrets,
+# personal paths, prohibited artifact categories, oversized files, and
+# manifest drift.
+#
+# Host-only. No GPU, no proprietary data, no secrets, no deployment.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Tracked-tree audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: python -m pip install --disable-pip-version-check pyyaml
+
+      - name: Audit working tree
+        run: python scripts/verify_publication.py
+
+      - name: Audit committed blob (HEAD)
+        run: python scripts/verify_publication.py --git-head
+
+      - name: Confirm no personal git identity leaked
+        run: |
+          email=$(git log -1 --format='%ae')
+          echo "committer email: ${email}"
+          case "$email" in
+            *users.noreply.github.com) echo "OK: no-reply address" ;;
+            *) echo "FAIL: commit metadata carries a non-noreply address"; exit 1 ;;
+          esac
+
+      - name: Confirm no GPU-touching step exists in CI
+        run: |
+          if grep -rniE 'hip|rocm|gfx1030|watchdog|tdr' .github/workflows/ci.yml \
+               | grep -vE '^\s*#|name:|MUST NOT'; then
+            echo "FAIL: unexpected GPU-related reference in CI"
+            exit 1
+          fi
+          echo "OK: CI contains no GPU execution step"

@@ -1,0 +1,30 @@
+gfx1030-dlss-nr-research
+DLSS Neural Rendering on AMD RDNA2 (gfx1030) — Experimental Compatibility Research
+
+Copyright 2026 the gfx1030-dlss-nr-research contributors
+
+This product includes software developed as part of the
+gfx1030-dlss-nr-research project.
+
+Unless otherwise noted, original project code is licensed under the
+Apache License, Version 2.0 (see LICENSE). Third-party components retain
+their respective licenses; see THIRD_PARTY_NOTICES.md and
+docs/PROVENANCE.md.
+
+--------------------------------------------------------------------
+INDEPENDENCE AND AFFILIATION
+--------------------------------------------------------------------
+
+This is an independent, unofficial research project.
+
+It is not affiliated with, endorsed by, or supported by NVIDIA, AMD,
+Rockstar Games, Take-Two Interactive, or any third-party mod or project
+referenced by the research.
+
+No company or game logos are used. No proprietary game assets, no
+NVIDIA binary assets, and no AMD runtime binaries are redistributed by
+this repository.
+
+This project exists to study interoperability and to publish original
+tooling, methodology, and validation results. It does not contain, and
+must not be used to obtain, any proprietary implementation it studies.

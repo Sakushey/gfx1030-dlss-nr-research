@@ -1,0 +1,32 @@
+# Deliberate line endings.
+#
+# The project standardises on LF in the repository for all text. The project's
+# PowerShell tooling is newline-agnostic — it does not depend on CRLF — so
+# normalising to LF is safe across the toolchain.
+
+* text=auto eol=lf
+
+# Text formats: always LF in the working tree and in the repository.
+*.md text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.txt text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.def text eol=lf
+*.bat text eol=lf
+
+# Binary formats: never normalise, never diff as text.
+*.co binary
+*.fatbin binary
+*.dll binary
+*.exe binary
+*.bin binary
+*.o binary
+*.obj binary
+*.lib binary
+*.png binary
+*.jpg binary
+*.pdf binary

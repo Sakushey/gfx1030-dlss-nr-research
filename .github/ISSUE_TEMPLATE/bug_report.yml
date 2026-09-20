@@ -1,0 +1,101 @@
+name: Bug report
+description: Report a defect in the project's tooling, harnesses, or documentation.
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. This is an independent, unofficial research
+        project; please read `README.md` and the status section before filing,
+        and search existing issues first.
+
+        Do not include proprietary game binaries, NVIDIA binary assets, AMD
+        runtime DLLs, credentials, or crash dumps containing personal or system
+        data. Reports containing them will be closed.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which part of the project is affected?
+      options:
+        - translator
+        - emulator
+        - ISA
+        - code-object
+        - harness
+        - memory-model
+        - ROCm
+        - D3D12
+        - CI
+        - documentation
+        - other
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, runtime/toolchain versions, and any other relevant context. Do not include personal paths or machine identifiers.
+      placeholder: "Example: Windows 11, ROCm runtime X.Y, Python 3.x, HIP SDK X.Y"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: The exact steps, inputs, and commands needed to reproduce the defect. Reference artifacts by identity (hash, size) rather than attaching proprietary ones.
+      placeholder: "1. ...\n2. ...\n3. ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What actually happened, including any error output. Do not paste secrets, credentials, or personal data.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: evidence_level
+    attributes:
+      label: Evidence level
+      description: The highest level actually established by what you are reporting. Do not round up.
+      options:
+        - PROPOSED
+        - HOST_STATIC
+        - HOST_VALIDATED
+        - HOST_INDEPENDENT_ORACLE
+        - PHYSICAL_DIAGNOSTIC
+        - PHYSICAL_ONE_WORKGROUP
+        - PHYSICAL_MULTI_WORKGROUP
+        - COMPLETE_JOB
+        - INTEROP
+        - PRESENTED_FRAME
+        - TEMPORAL
+        - PERFORMANCE
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I have not included any proprietary artifacts (game binaries, NVIDIA binary assets, AMD runtime DLLs, or copied commercial mod binaries).
+          required: true
+        - label: I have not included any credentials, tokens, or personal data.
+          required: true

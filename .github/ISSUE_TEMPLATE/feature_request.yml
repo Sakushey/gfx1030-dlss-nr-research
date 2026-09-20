@@ -1,0 +1,57 @@
+name: Feature request
+description: Propose a capability the project does not currently have.
+title: "[Feature] "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feature proposals are welcome, but this project is evidence-driven: a
+        proposal that would let a claim outrun its evidence will not be
+        accepted, however useful it looks.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem does this solve? Describe the gap, not the solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_direction
+    attributes:
+      label: Proposed direction
+      description: What you would like to see, and roughly how it might work. Note any risks, including any risk of weakening the hardware safety policy.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: proof_layer
+    attributes:
+      label: Proof layer affected
+      description: Which rung of the proof ladder does this mostly concern? Each rung is stricter than the last, and passing one never implies the next.
+      options:
+        - Host static correctness
+        - Host dynamic / independent oracle
+        - One-workgroup physical
+        - Multi-workgroup
+        - Authentic full dispatch
+        - Complete neural job
+        - D3D12/HIP interop
+        - Presented frame
+        - Temporal stability
+        - Sustained gameplay
+        - Performance
+        - Not tied to a single rung
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you considered, and why you did not propose them.
+    validations:
+      required: true

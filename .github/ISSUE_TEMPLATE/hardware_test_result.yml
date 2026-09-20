@@ -1,0 +1,134 @@
+name: Hardware test result
+description: Report the result of a bounded, authorized physical experiment on real hardware.
+title: "[Hardware] "
+labels:
+  - hardware
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form only for physical experiments that were **explicitly
+        authorized** and run under the project's hardware safety policy: bounded
+        one-shot experiments, no automatic retries, no watchdog or TDR
+        modification, no clock/voltage/power tricks, raw evidence preserved, and
+        preflight performed first.
+
+        Two reminders that decide whether a result counts:
+
+        * **Driver-reset output is not kernel output.** A run that was recovered
+          by the Windows GPU watchdog does not demonstrate kernel completion.
+        * **Host evidence is not physical qualification.** Keep the two separate.
+
+        Do not include proprietary artifacts, credentials, or crash dumps
+        containing personal or system data.
+
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU
+      description: The GPU used, as specifically as you can name it.
+      placeholder: "Example: RX 6950 XT"
+    validations:
+      required: true
+
+  - type: input
+    id: architecture
+    attributes:
+      label: Architecture
+      description: The architecture or target as the toolchain reports it.
+      placeholder: "Example: gfx1030 / RDNA2 / Navi21-class"
+    validations:
+      required: true
+
+  - type: input
+    id: driver_version
+    attributes:
+      label: Driver version
+      description: The GPU driver version in use. Do not modify it to make a test pass.
+    validations:
+      required: true
+
+  - type: input
+    id: runtime_version
+    attributes:
+      label: Runtime version
+      description: The compute runtime / HIP runtime version actually loaded, identified as precisely as possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: candidate_identity
+    attributes:
+      label: Candidate identity
+      description: Identify the translated candidate under test — hash, size, structural identifiers. Do not attach proprietary artifacts.
+    validations:
+      required: true
+
+  - type: textarea
+    id: harness_identity
+    attributes:
+      label: Harness identity
+      description: Identify the harness that ran the candidate — name, version, and hash where available. State which harness, not just its family.
+    validations:
+      required: true
+
+  - type: input
+    id: geometry
+    attributes:
+      label: Geometry (grid / block)
+      description: The launch geometry used, as grid and block dimensions.
+      placeholder: "Example: grid (1,1,1), block (64,1,1)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: reset_observed
+    attributes:
+      label: Watchdog / reset observed?
+      description: Was a GPU watchdog recovery, TDR, or driver reset observed during or after the run?
+      options:
+        - "no"
+        - "yes"
+        - unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: settings_modified
+    attributes:
+      label: Were watchdog / TDR settings modified?
+      description: "Answer honestly. Answering **yes** is disqualifying: the result cannot be accepted, because modifying watchdog or TDR behaviour changes the very condition under test and violates the project's hardware safety policy. A yes answer here will close the report as out of policy."
+      options:
+        - "no"
+        - "yes"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: evidence_level
+    attributes:
+      label: Evidence level
+      description: The highest level actually established by this run. Do not round up.
+      options:
+        - PROPOSED
+        - HOST_STATIC
+        - HOST_VALIDATED
+        - HOST_INDEPENDENT_ORACLE
+        - PHYSICAL_DIAGNOSTIC
+        - PHYSICAL_ONE_WORKGROUP
+        - PHYSICAL_MULTI_WORKGROUP
+        - COMPLETE_JOB
+        - INTEROP
+        - PRESENTED_FRAME
+        - TEMPORAL
+        - PERFORMANCE
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: raw_evidence_attached
+    attributes:
+      label: Raw evidence
+      options:
+        - label: I have preserved the raw evidence from this run and can provide it (referenced by identity, not attached if restricted).
+          required: true

@@ -1,0 +1,73 @@
+# This file is defence in depth only.
+# The publication allowlist is the primary control: what is published is
+# determined by an explicit allowlist, not by what this file happens to ignore.
+# A pattern missing here must never be the reason something private ships.
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Build and scratch output
+build/
+out/
+tmp/
+temp/
+scratch/
+*.log
+
+# Logs and captured output
+logs/
+*.csv.tmp
+
+# Crash dumps and Windows error reporting
+dumps/
+*.dmp
+*.mdmp
+WER/
+*.wer
+
+# Environment and secrets
+*.env
+.env*
+credentials*
+secrets*
+*.key
+*.pem
+
+# IDE and editor metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS metadata
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Caches
+.cache/
+
+# Generated large fixtures (never commit generated bulk data)
+fixtures/generated/
+*.generated.bin
+*.generated.json
+
+# Generated physical output (raw hardware evidence is preserved out of band,
+# never committed to the repository)
+physical-out/
+physical_output/
+*.physout
+
+# Local-only publication build records.
+# These list every path in the pre-publication source tree, which contains
+# mirrored library directories whose paths embed a host username. They are
+# kept locally for audit purposes and must never be committed.
+audit/_build/

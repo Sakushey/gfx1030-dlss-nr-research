@@ -1,0 +1,32 @@
+; amdhip64_7.dll export list: exactly the 29 HIP symbols imported by the
+; upstream DLSS-NR runtime (re-extracted in phase10_upstream_hip_imports.csv).
+EXPORTS
+    __hipPopCallConfiguration
+    __hipPushCallConfiguration
+    __hipRegisterFatBinary
+    __hipRegisterFunction
+    __hipRegisterVar
+    __hipUnregisterFatBinary
+    hipDestroyExternalMemory
+    hipDeviceSynchronize
+    hipDriverGetVersion
+    hipEventCreate
+    hipEventElapsedTime
+    hipEventRecord
+    hipEventSynchronize
+    hipExternalMemoryGetMappedBuffer
+    hipFree
+    hipGetDeviceCount
+    hipGetDevicePropertiesR0600
+    hipGetErrorString
+    hipGetLastError
+    hipImportExternalMemory
+    hipLaunchKernel
+    hipMalloc
+    hipMemcpy
+    hipMemcpyAsync
+    hipMemcpyToSymbol
+    hipMemset
+    hipMemsetAsync
+    hipRuntimeGetVersion
+    hipSetDevice

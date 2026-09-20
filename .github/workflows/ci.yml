@@ -1,0 +1,93 @@
+name: CI
+
+# Host-only by design.
+#
+# This workflow MUST NOT launch a GPU kernel, run a game, download
+# proprietary artifacts, deploy anything, or modify watchdog/TDR settings.
+# It compiles and imports host-side Python, validates structured files, and
+# runs the publication audit. Nothing here needs a GPU, and no secrets are
+# required.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host-only:
+    name: Host-only checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: python -m pip install --disable-pip-version-check pyyaml
+
+      - name: Byte-compile host tooling
+        run: |
+          python -m compileall -q src tools scripts conftest.py
+
+      - name: Import smoke test
+        run: |
+          python - <<'PY'
+          import conftest, importlib, pathlib, sys
+
+          modules = sorted(
+              p.stem for d in ("emulator", "oracle", "isa")
+              for p in pathlib.Path("src", d).glob("*.py")
+          )
+          failed = []
+          for m in modules:
+              try:
+                  importlib.import_module(m)
+              except Exception as e:              # noqa: BLE001
+                  failed.append(f"{m}: {type(e).__name__}: {e}")
+          print(f"imported {len(modules) - len(failed)}/{len(modules)} modules")
+          for f in failed:
+              print("  FAIL", f)
+          sys.exit(1 if failed else 0)
+          PY
+
+      - name: Validate JSON and YAML
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          import yaml
+
+          bad = []
+          for p in pathlib.Path(".").rglob("*.json"):
+              if ".git" in p.parts:
+                  continue
+              try:
+                  json.loads(p.read_text(encoding="utf-8"))
+              except Exception as e:              # noqa: BLE001
+                  bad.append(f"{p}: {e}")
+          for pat in ("*.yml", "*.yaml"):
+              for p in pathlib.Path(".").rglob(pat):
+                  if ".git" in p.parts:
+                      continue
+                  try:
+                      yaml.safe_load(p.read_text(encoding="utf-8"))
+                  except Exception as e:          # noqa: BLE001
+                      bad.append(f"{p}: {e}")
+          for b in bad:
+              print("  FAIL", b)
+          print(f"structured-file validation: {len(bad)} problem(s)")
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Host-only test suite
+        run: python -m unittest discover -s tests/host -t tests/host -v
+
+      - name: Publication audit
+        run: python scripts/verify_publication.py

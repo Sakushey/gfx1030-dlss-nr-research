@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Read the README and current status first
+    url: https://github.com/Sakushey/gfx1030-dlss-nr-research/blob/main/README.md
+    about: General questions, scope, and the project's current status are covered in the README. Read it and the status section before opening an issue, and search existing issues first.
