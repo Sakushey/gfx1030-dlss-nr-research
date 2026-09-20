@@ -174,11 +174,11 @@ computation of an expected value, a negative control that *should* fail
 and does, or a documented disagreement between the emulator and the
 oracle.
 
-Start with the live tracker: [physical liveness #2](../../issues/2),
-[independent ISA review #3](../../issues/3),
-[ROCm post-watchdog semantics #4](../../issues/4),
-[second-machine host reproduction #8](../../issues/8), and
-[second-device validation #9](../../issues/9).
+Start with the live tracker: [physical liveness #2](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/2),
+[independent ISA review #3](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/3),
+[ROCm post-watchdog semantics #4](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/4),
+[second-machine host reproduction #8](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/8), and
+[second-device validation #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9).
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
