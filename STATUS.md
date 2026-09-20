@@ -50,10 +50,16 @@ A correctly parameterized **one-workgroup** gfx1030 translation reaches the
 physical HIP runtime but does not complete before the Windows GPU watchdog
 recovers the engine.
 
-Host-side descriptor, barrier, waitcnt, argument, and address-layout
-validation has narrowed the remaining problem to **physical kernel
-liveness**. The failure is not a host-model disagreement: the host model
-reaches its termination condition on the same launch state.
+Host-side descriptor, argument, address-layout, barrier, and waitcnt
+checks pass on the modeled path. The failure is therefore being treated
+as a **physical kernel-liveness** problem, without assuming those host
+checks can rule out every hardware-specific synchronization or model-
+fidelity defect.
+
+The latest authorized midpoint checkpoint diagnostic also triggered a
+watchdog recovery. It narrows the first physical failure to the **first
+~55.6% of modeled one-workgroup execution**. No exact failing instruction
+or mechanism has been established yet.
 
 Work is focused on **bounded checkpoint diagnostics rather than blind
 retries**. Retrying a watchdog-reset kernel without a new hypothesis
@@ -79,11 +85,14 @@ The project does **not** claim, and must not be described as claiming:
 
 ## Immediate next steps
 
-1. Localize the one-workgroup non-completion with bounded checkpoint
-   diagnostics (rung 3).
-2. Independent review of the dynamically executed gfx1030 instruction
-   forms (rung 2 coverage).
-3. Map D3D12/HIP interop requirements ahead of rung 7, without claiming it.
+1. Continue bounded bisection of the one-workgroup non-completion
+   ([issue #2](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/2)).
+2. Independently review the dynamically executed gfx1030 instruction
+   forms ([issue #3](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/3)).
+3. Characterize post-watchdog ROCm synchronization semantics
+   ([issue #4](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/4)).
+4. Map D3D12/HIP interop requirements ahead of rung 7
+   ([issue #7](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/7)).
 
 See [ROADMAP.md](ROADMAP.md) for the milestone view and
 [docs/current-state.md](docs/current-state.md) for detail.
