@@ -18,7 +18,7 @@ statement that any particular game, mod, or workload works on `gfx1030`.
 | J3 physical execution | Kernel launches; liveness failure under investigation | `PHYSICAL_DIAGNOSTIC` | Reaches the physical HIP runtime; does not complete before the watchdog recovers the engine. |
 | T32 host model | Experimental | `HOST_STATIC` | An experimental host-side model; not qualified, not a basis for a physical claim. |
 | Complete neural job | Not qualified | `PROPOSED` | No complete neural job has been assembled and validated. |
-| D3D12/HIP interop | Not demonstrated | `PROPOSED` | Requirements are mapped only at the level of an open question; see issue 06. |
+| D3D12/HIP interop | Not demonstrated | `PROPOSED` | Requirements are mapped only at the level of an open question; see [issue #7](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/7). |
 | Presented frame | Not demonstrated | `PROPOSED` | No frame has been produced, let alone presented. |
 | Performance / gameplay | Not applicable yet | — | Out of scope until far later rungs; no numbers should be inferred from anything here. |
 
@@ -42,9 +42,9 @@ of success.
 
 ### What has been narrowed
 
-Host-side validation has systematically eliminated a large class of candidate
-causes. The following have been checked host-side and are not, at this point, the
-leading explanation:
+Host-side validation has ruled out a large class of simple host-configuration
+mistakes. The following have been checked on the modeled path and are not, at this
+point, the leading explanation:
 
 - **Descriptor layout** — argument/descriptor placement and packing have been
   validated against the expected entry contract.
@@ -57,9 +57,13 @@ leading explanation:
 - **Address layout** — the address-space layout of the buffers the workload touches
   has been validated.
 
-The remaining problem has therefore been narrowed to **physical kernel liveness** —
-something about the kernel as it actually runs on the device, rather than about the
-host-side description of it.
+The remaining problem is therefore being treated as **physical kernel liveness**.
+These host-side checks do not prove that every hardware-specific synchronization,
+initialization, scheduling, or model-fidelity hypothesis is impossible.
+
+A midpoint post-barrier diagnostic has now also triggered watchdog recovery. That
+narrows the first physical failure to the **first ~55.6% of the modeled
+one-workgroup execution**. It is a localization result, not a root-cause result.
 
 ### How the problem is being approached
 
@@ -74,9 +78,10 @@ Work focuses on **bounded checkpoint diagnostics** rather than blind retries:
   case before its "clean" result is believed. See
   [evidence and reproducibility](evidence-and-reproducibility.md).
 
-Open tasks that bear on this problem are drafted in
-`docs/initial-issues/01-candidate-f-physical-j3-non-completion.md` and
-`docs/initial-issues/03-rocm-post-watchdog-synchronization-semantics.md`.
+Live tasks that bear on this problem include
+[physical liveness #2](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/2),
+[independent ISA review #3](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/3),
+and [ROCm post-watchdog semantics #4](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/4).
 
 ## Hardware safety policy
 
@@ -115,7 +120,8 @@ not a statement about silicon. Between the two stand at least:
 - **The entry contract.** How arguments, descriptors, and addresses are presented to
   the device at launch is a separate question from what the instructions mean.
 - **The runtime.** The HIP runtime's handling of the dispatch, and its behavior after
-  an abnormal condition, is a separate question again — see issue 03.
+  an abnormal condition, is a separate question again — see
+  [issue #4](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/4).
 - **The device.** Scheduling, wave occupancy, memory-system behavior, and interaction
   with the watchdog are properties of the hardware and the platform, not of the
   model.
