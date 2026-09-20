@@ -41,10 +41,15 @@ result is read back from device memory, and the value is checked against a
 host-computed expectation. No watchdog reset occurs.
 
 **Why it is blocked:** the kernel launches but does not complete before
-the watchdog recovers the engine. Host-side validation has eliminated
-descriptor, barrier, waitcnt, argument, and address-layout
-misconfiguration as explanations. The remaining hypothesis space is
-physical liveness.
+the watchdog recovers the engine. Host-side descriptor, argument,
+address-layout, barrier, and waitcnt checks pass on the modeled path, so
+simple host-configuration mistakes in those areas are no longer the
+leading explanation. That does not rule out hardware-specific
+synchronization or model-fidelity defects.
+
+The latest midpoint checkpoint diagnostic also recovered through the
+watchdog, narrowing the first physical failure to the first ~55.6% of
+modeled one-workgroup execution.
 
 **Approach:** bounded checkpoint diagnostics. Each experiment answers one
 question, is authorized explicitly, and produces raw evidence that is
