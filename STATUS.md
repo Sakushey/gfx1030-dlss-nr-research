@@ -56,10 +56,23 @@ as a **physical kernel-liveness** problem, without assuming those host
 checks can rule out every hardware-specific synchronization or model-
 fidelity defect.
 
-The latest authorized midpoint checkpoint diagnostic also triggered a
-watchdog recovery. It narrows the first physical failure to the **first
-~55.6% of modeled one-workgroup execution**. No exact failing instruction
-or mechanism has been established yet.
+The latest authorized checkpoint diagnostic (B2) also triggered a watchdog
+recovery. Its verdict was `DIAG_B2_TDR`.
+
+| | |
+| --- | --- |
+| latest physical diagnostic | `DIAG_B2_TDR` |
+| physical search interval | `[dispatch, 0xB3A58]` |
+| per-wave steps | 3,547 |
+| share of modeled full dispatch | 25.9% |
+| Candidate-F defect identified | **no** |
+| next work | further bounded localization + targeted host equivalence |
+
+This narrows the first physical failure to the **first 3,547 modeled per-wave
+steps**. No exact failing instruction or mechanism has been established yet.
+The B2 cut also eliminated two of the three candidate noncanonical `s_addc`
+sites by measurement; the remaining one is still inside the surviving
+interval.
 
 Work is focused on **bounded checkpoint diagnostics rather than blind
 retries**. Retrying a watchdog-reset kernel without a new hypothesis

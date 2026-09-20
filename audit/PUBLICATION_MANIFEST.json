@@ -45,6 +45,18 @@
    "reason": "host-only check that the provenance manifest matches the files on disk",
    "license": "Apache-2.0",
    "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/test_publication_sync.py",
+   "reason": "host-only tests for the publication sync helper, driving isolated temporary repositories rather than the real private tree",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/test_workflow_pins.py",
+   "reason": "host-only regression that external workflow actions are pinned to immutable commit SHAs",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
   }
  ],
  "files": [

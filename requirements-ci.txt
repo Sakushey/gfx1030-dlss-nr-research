@@ -1,0 +1,6 @@
+# CI validation tooling only.
+#
+# This is not a runtime or project dependency. It exists so the host-only
+# workflows validate structured files with a pinned, reproducible PyYAML
+# rather than whatever the runner happens to resolve.
+PyYAML==6.0.3

@@ -74,11 +74,11 @@ Concretely, the repository contains original work in four areas:
 
 A correctly parameterized one-workgroup gfx1030 translation currently
 reaches the physical HIP runtime but fails to complete before the
-Windows GPU watchdog recovers the engine. The latest bounded midpoint
-checkpoint diagnostic also triggered recovery, narrowing the first
-physical failure to the **first ~55.6% of the modeled one-workgroup
-execution**. That localizes the search; it does not identify the root
-cause.
+Windows GPU watchdog recovers the engine. The latest B2 checkpoint
+diagnostic also triggered watchdog recovery, narrowing the first
+physical failure to the **first 3,547 modeled per-wave steps — about
+25.9% of the full J3 dispatch**. This is a localization result, not an
+identified root cause.
 
 Host-side descriptor, argument, address-layout, barrier, and waitcnt
 checks all pass for the modeled path, so those simple host-configuration
