@@ -115,11 +115,13 @@ glossary, and drafted issue descriptions.
   physical HIP runtime and is accepted at launch, but **does not complete** before the
   Windows GPU watchdog recovers the engine. That is a rung-3 attempt that has not
   passed.
-- Host-side validation has narrowed the remaining problem to **physical kernel
-  liveness** by eliminating descriptor layout, barrier placement, `waitcnt` placement,
-  argument layout, and address layout as the leading explanations. Having narrowed the
-  problem is not the same as having solved it, and it is not a claim that those areas
-  are defect-free in general.
+- Host-side descriptor, argument, address-layout, barrier, and `waitcnt` checks pass
+  on the modeled path, so simple host-configuration mistakes in those areas are no
+  longer the leading explanations. These checks do not rule out hardware-specific
+  synchronization, initialization, scheduling, or model-fidelity defects.
+- A bounded midpoint checkpoint diagnostic also triggered watchdog recovery, narrowing
+  the first physical failure to the **first ~55.6% of modeled one-workgroup
+  execution**. No exact failing instruction or mechanism has been established.
 - After a watchdog recovery, a host-side synchronization call can return without
   reporting an error. That return value is **not** kernel output and must not be read as
   success.
@@ -156,25 +158,25 @@ The most useful feedback at this stage, roughly in order:
 1. **On the physical liveness problem.** Any independent perspective on why a
    correctly parameterized one-workgroup kernel would be accepted at launch but fail
    to complete, given the host-side areas already eliminated. See
-   `docs/initial-issues/01-candidate-f-physical-j3-non-completion.md`.
+   [issue #2](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/2).
 2. **On post-watchdog synchronization semantics.** What a HIP synchronization call
    actually reports after a watchdog recovery, and how to interpret it correctly. See
-   `docs/initial-issues/03-rocm-post-watchdog-synchronization-semantics.md`.
+   [issue #4](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/4).
 3. **On the instruction forms actually executed.** Independent review of the
    dynamically executed `gfx1030` forms and their semantics, especially `EXEC`/`VCC`
    masking, LDS/DS, and `waitcnt` placement. See
-   `docs/initial-issues/02-independent-review-executed-gfx1030-instruction-forms.md`.
+   [issue #3](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/3).
 4. **On the methodology.** Whether the proof ladder, the evidence labels, and the
    verifier rules described in [evidence and reproducibility](evidence-and-reproducibility.md)
    are sound — and where they are gameable.
 5. **On reproducibility.** Whether the host-only setup works on a machine that is not
    the original researcher's. See
-   `docs/initial-issues/07-host-only-setup-second-machine.md`.
+   [issue #8](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/8).
 6. **On hardware generality.** Whether a bounded case behaves the same on a second
    Navi21/`gfx1030` device. See
-   `docs/initial-issues/08-second-navi21-gfx1030-device.md`.
+   [issue #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9).
 7. **On host emulator performance**, if the emulator is the bottleneck for your own
-   work. See `docs/initial-issues/04-emulator-parallel-execution-performance.md`.
+   work. See [issue #5](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/5).
 
 Contributions are welcome — including host-only work, which needs no GPU. See
 [contribution areas](contribution-areas.md).
