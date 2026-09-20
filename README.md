@@ -2,6 +2,10 @@
 
 ### Experimental Compatibility Research
 
+[![CI](https://github.com/Sakushey/gfx1030-dlss-nr-research/actions/workflows/ci.yml/badge.svg)](https://github.com/Sakushey/gfx1030-dlss-nr-research/actions/workflows/ci.yml)
+[![Publication audit](https://github.com/Sakushey/gfx1030-dlss-nr-research/actions/workflows/publication-audit.yml/badge.svg)](https://github.com/Sakushey/gfx1030-dlss-nr-research/actions/workflows/publication-audit.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 Experimental open-source compatibility research investigating whether
 DLSS Neural Rendering workloads can be translated, validated, and
 executed on AMD RDNA2 / Navi21-class gfx1030 hardware.
@@ -70,9 +74,17 @@ Concretely, the repository contains original work in four areas:
 
 A correctly parameterized one-workgroup gfx1030 translation currently
 reaches the physical HIP runtime but fails to complete before the
-Windows GPU watchdog recovers the engine. Host-side descriptor,
-barrier, waitcnt, argument, and address-layout validation has narrowed
-the remaining problem to physical kernel liveness.
+Windows GPU watchdog recovers the engine. The latest bounded midpoint
+checkpoint diagnostic also triggered recovery, narrowing the first
+physical failure to the **first ~55.6% of the modeled one-workgroup
+execution**. That localizes the search; it does not identify the root
+cause.
+
+Host-side descriptor, argument, address-layout, barrier, and waitcnt
+checks all pass for the modeled path, so those simple host-configuration
+errors are no longer the leading explanations. They do **not** rule out
+a physical synchronization, initialization, scheduling, or model-fidelity
+defect.
 
 Work is now focused on **bounded checkpoint diagnostics rather than
 blind retries**. If you work on RDNA2 execution semantics, wave32
@@ -161,6 +173,12 @@ Good first contributions are usually on rungs 1–2: an independent
 computation of an expected value, a negative control that *should* fail
 and does, or a documented disagreement between the emulator and the
 oracle.
+
+Start with the live tracker: [physical liveness #2](../../issues/2),
+[independent ISA review #3](../../issues/3),
+[ROCm post-watchdog semantics #4](../../issues/4),
+[second-machine host reproduction #8](../../issues/8), and
+[second-device validation #9](../../issues/9).
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
