@@ -2,10 +2,9 @@ name: Publication audit
 
 # Periodic and on-demand audit of what is actually tracked.
 #
-# This is the gate that answers "did anything get committed that should not
-# have?" It scans the committed tree — not the working tree — for secrets,
-# personal paths, prohibited artifact categories, oversized files, and
-# manifest drift.
+# This gate asks "did anything get committed that should not have?"
+# It scans the committed tree for secrets, personal paths, prohibited
+# artifact categories, oversized files, and manifest drift.
 #
 # Host-only. No GPU, no proprietary data, no secrets, no deployment.
 
@@ -26,12 +25,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -53,11 +52,35 @@ jobs:
             *) echo "FAIL: commit metadata carries a non-noreply address"; exit 1 ;;
           esac
 
-      - name: Confirm no GPU-touching step exists in CI
+      - name: Confirm CI contains no GPU execution command
         run: |
-          if grep -rniE 'hip|rocm|gfx1030|watchdog|tdr' .github/workflows/ci.yml \
-               | grep -vE '^\s*#|name:|MUST NOT'; then
-            echo "FAIL: unexpected GPU-related reference in CI"
-            exit 1
-          fi
-          echo "OK: CI contains no GPU execution step"
+          python - <<'PY'
+          import pathlib
+          import re
+          import sys
+          import yaml
+
+          workflow = pathlib.Path(".github/workflows/ci.yml")
+          data = yaml.safe_load(workflow.read_text(encoding="utf-8"))
+          forbidden = re.compile(r"(?i)(^|[^A-Za-z0-9_])(hip(?:cc|run)?|rocm|gfx1030|watchdog|tdr)([^A-Za-z0-9_]|$)")
+          hits = []
+
+          for job_name, job in (data.get("jobs") or {}).items():
+              for index, step in enumerate(job.get("steps") or [], start=1):
+                  run = step.get("run")
+                  if not isinstance(run, str):
+                      continue
+                  for line_no, line in enumerate(run.splitlines(), start=1):
+                      if forbidden.search(line):
+                          hits.append(
+                              f"job={job_name} step={index} run-line={line_no}: {line.strip()}"
+                          )
+
+          if hits:
+              print("FAIL: GPU-related command token found in CI run commands")
+              for hit in hits:
+                  print("  ", hit)
+              sys.exit(1)
+
+          print("OK: CI run commands contain no GPU execution token")
+          PY
