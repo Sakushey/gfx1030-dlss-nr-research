@@ -19,23 +19,29 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: publication-audit-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   audit:
     name: Tracked-tree audit
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: "3.12"
 
       - name: Install validation dependencies
-        run: python -m pip install --disable-pip-version-check pyyaml
+        run: python -m pip install --disable-pip-version-check -r requirements-ci.txt
 
       - name: Audit working tree
         run: python scripts/verify_publication.py

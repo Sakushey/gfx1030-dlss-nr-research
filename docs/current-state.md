@@ -61,9 +61,21 @@ The remaining problem is therefore being treated as **physical kernel liveness**
 These host-side checks do not prove that every hardware-specific synchronization,
 initialization, scheduling, or model-fidelity hypothesis is impossible.
 
-A midpoint post-barrier diagnostic has now also triggered watchdog recovery. That
-narrows the first physical failure to the **first ~55.6% of the modeled
-one-workgroup execution**. It is a localization result, not a root-cause result.
+A B2 post-barrier checkpoint diagnostic has now also triggered watchdog
+recovery. That narrows the first physical failure to the **first 3,547 modeled
+per-wave steps — about 25.9% of the full J3 dispatch**. It is a localization
+result, not a root-cause result. The same cut eliminated two of the three
+candidate `s_addc` sites by measurement; the remaining one is still inside the
+surviving interval.
+
+A cross-wave LDS write-after-write condition was measured in the host model:
+1,473 unsynchronised pairs write different values that a later read observes.
+It was tested for consequence rather than argued about — forcing the wave-issue
+order to the exact reverse of the frozen order on every tick, and separately
+rotating it by one, left every observable (image hash, barrier epochs,
+control-flow signature, tick count, liveness) unchanged across 34 reorderings.
+It is a real property of the modelled memory model, so the physical-cause
+hypothesis is **weakened** by host perturbation — not physically falsified.
 
 ### How the problem is being approached
 

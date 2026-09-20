@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this research software, please cite it using these metadata."
+title: "DLSS Neural Rendering on AMD RDNA2 (gfx1030): Experimental Compatibility Research"
+authors:
+  - name: "Sakushey"
+version: "0.0.1-dev-preview"
+date-released: "2026-09-20"
+license: Apache-2.0
+type: software
+repository-code: "https://github.com/Sakushey/gfx1030-dlss-nr-research"
+url: "https://github.com/Sakushey/gfx1030-dlss-nr-research"
+abstract: >-
+  Experimental open-source compatibility research toward running DLSS Neural
+  Rendering workloads on AMD RDNA2 / gfx1030 hardware. It covers ISA
+  translation, a host-side semantic emulator with an independent scalar
+  reference oracle, proof-oriented validation, and bounded hardware testing.
+  This is early development research: there is no end-to-end game frame yet.
+keywords:
+  - gfx1030
+  - RDNA2
+  - ROCm
+  - HIP
+  - GPU ISA
+  - neural rendering
+  - reverse engineering
+  - AMDGPU
+  - DLSS
+  - Navi21

@@ -47,9 +47,10 @@ simple host-configuration mistakes in those areas are no longer the
 leading explanation. That does not rule out hardware-specific
 synchronization or model-fidelity defects.
 
-The latest midpoint checkpoint diagnostic also recovered through the
-watchdog, narrowing the first physical failure to the first ~55.6% of
-modeled one-workgroup execution.
+The latest checkpoint diagnostic (B2) also recovered through the
+watchdog, narrowing the first physical failure to the first 3,547 modeled
+per-wave steps — about 25.9% of the full J3 dispatch. This is a
+localization result, not a root cause.
 
 **Approach:** bounded checkpoint diagnostics. Each experiment answers one
 question, is authorized explicitly, and produces raw evidence that is

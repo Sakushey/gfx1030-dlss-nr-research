@@ -1,12 +1,19 @@
 {
-  "generated_by": "local publication executor + supervisor GitHub finalization",
+  "generated_by": "local publication executor + supervisor GitHub finalization + final hardening pass",
   "generated_utc": "2026-09-20",
   "status_values": [
     "PASS",
     "FAIL",
     "BLOCKED",
-    "N/A"
+    "N/A",
+    "DEFERRED_NONBLOCKING"
   ],
+  "verification_method": {
+    "machine_verified_anonymous": "Read over HTTPS without credentials against the public GitHub API / repository page. No token was used, stored, or extracted.",
+    "machine_verified_local": "Read from the local git remote-tracking refs.",
+    "user_reported": "Stated by the repository owner; not independently queryable without repository-admin credentials."
+  },
+
   "source_tree_untouched": "PASS",
   "publication_allowlist_complete": "PASS",
   "provenance_pass": "PASS",
@@ -20,26 +27,49 @@
   "community_files_pass": "PASS",
   "ci_host_only": "PASS",
   "git_local_identity_noreply": "PASS",
+
   "repository_created": "PASS",
   "repository_owner": "Sakushey",
   "repository_name": "gfx1030-dlss-nr-research",
-  "repository_visibility_current": "private",
-  "repository_visibility_public": "BLOCKED",
-  "repository_visibility_note": "Repository is intentionally private while final publication review is completed. Public visibility requires a repository-admin action not exposed by the connected GitHub tool.",
+  "repository_visibility_current": "public",
+  "repository_visibility_public": "PASS",
+  "repository_visibility_note": "Machine-verified: an unauthenticated HTTPS request to the repository and to the public GitHub API returns HTTP 200, and `private` reads false with `visibility` `public`.",
+  "repository_description_present": "PASS",
+  "repository_license_detected": "Apache-2.0",
+
   "main_pushed": "PASS",
   "remote_main_verified": "PASS",
+  "default_branch": "main",
+
   "issues_enabled": "PASS",
-  "initial_issues_created": "PASS",
-  "discussions_enabled": "BLOCKED",
-  "discussions_note": "Not enabled yet; requires a repository setting change.",
-  "topics_applied": "BLOCKED",
-  "topics_note": "Repository topics are not yet configured; requires a repository-admin setting change.",
-  "labels_created": "BLOCKED",
-  "labels_note": "Custom label taxonomy is not yet configured. Issues were opened without assuming unavailable custom labels.",
+  "discussions_enabled": "PASS",
+  "wiki_enabled": "N/A",
+  "wiki_note": "Deliberately left disabled.",
+  "topics_applied": "PASS",
+  "topics_count": 19,
+
+  "release_created": "PASS",
+  "release": "v0.0.1-dev-preview",
+  "release_is_prerelease": true,
+  "release_published_utc": "2026-09-20T16:19:57Z",
+  "release_note": "A historical development-preview snapshot. Its tag and source snapshot are not moved when current research advances.",
+  "release_tag_verified": "PASS",
+
+  "labels_created": "DEFERRED_NONBLOCKING",
+  "labels_note": "A custom fine-grained label taxonomy is not a release blocker and is deferred to the maintainer.",
+
   "remote_secret_check_pass": "PASS",
   "host_ci_pass": "PASS",
   "publication_audit_pass": "PASS",
-  "github_release_created": false,
-  "release_note": "A source-only v0.0.1-dev-preview prerelease is prepared but should be created only after the final public-visibility review.",
-  "final_blocking_reason": "PRIVATE_STAGING_FINAL_ADMIN_TOGGLES_PENDING"
+
+  "admin_security_settings": "USER_REPORTED_ENABLED_NOT_MACHINE_VERIFIED",
+  "admin_security_settings_note": "Branch protection / ruleset and CodeQL default setup are repository-admin settings. They are not queryable anonymously and no credential was extracted to check them. Treat as recommended, not proven.",
+  "admin_security_recommendations": [
+    "main ruleset: require a pull request before merge; require the Host-only checks and Tracked-tree audit status checks; require conversation resolution; block force pushes and branch deletion; 0 required approvals is acceptable for a single-maintainer stage; do not require signed commits yet.",
+    "Enable CodeQL default setup under Security / Code security.",
+    "Enable automatic deletion of head branches after merge.",
+    "Squash merge on; rebase and merge-commit optional."
+  ],
+
+  "final_blocking_reason": "NONE"
 }

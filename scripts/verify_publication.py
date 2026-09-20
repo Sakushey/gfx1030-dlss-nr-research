@@ -27,7 +27,8 @@ REQUIRED = [
     "README.md", "LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.md",
     "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md", "SUPPORT.md",
     "STATUS.md", "ROADMAP.md", "ARCHITECTURE.md", "REPRODUCIBILITY.md",
-    "CHANGELOG.md", ".gitignore", ".gitattributes",
+    "CHANGELOG.md", "CITATION.cff", "requirements-ci.txt",
+    ".gitignore", ".gitattributes",
     ".github/PULL_REQUEST_TEMPLATE.md", ".github/CODEOWNERS",
     ".github/ISSUE_TEMPLATE/bug_report.yml",
     ".github/ISSUE_TEMPLATE/research_validation.yml",
@@ -70,6 +71,14 @@ FORBIDDEN_EXT = {
     ".dll", ".exe", ".o", ".obj", ".lib", ".exp", ".pre", ".bc",
     ".dmp", ".zip", ".pyc", ".gfx1030accept",
 }
+
+YAML_EXT = (".yml", ".yaml", ".cff")
+
+# External GitHub Actions must be pinned to an immutable commit SHA. A moving
+# tag such as `@v7` can be re-pointed by the upstream owner, which would let
+# unreviewed code run with this repository's CI token.
+ACTION_REF_RX = re.compile(r"^\s*(?:-\s*)?uses:\s*(\S+)\s*(?:#.*)?$")
+SHA40_RX = re.compile(r"^[0-9a-fA-F]{40}$")
 
 MAX_BYTES = 100 * 1024 * 1024
 WARN_BYTES = 1 * 1024 * 1024
@@ -271,7 +280,7 @@ def check_yaml(head: bool, files: list[str]) -> None:
     bad = []
     n = 0
     for rel in files:
-        if not rel.endswith((".yml", ".yaml")):
+        if not rel.endswith(YAML_EXT):
             continue
         data = blob_bytes(head, rel)
         if not data:
@@ -323,8 +332,8 @@ def check_manifest(head: bool, files: list[str]) -> None:
         "README.md", "LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.md",
         "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md",
         "SUPPORT.md", "STATUS.md", "ROADMAP.md", "ARCHITECTURE.md",
-        "REPRODUCIBILITY.md", "CHANGELOG.md", ".gitignore",
-        ".gitattributes",
+        "REPRODUCIBILITY.md", "CHANGELOG.md", "CITATION.cff",
+        "requirements-ci.txt", ".gitignore", ".gitattributes",
     }
     unaccounted = [
         f for f in tracked
@@ -361,6 +370,48 @@ def check_readme_links(head: bool) -> None:
            "; ".join(missing[:10]) if missing else f"{len(targets)} links resolve")
 
 
+def action_ref_problems(rel: str, text: str) -> list[str]:
+    """Every external action reference must be a full 40-hex commit SHA.
+
+    Local actions (`./...`) are exempt: they are this repository's own code.
+    """
+    problems: list[str] = []
+    for i, line in enumerate(text.splitlines(), 1):
+        m = ACTION_REF_RX.match(line)
+        if not m:
+            continue
+        ref = m.group(1).strip().strip('"').strip("'")
+        if ref.startswith("./"):
+            continue
+        if "@" not in ref:
+            problems.append(f"{rel}:{i} `uses: {ref}` carries no ref")
+            continue
+        pinned = ref.rpartition("@")[2]
+        if not SHA40_RX.match(pinned):
+            problems.append(
+                f"{rel}:{i} `uses: {ref}` is not pinned to a 40-hex commit SHA"
+            )
+    return problems
+
+
+def check_workflow_pins(head: bool, files: list[str]) -> None:
+    bad: list[str] = []
+    n = 0
+    for rel in files:
+        norm = rel.replace("\\", "/")
+        if not norm.startswith(".github/workflows/"):
+            continue
+        if not norm.endswith(YAML_EXT):
+            continue
+        data = blob_bytes(head, rel)
+        if not data:
+            continue
+        n += 1
+        bad.extend(action_ref_problems(norm, data.decode("utf-8", "ignore")))
+    record(not bad, "action pinning",
+           "; ".join(bad[:10]) if bad else f"{n} workflow(s) fully SHA-pinned")
+
+
 def check_no_pycache(files: list[str]) -> None:
     bad = [f for f in files if "__pycache__" in f or f.endswith(".pyc")]
     record(not bad, "no bytecode caches tracked",
@@ -394,6 +445,7 @@ def main() -> int:
     check_required(files)
     check_manifest(args.git_head, files)
     check_readme_links(args.git_head)
+    check_workflow_pins(args.git_head, files)
     check_no_pycache(files)
 
     failed = 0
