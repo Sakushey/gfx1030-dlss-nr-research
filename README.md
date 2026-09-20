@@ -260,3 +260,4 @@ referenced by the research.
 | [docs/hardware-testing-policy.md](docs/hardware-testing-policy.md) | bounded-experiment rules |
 | [docs/reverse-engineering-boundaries.md](docs/reverse-engineering-boundaries.md) | what this project will and will not do |
 | [docs/PROVENANCE.md](docs/PROVENANCE.md) | where the published code came from |
+| [docs/maintainer-publication-sync.md](docs/maintainer-publication-sync.md) | safe recurring private-to-public sync procedure |
