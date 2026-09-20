@@ -1,21 +1,21 @@
 # Development Preview 0.0.1 — gfx1030 Neural-Rendering Research
 
-> **DRAFT — this release has NOT been created yet.** This document is a draft of
-> release notes for a release that does not exist. No tag has been created, no
-> release has been published, and nothing described here has been shipped. It is
-> written so that a future release, if one is made, has a considered description
-> ready. Suggested future tag: **`v0.0.1-dev-preview`**.
+> **Development preview:** this is an early source-only research release. It is
+> intended for review, reproduction, and collaboration while the physical
+> gfx1030 liveness problem remains unresolved. It is not a compatibility or
+> production-readiness claim.
 
 **Project:** DLSS Neural Rendering on AMD RDNA2 (gfx1030) — Experimental Compatibility
 Research
 
-**Suggested tag:** `v0.0.1-dev-preview`
+**Tag:** `v0.0.1-dev-preview`
 
-**Suggested release type:** pre-release / development preview
+**Release type:** pre-release / development preview
 
 **Status of the work described:** active research. See
-[current state](current-state.md) for the accurate, current picture — in particular,
-nothing here constitutes a compatibility claim or a working result.
+[current state](https://github.com/Sakushey/gfx1030-dlss-nr-research/blob/main/docs/current-state.md)
+for the accurate, current picture — in particular, nothing here constitutes a
+compatibility claim or an end-to-end working result.
 
 ---
 
@@ -25,7 +25,7 @@ This is an independent, unofficial research project. It is **not affiliated with
 endorsed by, or supported by** NVIDIA, AMD, Rockstar Games, Take-Two Interactive, or
 any referenced third-party mod or project.
 
-A development preview is being considered for the **host-side research tooling**: the
+This development preview publishes the **host-side research tooling**: the
 emulator, the independent oracle, the HIP interoperability tooling, the bounded
 harnesses, and the analysis utilities. The purpose of publishing it at this stage is
 to make the methodology and the tooling available for review and reuse while the
@@ -50,7 +50,7 @@ An independently written scalar reference implementation of the same ISA semanti
 deliberately not sharing code or control flow with the emulator. Its purpose is to be
 able to disagree with the emulator; an oracle that restates the emulator validates
 nothing. See `src/oracle/isa_oracle_scalar.py` and
-[architecture](architecture.md) for why the separation is load-bearing.
+[architecture](https://github.com/Sakushey/gfx1030-dlss-nr-research/blob/main/docs/architecture.md) for why the separation is load-bearing.
 
 ### HIP bridge tooling
 
@@ -80,7 +80,7 @@ A single bounded GPU experiment, run through one documented entry point:
 `powershell -ExecutionPolicy Bypass -File scripts\run_test.ps1`. It performs a device
 preflight, compiles a small soft-WMMA test program for `gfx1030`, and runs one tiny
 tile. It is not a benchmark and not a stress test. See
-[build and setup](build-and-setup.md).
+[build and setup](https://github.com/Sakushey/gfx1030-dlss-nr-research/blob/main/docs/build-and-setup.md).
 
 ### Documentation
 
@@ -136,7 +136,7 @@ glossary, and drafted issue descriptions.
   generation that enumerates `gfx1030` in this environment; ROCm 7.1 does not enumerate
   this device here.
 
-Full detail: [current state](current-state.md).
+Full detail: [current state](https://github.com/Sakushey/gfx1030-dlss-nr-research/blob/main/docs/current-state.md).
 
 ## Hardware safety statement
 
@@ -144,7 +144,7 @@ Every physical experiment in this project is **bounded and one-shot**, with no
 automatic retries, no watchdog/TDR modification, and no clock/voltage/power/firmware/
 BIOS/registry/driver changes. Raw evidence is preserved as produced. Physical tests are
 run only when explicitly authorized. See
-[hardware testing policy](hardware-testing-policy.md).
+[hardware testing policy](https://github.com/Sakushey/gfx1030-dlss-nr-research/blob/main/docs/hardware-testing-policy.md).
 
 **If you run the bounded GPU experiment yourself:** do not modify watchdog or TDR
 settings, do not change clocks, voltages, power limits, firmware, BIOS, registry, or
@@ -167,7 +167,7 @@ The most useful feedback at this stage, roughly in order:
    masking, LDS/DS, and `waitcnt` placement. See
    [issue #3](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/3).
 4. **On the methodology.** Whether the proof ladder, the evidence labels, and the
-   verifier rules described in [evidence and reproducibility](evidence-and-reproducibility.md)
+   verifier rules described in [evidence and reproducibility](https://github.com/Sakushey/gfx1030-dlss-nr-research/blob/main/docs/evidence-and-reproducibility.md)
    are sound — and where they are gameable.
 5. **On reproducibility.** Whether the host-only setup works on a machine that is not
    the original researcher's. See
@@ -179,7 +179,7 @@ The most useful feedback at this stage, roughly in order:
    work. See [issue #5](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/5).
 
 Contributions are welcome — including host-only work, which needs no GPU. See
-[contribution areas](contribution-areas.md).
+[contribution areas](https://github.com/Sakushey/gfx1030-dlss-nr-research/blob/main/docs/contribution-areas.md).
 
 ## A note on reading this preview
 

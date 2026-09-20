@@ -17,7 +17,7 @@ jobs:
       - name: Checkout release commit
         uses: actions/checkout@v7
 
-      - name: Create v0.0.1 development prerelease
+      - name: Create or refresh v0.0.1 development prerelease
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -44,6 +44,16 @@ jobs:
               "User-Agent": "gfx1030-dlss-nr-research-release-bootstrap",
           }
 
+          payload_obj = {
+              "tag_name": tag,
+              "target_commitish": "main",
+              "name": title,
+              "body": notes,
+              "draft": False,
+              "prerelease": True,
+              "generate_release_notes": False,
+          }
+
           check = urllib.request.Request(
               f"https://api.github.com/repos/{repo}/releases/tags/{tag}",
               headers=headers,
@@ -51,32 +61,36 @@ jobs:
           try:
               with urllib.request.urlopen(check) as response:
                   existing = json.load(response)
-              print(f"Release already exists: {existing.get('html_url', tag)}")
-              raise SystemExit(0)
+              release_id = existing["id"]
+              payload = json.dumps(
+                  {
+                      "name": title,
+                      "body": notes,
+                      "draft": False,
+                      "prerelease": True,
+                  }
+              ).encode("utf-8")
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/releases/{release_id}",
+                  data=payload,
+                  headers=headers,
+                  method="PATCH",
+              )
+              action = "Refreshed"
           except urllib.error.HTTPError as exc:
               if exc.code != 404:
                   raise
+              payload = json.dumps(payload_obj).encode("utf-8")
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/releases",
+                  data=payload,
+                  headers=headers,
+                  method="POST",
+              )
+              action = "Created"
 
-          payload = json.dumps(
-              {
-                  "tag_name": tag,
-                  "target_commitish": "main",
-                  "name": title,
-                  "body": notes,
-                  "draft": False,
-                  "prerelease": True,
-                  "generate_release_notes": False,
-              }
-          ).encode("utf-8")
-
-          request = urllib.request.Request(
-              f"https://api.github.com/repos/{repo}/releases",
-              data=payload,
-              headers=headers,
-              method="POST",
-          )
           with urllib.request.urlopen(request) as response:
-              created = json.load(response)
+              release = json.load(response)
 
-          print(f"Created prerelease: {created['html_url']}")
+          print(f"{action} prerelease: {release['html_url']}")
           PY
