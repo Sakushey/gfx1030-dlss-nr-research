@@ -1,3 +1,15 @@
+// Bounded throughput benchmark for the DENSE software-matrix decomposition.
+//
+// It reuses the dense arithmetic fixture's kernel shape (`soft_wmma_test.cpp`)
+// and differs only in launching many bounded tiles and timing them. It is not
+// a fragment-ownership test and its results say nothing about fragment
+// ownership; see tests/soft_wmma_fragment_test.cpp for that.
+//
+// Grading uses the same shared comparator as the other two fixtures, so the
+// benchmark cannot report throughput for a run the comparator would reject.
+// Each batch's output region is pre-filled with the sentinel, which is what
+// makes "the kernel never wrote this tile" distinguishable from "the kernel
+// wrote the same numbers the previous batch left there".
 #include <hip/hip_runtime.h>
 
 #include <algorithm>
@@ -8,6 +20,8 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
+
+#include "wmma_numeric_compare.h"
 
 #define HIP_CHECK(call)                                                        \
     do {                                                                       \
@@ -92,18 +106,29 @@ static void cpu_reference(const std::vector<float>& A,
     }
 }
 
-static double max_abs_error(const std::vector<float>& got,
-                            const std::vector<float>& ref,
-                            int tiles)
+// Grade one batch with the shared comparator.
+//
+// `got` holds `tiles` complete 256-element tiles; `ref` is the single 256
+// element reference the repeated tile converges on. Because the same input
+// tile is reused for every launch, the reference is tiled rather than
+// re-derived, and the tiling is materialised here so the comparator sees two
+// real buffers of equal length instead of an index expression it cannot
+// length-check.
+static wmma_check::Result grade_batch(const std::vector<float>& got,
+                                      const std::vector<float>& ref,
+                                      int tiles,
+                                      std::size_t guard_count,
+                                      float tolerance)
 {
-    double max_abs = 0.0;
-    const std::size_t elements = static_cast<std::size_t>(tiles) * 256;
-    for (std::size_t i = 0; i < elements; ++i) {
-        max_abs = std::max(max_abs,
-                           std::abs(static_cast<double>(got[i]) -
-                                    static_cast<double>(ref[i % 256])));
+    const std::size_t graded = static_cast<std::size_t>(tiles) * 256;
+    std::vector<float> tiled_ref(graded);
+    for (std::size_t i = 0; i < graded; ++i) {
+        tiled_ref[i] = ref[i % 256];
     }
-    return max_abs;
+    const std::size_t total = graded + guard_count;
+    const wmma_check::Config cfg(tolerance, graded, guard_count);
+    return wmma_check::compare(got.data(), std::min(got.size(), total),
+                               tiled_ref.data(), tiled_ref.size(), cfg);
 }
 
 int main()
@@ -112,9 +137,11 @@ int main()
     constexpr float kAbortMs = 2000.0f;
     constexpr double kTolerance = 1.0e-3;
     constexpr int kBatches[] = {10, 100, 1000, 10000};
+    // Out-of-range guards appended to every batch's output region.
+    constexpr std::size_t kGuards = 4;
 
-    std::cout << "gfx1030 soft-WMMA bounded benchmark\n";
-    std::cout << "----------------------------------\n";
+    std::cout << "gfx1030 dense software-matrix bounded benchmark\n";
+    std::cout << "----------------------------------------------\n";
     std::cout << "Hard limits: max iterations=" << kMaxIterations
               << ", per-batch abort=" << kAbortMs << " ms\n";
 
@@ -152,12 +179,14 @@ int main()
     cpu_reference(A, B, ref);
 
     float *dA = nullptr, *dB = nullptr, *dC = nullptr;
-    const std::size_t c_bytes = static_cast<std::size_t>(kMaxIterations) *
-                                256 * sizeof(float);
+    const std::size_t c_bytes =
+        (static_cast<std::size_t>(kMaxIterations) * 256 + kGuards) *
+        sizeof(float);
     HIP_CHECK(hipMalloc(&dA, 256 * sizeof(float)));
     HIP_CHECK(hipMalloc(&dB, 256 * sizeof(float)));
     HIP_CHECK(hipMalloc(&dC, c_bytes));
-    std::vector<float> got(static_cast<std::size_t>(kMaxIterations) * 256);
+    std::vector<float> got(static_cast<std::size_t>(kMaxIterations) * 256 +
+                           kGuards);
 
     HIP_CHECK(hipMemcpy(dA, A.data(), 256 * sizeof(float), hipMemcpyHostToDevice));
     HIP_CHECK(hipMemcpy(dB, B.data(), 256 * sizeof(float), hipMemcpyHostToDevice));
@@ -179,7 +208,15 @@ int main()
 
         const std::size_t batch_bytes = static_cast<std::size_t>(iterations) *
                                         256 * sizeof(float);
-        HIP_CHECK(hipMemsetAsync(dC, 0, batch_bytes, stream));
+        // Sentinel, not zero: the tiles all compute the same values, so a
+        // zeroed buffer cannot distinguish "the kernel wrote this tile" from
+        // "the previous batch left this tile here".
+        std::vector<float> stage(
+            static_cast<std::size_t>(iterations) * 256 + kGuards,
+            wmma_check::sentinel_value());
+        HIP_CHECK(hipMemcpyAsync(dC, stage.data(),
+                                 (stage.size()) * sizeof(float),
+                                 hipMemcpyHostToDevice, stream));
         HIP_CHECK(hipStreamSynchronize(stream));
         const auto host_start = std::chrono::steady_clock::now();
         HIP_CHECK(hipEventRecord(start, stream));
@@ -195,13 +232,15 @@ int main()
 
         float elapsed_ms = 0.0f;
         HIP_CHECK(hipEventElapsedTime(&elapsed_ms, start, stop));
-        HIP_CHECK(hipMemcpy(got.data(), dC, batch_bytes, hipMemcpyDeviceToHost));
+        HIP_CHECK(hipMemcpy(got.data(), dC, stage.size() * sizeof(float),
+                            hipMemcpyDeviceToHost));
 
         const double host_ms = std::chrono::duration<double, std::milli>(
                                    host_end - host_start)
                                    .count();
-        const double max_abs = max_abs_error(got, ref, iterations);
-        const bool pass = max_abs <= kTolerance;
+        const wmma_check::Result r =
+            grade_batch(got, ref, iterations, kGuards, kTolerance);
+        const bool pass = (r.verdict == wmma_check::Verdict::PASS);
         const double us_per_tile =
             (static_cast<double>(elapsed_ms) * 1000.0) / iterations;
 
@@ -209,13 +248,16 @@ int main()
                   << " elapsed GPU ms=" << std::setprecision(6) << elapsed_ms
                   << " host wait ms=" << host_ms
                   << " avg us/tile=" << us_per_tile
-                  << " max abs error=" << std::scientific << max_abs
+                  << " max abs error=" << std::scientific << r.max_abs
                   << " correctness=" << (pass ? "PASS" : "FAIL")
+                  << " verdict=" << wmma_check::verdict_name(r.verdict)
                   << " HIP errors=none\n" << std::defaultfloat;
 
         if (!pass || elapsed_ms > kAbortMs) {
             if (!pass) {
-                std::cout << "STOP: correctness failed; no further escalation.\n";
+                std::cout << "STOP: correctness failed at element " << r.index
+                          << " (" << wmma_check::verdict_name(r.verdict)
+                          << "); no further escalation.\n";
             } else {
                 std::cout << "STOP: batch exceeded the hard time guard; no further escalation.\n";
             }

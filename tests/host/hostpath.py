@@ -17,4 +17,12 @@ if os.path.isdir(_SRC):
         if os.path.isdir(_d) and _d not in sys.path:
             sys.path.insert(0, _d)
 
+    # `src` itself goes on the path too, APPENDED rather than inserted, so it
+    # cannot shadow anything the flat directories already resolve. This is what
+    # makes the `qualification` package importable as a package (`from
+    # qualification import ...`) while the older flat modules (`import emu`)
+    # keep working unchanged.
+    if _SRC not in sys.path:
+        sys.path.append(_SRC)
+
 REPO_ROOT = _ROOT

@@ -20,6 +20,10 @@ _ROOT = os.path.dirname(os.path.abspath(__file__))
 _SRC = os.path.join(_ROOT, "src")
 
 if os.path.isdir(_SRC):
+    # `src` itself is appended (not inserted) so the `qualification` package
+    # resolves as a package without shadowing the flat modules below.
+    if _SRC not in sys.path:
+        sys.path.append(_SRC)
     for _name in sorted(os.listdir(_SRC)):
         _d = os.path.join(_SRC, _name)
         if os.path.isdir(_d) and _d not in sys.path:

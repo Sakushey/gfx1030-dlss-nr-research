@@ -5,10 +5,33 @@ Every flag below is DERIVED from a file, never typed in.  A flag whose
 evidence file is missing is reported as NOT_MEASURED, not as NO -- those are
 different statements and the difference is the point.
 
+The four track flags that used to be the exception are now derived too.  They
+were literals --
+
+    ev["F_output_dependency_slice"] = "NOT_BUILT"
+    ev["G_j3v2_input_expected_harness"] = "NOT_BUILT"
+    ev["I_final_package"] = "PARTIAL (H track only)"
+    ev["J_adversarial_release_tests"] = "NOT_BUILT"
+
+-- which made them the only claims in this file that nothing could contradict,
+-- and they were exactly the four gating J3_READY.  They now come from the
+-- artifact-backed qualification ledger (`qualification_ledger.py`), keyed by
+-- the eight-tuple that identifies what was measured, with each track's
+-- readiness read from the stage that track would produce evidence for.  The
+-- mapping is a declaration: it says which question a track answers, and it is
+-- written out in TRACK_STAGE below rather than implied.
+
+A checkout with no ledger reports every stage NOT_RUN.  That is the true
+statement about a tree that has qualified nothing, and it is not the same as
+NOT_BUILT, which asserted a build outcome nobody had measured.
+
     python k_readiness.py
 """
 from __future__ import annotations
 import hashlib, json, os
+
+from qualification_ledger import (Ledger, Key, STAGES, J3_SOURCE_PROFILE,
+                                  FINAL_HEAD_PROFILES)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -123,28 +146,56 @@ def main():
     # --- E: swin32t --------------------------------------------------
     ev["E_swin32t_outcome"] = "EXPLAINED_VALID (see e_swin32t/)"
 
-    # --- tracks not attempted ---------------------------------------
-    ev["F_output_dependency_slice"] = "NOT_BUILT"
-    ev["G_j3v2_input_expected_harness"] = "NOT_BUILT"
-    ev["I_final_package"] = "PARTIAL (H track only)"
-    ev["J_adversarial_release_tests"] = "NOT_BUILT"
+    # --- F/G/I/J: read from the qualification ledger ------------------
+    #
+    # Which question each track answers, as a declaration.  F asks whether the
+    # output dependency slice holds statically; G whether the J3v2 input
+    # matches what the harness expects numerically; I whether a package was
+    # produced and presented; J whether the release was tested adversarially
+    # on a device.  Each is a STAGE, and reading one stage says nothing about
+    # the others -- which is the property the literals destroyed.
+    TRACK_STAGE = {
+        "F_output_dependency_slice": "HOST_STATIC",
+        "G_j3v2_input_expected_harness": "HOST_NUMERIC",
+        "I_final_package": "PRESENTATION",
+        "J_adversarial_release_tests": "AUTHENTIC_DISPATCH",
+    }
+    ledger = Ledger.load(os.path.join(ROOT, "audit",
+                                      "QUALIFICATION_LEDGER.json"), root=ROOT)
+    # The key the ledger is queried with.  Its object hashes are what makes a
+    # record about *this* build; an empty hash means the ledger records a
+    # different (or no) translation, and every stage then reads NOT_RUN, which
+    # is correct: nothing has been qualified for this key.
+    j3_key = Key(source_profile=J3_SOURCE_PROFILE,
+                 source_object_sha256=ev.get("C_candidate_sha256") or "unknown",
+                 translated_object_sha256="unrecorded",
+                 device="gfx1030", runtime="rocm6.4",
+                 fixture="swin32f", geometry="one_workgroup",
+                 test_version="16o")
+    ev["ledger_records"] = len(ledger.records)
+    ev["ledger_stale_records"] = [
+        {"stage": r.stage, "status": r.status, "why": why}
+        for r, why in ledger.stale_records()]
+    ev["ledger_stage_statuses"] = ledger.statuses_for(j3_key)
+    for track, stage in TRACK_STAGE.items():
+        ev[track] = "%s (%s)" % (ledger.status(j3_key, stage), stage)
 
     j3_ready = bool(
         root_cause_measured
         and ev["C_freeze_exists"]
         and ev.get("B3_J3_CRITICAL_UNVERIFIED") == 0
         and ev.get("D_all_clean_or_explained") is True
-        and ev["F_output_dependency_slice"] != "NOT_BUILT"
-        and ev["G_j3v2_input_expected_harness"] != "NOT_BUILT"
-        and ev["J_adversarial_release_tests"] != "NOT_BUILT")
+        and ev["F_output_dependency_slice"].startswith("PASS")
+        and ev["G_j3v2_input_expected_harness"].startswith("PASS")
+        and ev["J_adversarial_release_tests"].startswith("PASS"))
 
     blockers = []
-    if ev["F_output_dependency_slice"] == "NOT_BUILT":
-        blockers.append("F_output_dependency_slice_NOT_BUILT")
-    if ev["G_j3v2_input_expected_harness"] == "NOT_BUILT":
-        blockers.append("G_j3v2_NOT_BUILT")
-    if ev["J_adversarial_release_tests"] == "NOT_BUILT":
-        blockers.append("J_adversarial_not_built")
+    for track, stage in TRACK_STAGE.items():
+        if track == "I_final_package":
+            continue  # not a J3 gate; reported, not blocking
+        status = ledger.status(j3_key, stage)
+        if status != "PASS":
+            blockers.append("%s_%s" % (track, status))
 
     doc = {"schema": "phase16o-readiness/1", "phase": "16O", "track": "K",
            "host_only": True, "gpu_execution_performed": False,

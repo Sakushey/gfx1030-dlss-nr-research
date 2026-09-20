@@ -1,0 +1,305 @@
+{
+  "schema": "bridge-payload-build-dag/1",
+  "title": "bridge payload build DAG",
+  "summary": "How bridge_gfx1030_fatbin.h is produced from a user-supplied copy of the proprietary distribution, and exactly which steps of that chain are reproducible from this published tree.",
+  "why_this_file_exists": "The published tree previously told the reader to generate the header 'using the tooling in ../isa/ and ../emulator/'. Neither directory contains a tool that emits a fatbin or a header, and the tools that do -- the phase-5/7/8/9/11 scripts -- are not published. The instruction was therefore not merely incomplete but wrong, and nothing recorded which historical directories the build actually depends on. This file records the real chain, marks every mandatory input, and names every step that cannot be reproduced from the published tree. The validator in tools/bridge_payload_dag.py fails closed on an undeclared unpublished input.",
+  "terminal": {
+    "node": "embed_header",
+    "artifact": "bridge_gfx1030_fatbin.h",
+    "published": false,
+    "publish_reason": "It embeds a proprietary code-object payload this project studies but does not distribute. Shipping a placeholder would silently change what the identity gate in registry_ident.cpp compares, which is worse than an explicit missing dependency.",
+    "consumer": "src/bridge/registry_ident.h includes it; without it the bridge sources do not compile, by design.",
+    "reproducibility": "NOT_REPRODUCIBLE_FROM_PUBLIC_TREE",
+    "blocking_gaps": [
+      "extract_bundle",
+      "source_elf",
+      "symbol_metadata",
+      "translate_isa",
+      "assemble_link"
+    ],
+    "blocking_gap_summary": "Five steps of this chain run tooling that is not published: the phase-11 locate/extract step, the phase-5 source-object extraction, the phase-9 metadata step, the phase-7/8 translation, and the phase-9 assemble/link step. A reader who supplies the proprietary input can reproduce the last four steps (profile identity, structural validation, replacement bundle, header) with the published tools; the translated object in the middle must be supplied by the reader as well. Every one of those five is declared on its own node below with the tool it needs, so no mandatory input is undocumented."
+  },
+  "stages": [
+    "installer_bundle",
+    "extraction",
+    "profile_identity",
+    "source_elf",
+    "symbol_metadata",
+    "translation",
+    "assembly_link",
+    "structural_validation",
+    "replacement_bundle",
+    "bridge_gfx1030_fatbin_h"
+  ],
+  "nodes": [
+    {
+      "id": "installer_bundle",
+      "stage": "installer_bundle",
+      "title": "The user's own copy of the distributed runtime",
+      "kind": "USER_SUPPLIED",
+      "path": "version.dll (a still copy of it: version.dll.static_copy)",
+      "historical_path": "phase5_exact_fragment/version.dll.static_copy",
+      "outputs": [
+        "a byte-for-byte copy of the user's own version.dll"
+      ],
+      "inputs": [],
+      "untracked": true,
+      "acquisition": "Supplied by the reader from their own installation of the distribution under study. This project does not ship it, does not mirror it, and does not record a download location for it. Copy the DLL out of your own install to any path you control; the copy is read-only for every step below.",
+      "note": "This is the only input that is neither produced by the DAG nor published. Everything else in the chain is derived from it, from a published tool, or from an external toolchain.",
+      "proprietary": true
+    },
+    {
+      "id": "extract_bundle",
+      "stage": "extraction",
+      "title": "Locate and extract the embedded clang offload bundle",
+      "kind": "DERIVED",
+      "inputs": [
+        "installer_bundle"
+      ],
+      "outputs": [
+        "the located bundle span, as a raw byte image",
+        "the file offset and RVA of each hipv4 site and of its __hip_fatbin wrapper"
+      ],
+      "tool": {
+        "kind": "UNPUBLISHED_TOOL",
+        "path": "phase11_fatbin/tools/p11_locate.py",
+        "historical_path": "phase11_fatbin/tools/",
+        "invocation": "python phase11_fatbin/tools/p11_locate.py",
+        "does": "Walks the PE section table of the still copy, finds every 'hipv4' magic site, computes each site's RVA, and finds the u64 wrapper pointer that names it. Host-only and read-only: it opens the copy with 'rb' and prints offsets.",
+        "why_unpublished": "It is the extraction half of a historical phase directory that the published tree does not carry. Its bundle-layout half is superseded by src/bridge/offload_bundle.py, which is published and stricter; the PE-walking half has no published equivalent.",
+        "documented": true,
+        "gap": "The extraction step's tool is not published. A reader must supply the extracted bundle image (or their own locator) rather than run a published command.",
+        "acquisition": "Run the phase-11 locator against your own copy, or supply the bundle image directly: it is a contiguous span that begins with the 24-byte magic '__CLANG_OFFLOAD_BUNDLE__'. Any reader that can find that magic in the PE finds the same span."
+      }
+    },
+    {
+      "id": "profile_identity",
+      "stage": "profile_identity",
+      "title": "Structural parse and target-profile identity",
+      "kind": "DERIVED",
+      "inputs": [
+        "extract_bundle"
+      ],
+      "outputs": [
+        "the declared entry count and the per-entry descriptor table",
+        "the target identifier 'hipv4-amdgcn-amd-amdhsa--gfx1030' and its payload offset and size",
+        "a structural parse that either succeeds or names the field that failed"
+      ],
+      "tool": {
+        "kind": "PUBLISHED_TOOL",
+        "path": "src/bridge/offload_bundle.py",
+        "invocation": "python -c \"import sys; sys.path.insert(0,'src/bridge'); import offload_bundle as ob; b=ob.parse_file(r'<bundle>'); print(b.declared_count, b.ids); ob.select_gfx1030(b)\"",
+        "does": "Parses exactly `count` descriptors, validates descriptor bounds, entry-id bounds, payload offsets, payload sizes, offset+size overflow, duplicate identifiers and non-empty payload overlap, then selects the gfx1030 target as a separate policy step.",
+        "why_published": "Host-only, stdlib-only, and carries no proprietary content: it is a reader for a documented container format. It is safe to publish precisely because it validates structure and never interprets the payload."
+      },
+      "note": "Structural failure and policy failure are different exception types (BundleFormatError vs BundleProfileError), so a report can distinguish 'this file is corrupt' from 'this file is the wrong architecture'."
+    },
+    {
+      "id": "source_elf",
+      "stage": "source_elf",
+      "title": "Extract the source-architecture code object (gfx1100) from the bundle",
+      "kind": "DERIVED",
+      "inputs": [
+        "extract_bundle",
+        "profile_identity"
+      ],
+      "outputs": [
+        "the source ELF code object as extracted",
+        "its disassembly, for study"
+      ],
+      "tool": {
+        "kind": "UNPUBLISHED_TOOL",
+        "path": "phase11_fatbin/tools/p11_locate.py",
+        "historical_path": "phase11_fatbin/tools/",
+        "invocation": "python phase11_fatbin/tools/p11_locate.py  (locate), then slice the located span at the descriptor's offset and size",
+        "does": "Slices the located span at the descriptor the previous step validated, yielding the source code object. The published offload_bundle.parse_file + Entry.payload combination performs the identical slice once the bundle span is available, and is the recommended replacement for this step.",
+        "why_unpublished": "The published tree carries no phase-5/phase-11 extraction driver; only the container reader was promoted.",
+        "documented": true,
+        "gap": "Producing the source ELF from the user's copy is not reproducible from the published tree alone. The container slice itself is reproducible with the published reader once the bundle span is in hand, so this gap is narrow: it is the PE walk, not the bundle parse.",
+        "acquisition": "Slice the validated entry: entry = offload_bundle.select_gfx1030(bundle); entry.payload(span) yields exactly the source code object, and it must start with the ELF magic 7f 45 4c 46."
+      }
+    },
+    {
+      "id": "symbol_metadata",
+      "stage": "symbol_metadata",
+      "title": "Kernel symbol map and resource metadata",
+      "kind": "DERIVED",
+      "inputs": [
+        "source_elf"
+      ],
+      "outputs": [
+        "phase9_symbol_map.csv: one row per kernel symbol",
+        "phase9_final_kernel_resources.csv: per-kernel register, LDS and wavefront resources",
+        "the decoded .note payload, as JSON"
+      ],
+      "tool": {
+        "kind": "UNPUBLISHED_TOOL",
+        "path": "phase9_static/tools/p9_meta.py",
+        "historical_path": "phase9_static/tools/",
+        "siblings": [
+          "p9_resources.py",
+          "p9_descriptor.py",
+          "msgpack_min.py"
+        ],
+        "invocation": "python phase9_static/tools/p9_meta.py",
+        "does": "Reads the ELF symbol table and the AMD metadata note of the source object and writes the kernel symbol map and the resource table. Reads msgpack through a minimal in-tree decoder rather than a dependency.",
+        "why_unpublished": "Part of a historical phase directory that is not carried in the published tree. It interprets AMD-specific metadata, and the decision to publish it was never made.",
+        "documented": true,
+        "gap": "The symbol/resource metadata step is not reproducible from the published tree. The needed facts are conventional ELF and AMD-note facts, so a reader has a route, but no published tool performs it.",
+        "acquisition": "Read the symbol table and the .note section of the source object with any ELF reader. The published src/isa/ tools model ISA semantics and are not a substitute for this step."
+      }
+    },
+    {
+      "id": "translate_isa",
+      "stage": "translation",
+      "title": "Translate the source ISA (gfx1100) to the target ISA (gfx1030)",
+      "kind": "DERIVED",
+      "inputs": [
+        "source_elf",
+        "symbol_metadata"
+      ],
+      "outputs": [
+        "the translated assembly for the target architecture",
+        "a per-instruction translation status table recording each substitution"
+      ],
+      "tool": {
+        "kind": "UNPUBLISHED_TOOL",
+        "path": "phase8_static/tools/8l_swin_fix.py",
+        "historical_path": "phase8_static/tools/",
+        "siblings": [
+          "disasm_lib.py",
+          "elf_meta.py",
+          "emu.py"
+        ],
+        "also_requires": "phase7_full_static/assembly/",
+        "invocation": "python phase8_static/tools/8l_swin_fix.py",
+        "does": "Rewrites the source assembly for the target architecture and records what was changed. The translation is the load-bearing intellectual step of the whole chain: it is where a target-architecture difference becomes a textual edit rather than a silent mismatch.",
+        "why_unpublished": "The largest gap in this DAG. The translation tooling lives across two historical phase directories (phase7_full_static/ and phase8_static/) and neither is published.",
+        "documented": true,
+        "gap": "Translation is NOT reproducible from the published tree. This is the step the misleading README sentence most directly obscured: src/isa/ carries ISA models and interpreters, not a gfx1100-to-gfx1030 translator, and src/emulator/ carries an emulator, not a translator either.",
+        "acquisition": "A reader must supply a translated object. Publishing the translator is a separate decision and is not claimed here."
+      }
+    },
+    {
+      "id": "assemble_link",
+      "stage": "assembly_link",
+      "title": "Assemble and link the translated module",
+      "kind": "DERIVED",
+      "inputs": [
+        "translate_isa"
+      ],
+      "outputs": [
+        "the linked code object for the target architecture"
+      ],
+      "tools": [
+        {
+          "kind": "UNPUBLISHED_TOOL",
+          "path": "phase9_static/tools/p9_emit.py",
+          "historical_path": "phase9_static/tools/",
+          "invocation": "python phase9_static/tools/p9_emit.py",
+          "does": "Emits the target assembly and the target metadata from the translated artefact.",
+          "documented": true,
+          "gap": "The emitted-assembly driver is unpublished, so the assembly/link step cannot be started from this tree.",
+          "acquisition": "Emit target assembly and metadata yourself, or supply the resulting object directly."
+        },
+        {
+          "kind": "UNPUBLISHED_TOOL",
+          "path": "phase9_static/tools/p9_bundle.py",
+          "historical_path": "phase9_static/tools/",
+          "invocation": "python phase9_static/tools/p9_bundle.py",
+          "does": "Drives the assembler and the linker over the emitted assembly and metadata, then audits the result.",
+          "documented": true,
+          "gap": "The link driver is unpublished. Only the vendor tools it calls are named and obtainable.",
+          "acquisition": "Run llvm-mc and ld.lld from your own ROCm install; the invocation strings are given on the EXTERNAL_TOOL entries below."
+        },
+        {
+          "kind": "EXTERNAL_TOOL",
+          "path": "llvm-mc.exe",
+          "historical_path": "C:\\Program Files\\AMD\\ROCm\\7.1\\bin\\",
+          "invocation": "llvm-mc -triple=amdgcn-amd-amdhsa -mcpu=gfx1030 -filetype=obj",
+          "does": "Assembles AMDGPU assembly to an object. Installed: this is part of a ROCm distribution, not a project artefact. The exact install root is a local build detail, not a property of the DAG.",
+          "why_external": "A vendor assembler. It cannot be published and does not need to be; it needs to be installed."
+        },
+        {
+          "kind": "EXTERNAL_TOOL",
+          "path": "ld.lld.exe",
+          "historical_path": "C:\\Program Files\\AMD\\ROCm\\7.1\\bin\\",
+          "invocation": "ld.lld -shared --no-undefined -plugin-opt=-amdgpu-internalize-symbols",
+          "does": "Links the object into a shared code object.",
+          "why_external": "A vendor linker, as above."
+        }
+      ],
+      "note": "The external tools are declared explicitly so that the unpublished part of this step is only the driver, never the vendor toolchain. Note that this project's runtime identity is pinned separately from the assembler's install root, and the two need not match."
+    },
+    {
+      "id": "structural_validation",
+      "stage": "structural_validation",
+      "title": "Validate the translated object before it is packaged",
+      "kind": "DERIVED",
+      "inputs": [
+        "assemble_link",
+        "profile_identity"
+      ],
+      "outputs": [
+        "a validation report naming every check performed",
+        "a pass/fail decision, with the failing field named on failure"
+      ],
+      "tool": {
+        "kind": "PUBLISHED_TOOL",
+        "path": "src/bridge/tools/p11_bundle_build.py",
+        "invocation": "python src/bridge/tools/p11_bundle_build.py --object <translated.co> --target-id hipv4-amdgcn-amd-amdhsa--gfx1030 --out <bundle>",
+        "does": "Checks the translated artefact is an ELF of the declared class and endianness, checks the target identifier is non-empty and unique, builds the bundle, and re-parses its own output with the published reader. A build whose own output does not re-parse is not written.",
+        "why_published": "Host-only and payload-agnostic: it checks shape and arithmetic, never the meaning of the instructions."
+      },
+      "note": "Validation is a separate node from packaging on purpose. The packager re-parses what it wrote, so a bundle that passes packaging has already passed the reader, but the validation node is where a failure is named before any bytes are written."
+    },
+    {
+      "id": "replacement_bundle",
+      "stage": "replacement_bundle",
+      "title": "Write the replacement clang offload bundle",
+      "kind": "DERIVED",
+      "inputs": [
+        "structural_validation",
+        "assemble_link",
+        "profile_identity"
+      ],
+      "outputs": [
+        "the replacement bundle, whose target entry carries the translated object"
+      ],
+      "tool": {
+        "kind": "PUBLISHED_TOOL",
+        "path": "src/bridge/tools/p11_bundle_build.py",
+        "invocation": "python src/bridge/tools/p11_bundle_build.py --object <translated.co> --out <bundle>",
+        "does": "Writes the 24-byte magic, the u64 ENTRY COUNT, and one descriptor per entry. It writes a count, never a version: the field after the magic is the number of descriptors that follow, and this project's history of writing 5 there is a recorded defect, not a format detail."
+      },
+      "measured_consequence": {
+        "what": "The historical rebuilt bundle carries 2 descriptors but writes 5 in the count field, and pads the table with a zero descriptor as a terminator. The published reader parses exactly `count` descriptors, so it rejects that file at entry 2 with 'identifier length is 0'.",
+        "historical_artifacts_measured": {
+          "phase11_fatbin/gfx1030_dlssnr.fatbin": "1258536 bytes; count field = 5; descriptors: host (idlen 30, payload 0), gfx1030 (idlen 33, payload 0x132428); then an all-zero descriptor. Rejected by src/bridge/offload_bundle.py.",
+          "phase11_fatbin/original_fatbin_extract.bin": "3982944 bytes; count field = 5; 5 real descriptors (host, gfx1100, gfx1101, gfx1102, gfx1201), table ends 0x136, payloads 0x1000-aligned, each starting 7f454c46. Parses cleanly, which is what a genuine count looks like."
+        },
+        "why_it_matters_for_reproducibility": "A header generated today by tools/p11_embed_header.py embeds a bundle built by tools/p11_bundle_build.py, whose count field says 2. That is 8 bytes different from the historical header over the same payload, so the payload hash and every identity constant derived from it differ. Anyone comparing a freshly generated header against an older one should expect that difference and should NOT 'fix' it by restoring the literal 5."
+      }
+    },
+    {
+      "id": "embed_header",
+      "stage": "bridge_gfx1030_fatbin_h",
+      "title": "Emit bridge_gfx1030_fatbin.h",
+      "kind": "DERIVED",
+      "inputs": [
+        "replacement_bundle"
+      ],
+      "outputs": [
+        "bridge_gfx1030_fatbin.h: the payload as a static unsigned char array plus the identity constants registry_ident.cpp compares"
+      ],
+      "tool": {
+        "kind": "PUBLISHED_TOOL",
+        "path": "src/bridge/tools/p11_embed_header.py",
+        "invocation": "python src/bridge/tools/p11_embed_header.py --bundle <bundle> --out bridge_gfx1030_fatbin.h",
+        "does": "Parses the bundle with the published reader, selects the gfx1030 entry, and emits the header. Refuses to emit anything if the bundle does not parse or does not carry the target.",
+        "why_published": "It emits a byte array and a hash; the payload it embeds comes from the caller's file, so publishing the emitter does not publish the payload."
+      },
+      "note": "The generated header is a build product of a proprietary input and is deliberately not published. The emitter being published does not change that; it makes the last step of the chain reproducible instead of folklore."
+    }
+  ]
+}

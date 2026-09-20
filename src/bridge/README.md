@@ -36,9 +36,24 @@ an explicit missing dependency — the gate would appear to work while
 verifying nothing.
 
 To build the bridge you must generate the header locally from **your own**
-code object, using the tooling in `../isa/` and `../emulator/`. The header
-supplies the byte payload and its identity constants for the version under
-study.
+code object. The last four steps of that chain run from this repository, with
+`tools/p11_bundle_build.py` and `tools/p11_embed_header.py`; the five steps
+before them do not, because the tooling that performed them lived in
+historical phase directories this repository does not publish, and neither
+does `../isa/` or `../emulator/` contain a payload builder.
+
+The full chain, with every mandatory input and every gap named, is in
+[`../../docs/bridge-payload-build-dag.md`](../../docs/bridge-payload-build-dag.md)
+and in machine-readable form in `bridge_payload_dag.json`. The short version:
+
+```powershell
+python tools/p11_bundle_build.py --object <your translated .co> --out gfx1030_dlssnr.fatbin
+python tools/p11_embed_header.py --bundle gfx1030_dlssnr.fatbin --out bridge_gfx1030_fatbin.h
+```
+
+```powershell
+python src/bridge/tools/bridge_payload_dag.py   # check the DAG is still honest
+```
 
 If your build fails with a missing `bridge_gfx1030_fatbin.h`, that is the
 documented behaviour, not a repository defect.

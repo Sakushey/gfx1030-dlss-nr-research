@@ -57,6 +57,156 @@
    "reason": "host-only regression that external workflow actions are pinned to immutable commit SHAs",
    "license": "Apache-2.0",
    "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "src/bridge/offload_bundle.py",
+   "reason": "F4: strict reader for the clang offload-bundle container (entry count, not a version; exactly `count` descriptors; no NUL-terminated identifiers)",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "src/bridge/bridge_payload_dag.json",
+   "reason": "F5: machine-readable bridge payload build DAG declaring every mandatory input and every unpublished step",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "src/bridge/tools/bridge_payload_dag.py",
+   "reason": "F5: validator for the build DAG; fails closed on an undocumented unpublished mandatory input",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "src/bridge/tools/p11_bundle_build.py",
+   "reason": "F5: packaging step of the build DAG -- validates a translated ELF and writes the replacement bundle, re-parsing its own output",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "src/bridge/tools/p11_embed_header.py",
+   "reason": "F5: final step of the build DAG -- emits bridge_gfx1030_fatbin.h from a caller-supplied bundle, refusing a bundle that does not parse or does not carry the target",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "docs/bridge-payload-build-dag.md",
+   "reason": "F5: the human-facing build DAG, naming every gap rather than implying the payload is reproducible from this tree",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tools/qualification_ledger.py",
+   "reason": "F7: artifact-backed qualification ledger keyed by source profile, object hashes, device, runtime, fixture, geometry and test version; seven independent stages and five statuses",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/wmma_numeric_compare.h",
+   "reason": "F2: the one finite-aware numerical comparator shared by the smoke test, the benchmark and the fragment fixture",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/wmma_fragment_ownership.h",
+   "reason": "F3: the wave32 fragment-ownership contract as a header, kept distinct from the dense arithmetic fixture",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/soft_wmma_fragment_test.cpp",
+   "reason": "F3: the fragment-ownership fixture (identity, one-hot, signed asymmetric, nonzero accumulator)",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/compare_driver.cpp",
+   "reason": "F2: host driver exercising every comparator rejection class plus the naive-comparator control",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/cxxtoolchain.py",
+   "reason": "test helper: locate a host C++ toolchain and compile-and-run a fixture",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/test_numeric_compare.py",
+   "reason": "F2 regression: 14 checks over the comparator, its negative controls and its consumers",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/test_fragment_ownership.py",
+   "reason": "F3 regression: 19 checks, including a Python simulation of the validated ownership procedure",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/test_launcher_contract.py",
+   "reason": "F1 regression: 28 checks over the launcher, including running the pre-fix revision as a negative control",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/test_offload_bundle.py",
+   "reason": "F4 regression: 43 checks over the bundle reader, including the pre-fix reader run verbatim",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/test_bridge_payload_dag.py",
+   "reason": "F5 regression: 40 checks, including twelve DAG controls each restoring a defect",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/test_emu_modes.py",
+   "reason": "F6 regression: 24 checks over the emulation modes, the declared-stub scan and a known nonzero WMMA product",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/test_qualification_ledger.py",
+   "reason": "F7 regression: 34 checks over the ledger vocabulary, its artifact checking and the J3 advance rules",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "src/qualification/__init__.py",
+   "reason": "package entry point for the fail-closed qualification primitives; exports the four-value result vocabulary, typed evidence, the gate/aggregate framework and the append-only attempt ledger",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository; extracted and sanitised from the originating research project's Phase-16AE qualification work"
+  },
+  {
+   "public_path": "src/qualification/evidence.py",
+   "reason": "typed results, coverage denominators and observations that can fail; implements the three rules that came out of a real fail-open readiness generator (observation failure is not a negative observation; a summary is not evidence; coverage is a first-class output)",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository; extracted and sanitised from the originating research project's Phase-16AE qualification work"
+  },
+  {
+   "public_path": "src/qualification/gates.py",
+   "reason": "the fail-closed gate framework: every gate is a predicate over recomputed evidence, a missing mandatory artefact is UNKNOWN and never PASS, and a gate with no negative control is an orphan that blocks the aggregate",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository; extracted and sanitised from the originating research project's Phase-16AE qualification work"
+  },
+  {
+   "public_path": "src/qualification/attempt_ledger.py",
+   "reason": "append-only, fsynced attempt ledger with a SHA-256 hash chain; the launch budget is derived from consuming records rather than being a literal, and a consuming record is written BEFORE the action it describes",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository; extracted and sanitised from the originating research project's Phase-16AE qualification work"
+  },
+  {
+   "public_path": "src/qualification/mutation.py",
+   "reason": "aggregate-level mutation harness: a mutation must move the FINAL verdict, not merely fail a child checker, and every gate must have at least one effective mutant or it is instrumentation theatre",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository; extracted and sanitised from the originating research project's Phase-16AE qualification work"
+  },
+  {
+   "public_path": "tests/host/test_qualification_framework.py",
+   "reason": "host-only tests for every refusal rule in the framework, each paired with the known-good case it must still accept",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository; extracted and sanitised from the originating research project's Phase-16AE qualification work"
   }
  ],
  "files": [
@@ -64,13 +214,13 @@
    "source_path": "phase16o_final/a_regression/rev_harness_fixed/emu.py",
    "public_path": "src/emulator/emu.py",
    "source_sha256": "c6afc641be3ce734789ec505eb7f23ca876db8787cbccb9f00426064edb17205",
-   "public_sha256": "d7b819d6679f76ec285617e60779a8f95aa6a1b005fb20c17778f6ee143b097c",
-   "bytes": 79724,
+   "public_sha256": "4cca203a04c784cfc4253f79df8f22ad4ae393aa09f5274acf0b40ff884f0bdc",
+   "bytes": 85782,
    "source_bytes": 81739,
    "publication_category": "PUBLIC_ORIGINAL_SOURCE",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "line endings normalised CRLF -> LF",
+   "modifications": "line endings normalised CRLF -> LF; published copy additionally carries F6 (explicit CONTROL_ONLY/NUMERICAL emulation modes with a declared-stub registry and an UNSUPPORTED_NUMERIC refusal), so it is no longer byte-identical to the private original",
    "reason": "original interoperability/emulation/validation tooling"
   },
   {
@@ -1130,13 +1280,13 @@
    "source_path": "phase16o_final/k_readiness.py",
    "public_path": "tools/k_readiness.py",
    "source_sha256": "c769ea77d7d26631fbc227d1c3649bd2f5c472d77d0f76173a5c9aef1261ef5a",
-   "public_sha256": "1ade19566d025d7d459917d9d20403917c431771b15715532e0cf5b7fa6a8dbf",
-   "bytes": 7148,
+   "public_sha256": "e0e0723a2bd5e51201ab945d48adf8f101b506400d2131202414ba7bd30ef719",
+   "bytes": 9889,
    "source_bytes": 7316,
    "publication_category": "PUBLIC_ORIGINAL_TOOLING",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "line endings normalised CRLF -> LF",
+   "modifications": "line endings normalised CRLF -> LF; published copy additionally carries F7 (the four literal track flags are read from audit/QUALIFICATION_LEDGER.json via tools/qualification_ledger.py instead of being typed in)",
    "reason": "original interoperability/emulation/validation tooling"
   },
   {
@@ -1156,39 +1306,39 @@
    "source_path": "soft_wmma_test.cpp",
    "public_path": "tests/soft_wmma_test.cpp",
    "source_sha256": "c559b161b05c8ebb7123e4638157805ba61f77e9ed99e13f658ea68409ec072a",
-   "public_sha256": "c559b161b05c8ebb7123e4638157805ba61f77e9ed99e13f658ea68409ec072a",
-   "bytes": 6489,
+   "public_sha256": "dfda440b5932dec4e79f7df5c1ba0b763a1c3e3f69d919a94ce23726f02865e5",
+   "bytes": 9451,
    "source_bytes": 6489,
    "publication_category": "PUBLIC_SAFE_TEST",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "none",
+   "modifications": "line endings normalised CRLF -> LF; published copy additionally carries F2 (now includes tests/wmma_numeric_compare.h and the dense-fixture disclaimer required by F3)",
    "reason": "original interoperability/emulation/validation tooling"
   },
   {
    "source_path": "soft_wmma_bench.cpp",
    "public_path": "tests/soft_wmma_bench.cpp",
    "source_sha256": "0bc7defd0092d070b768ade5a33718baf85a52d05ef986da3ad54a275992a696",
-   "public_sha256": "0bc7defd0092d070b768ade5a33718baf85a52d05ef986da3ad54a275992a696",
-   "bytes": 8585,
+   "public_sha256": "327498626a8ef4e4a4955ef9226805d09c45fece7d641afb20882ee728437e17",
+   "bytes": 11003,
    "source_bytes": 8585,
    "publication_category": "PUBLIC_SAFE_TEST",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "none",
+   "modifications": "line endings normalised CRLF -> LF; published copy additionally carries F2 (now includes tests/wmma_numeric_compare.h)",
    "reason": "original interoperability/emulation/validation tooling"
   },
   {
    "source_path": "run_test.ps1",
    "public_path": "scripts/run_test.ps1",
    "source_sha256": "02af7f8ccea46c9dd62c0327444570f7c2d8fb7ced6b9ecfcab3ea09adb94659",
-   "public_sha256": "02af7f8ccea46c9dd62c0327444570f7c2d8fb7ced6b9ecfcab3ea09adb94659",
-   "bytes": 3832,
+   "public_sha256": "e83afc4a667c6f5b4014dac26656bda44c6f39b0880aa7768503c4ef29fb6c6a",
+   "bytes": 11123,
    "source_bytes": 3832,
    "publication_category": "PUBLIC_ORIGINAL_TOOLING",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "none",
+   "modifications": "line endings normalised CRLF -> LF; published copy additionally carries F1 (source resolved under tests\\, a -BuildOnly switch, an explicit -HipRoot, and layered Visual Studio discovery)",
    "reason": "original interoperability/emulation/validation tooling"
   },
   {

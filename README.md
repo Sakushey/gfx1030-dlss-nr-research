@@ -94,6 +94,83 @@ help most — see [Where contributors can help](#where-contributors-can-help).
 
 ---
 
+## Hardware scope and generalization
+
+This project targets **one die**: `gfx1030` (RDNA2 / Navi 21). All physical
+evidence comes from a single card, an RX 6950 XT. Nothing here is a
+"supported GPU list" — no GPU has reached rung 3, so no card can be
+described as working. The narrower question, *would this generalize to
+other AMD GPUs*, does have a concrete answer, and it is worth stating
+before anyone buys hardware for it.
+
+| Die | Target | Example cards | Status for this project |
+| --- | --- | --- | --- |
+| Navi 21 | `gfx1030` | RX 6800 / 6800 XT / 6900 XT / 6950 XT, PRO W6800 | **the target** — the only die with physical evidence, and only one card of it |
+| Navi 22 | `gfx1031` | RX 6700 / 6700 XT / 6750 XT | **untested — most promising second device**; same ISA generation, next-largest cache |
+| Navi 23 | `gfx1032` | RX 6600 / 6600 XT / 6650 XT | **untested — plausible for host-side work**; much smaller cache, so tuning does not transfer |
+| Navi 24 | `gfx1034` | RX 6400 / 6500 XT | **untested — experimental**; 16 MB cache, 64-bit bus, 4 GB |
+| APUs | `gfx1033` / `gfx1035` / `gfx1036` | Van Gogh (Steam Deck), Rembrandt (Ryzen 6000 mobile), Raphael / Mendocino (Ryzen 7000 desktop, Ryzen 7020) | **untested — experimental**; integrated, shares system memory, thinnest tooling support |
+
+Published die specifications place Infinity Cache at 128 MB (Navi 21),
+80–96 MB (Navi 22), 32 MB (Navi 23), and 16 MB (Navi 24), with no dedicated
+cache on the APUs. For a workload like this one, cache capacity — not CU
+count — is what separates those dies: a translation tuned around Navi 21's
+cache will not hold on the smaller parts, and bandwidth-bound stages will
+scale worse than CU count suggests. These are platform specifications, not
+measurements taken by this project.
+
+### What carries, and what does not
+
+- **The ISA generation carries.** Every die above is `gfx10.3`, and LLVM
+  offers a single `gfx10-3-generic` target spanning `gfx1030`–`gfx1036`
+  (code object V6 and above). Within this family LLVM applies no target
+  restrictions — unlike `gfx10-1-generic`, which restricts dot-product
+  forms. A generic code object is still a lowest common denominator and is
+  not expected to match a per-die build.
+- **Per-die validation does not carry.** Optional instruction forms — this
+  workload's packed dot-product path among them — are exactly what a
+  generic target trades away, so forms must be verified per target rather
+  than assumed present.
+- **Runtime coverage is narrower than the hardware family.** On Windows,
+  only `gfx1030` (Navi 21) is fully supported by the HIP SDK; Navi 22 and
+  Navi 23 are runtime-only, with prebuilt HIP SDK libraries explicitly not
+  officially supported for them. This project does not depend on those
+  libraries, which is the main reason a Navi 22 card is a plausible second
+  device at all.
+- **Linux has an escape hatch that Windows does not.** On Linux,
+  `HSA_OVERRIDE_GFX_VERSION=10.3.0` is commonly used to run `gfx1030`-built
+  code on other RDNA2 cards. There is no equivalent here, so on Windows
+  each target is a separate build.
+- **The physical path is fail-closed to `gfx1030`.** Preflight stops if the
+  device does not report `gfx1030`, and the fatbin is selected by the target
+  identifier `hipv4-amdgcn-amd-amdhsa--gfx1030`. Running on another die is a
+  new translation plus an explicit preflight change — not a configuration
+  flag.
+- **Host-side work is per instruction form, not per die.** The emulator, the
+  oracle, and the ISA tooling are conditioned on the forms the traced
+  workload executes. Another die re-uses all of it, but brings its own
+  enumeration burden.
+
+### A second die is the highest-value physical contribution
+
+Reports are welcome through the
+[hardware test result](.github/ISSUE_TEMPLATE/hardware_test_result.yml)
+issue form, under the [hardware testing policy](docs/hardware-testing-policy.md):
+
+- **One tester per die.** A Navi 22 and a Navi 23 card would cover most of
+  the family beyond the target.
+- **A numerical check, not a launch report.** Compare against a host-computed
+  expected value: compiler targets can shift rounding in emulated
+  low-precision paths, and that is cheap to catch early.
+- **Full identity.** Device, the runtime version actually loaded, and the
+  artifact identity by content hash.
+
+A second-die result tests whether the current problem is a property of one
+card or of the family, which is why it is worth more right now than another
+run on the target card.
+
+---
+
 ## The proof ladder
 
 Every claim in this project sits on exactly one rung. **Passing one rung

@@ -310,9 +310,102 @@ class NotImpl(Exception):
     pass
 
 
+class UnsupportedNumeric(NotImpl):
+    """A numerically-required form whose handler computes nothing.
+
+    Raised instead of returning success. `.kind` is `UNSUPPORTED_NUMERIC` so
+    a report can name the outcome without reading the message, and it is a
+    subclass of `NotImpl` so existing `except NotImpl` callers keep catching
+    it -- a new exception that escaped those would turn a previously-reported
+    halt into a crash.
+    """
+
+    kind = "UNSUPPORTED_NUMERIC"
+
+    def __init__(self, mnemonic, reason):
+        super().__init__(f"{mnemonic}: {reason}")
+        self.mnemonic = mnemonic
+        self.reason = reason
+
+
+class EmuMode:
+    """What the emulator is being asked to model.
+
+    The distinction exists because two different questions get asked of this
+    file and they have different failure rules.
+
+      CONTROL_ONLY  -- "does the kernel reach the same control flow". A form
+                       whose numerical effect is not modelled may run as a
+                       value-stub, because control flow does not depend on
+                       the value it would have produced. This is the legacy
+                       behaviour, and it is the DEFAULT, so every existing
+                       caller is unchanged.
+
+      NUMERICAL     -- "does the kernel compute the right numbers". A stub is
+                       no longer admissible: an instruction that does not
+                       update its destination is indistinguishable from one
+                       that does, so a wrong answer and a right answer read
+                       the same in the trace. Any form this file has not
+                       implemented numerically raises `UnsupportedNumeric`
+                       instead of succeeding silently.
+    """
+
+    CONTROL_ONLY = "CONTROL_ONLY"
+    NUMERICAL = "NUMERICAL"
+    ALL = (CONTROL_ONLY, NUMERICAL)
+
+
+def value_stub(reason):
+    """Declare a handler that deliberately computes nothing.
+
+    The declaration is the point. An undeclared no-op is the defect this
+    exists to prevent -- `op_v_dot2c_f32_f16` and `op_ds_bpermute_b32` were
+    both bare `pass` bodies while being the arithmetic unit of the whole
+    soft-WMMA replacement, and nothing in the file said so. `Core.step`
+    refuses to dispatch a declared stub in NUMERICAL mode, and
+    `tests/host/test_emu_modes.py` parses this module and fails if any `op_`
+    handler is a no-op without carrying this declaration.
+    """
+    def decorate(fn):
+        fn.__emu_value_stub__ = reason
+        return fn
+    return decorate
+
+
+def is_value_stub(fn):
+    """The declared reason `fn` computes nothing, or None if it computes."""
+    return getattr(fn, "__emu_value_stub__", None)
+
+
+def control_only_vacuous(reason):
+    """Declare a handler whose having no effect is CORRECT, not a gap.
+
+    `s_nop`, `s_waitcnt`, `s_delay_alu`, `s_clause` and `s_sendmsg` are
+    scheduling and synchronisation instructions. They write no register
+    because they have no result, so refusing them in NUMERICAL mode would be
+    wrong: a numerical model that rejected `s_waitcnt` could not run any real
+    kernel. The distinction between this and `value_stub` is the whole point
+    of F6 -- "does nothing and should do nothing" is not "does nothing and
+    should have computed something".
+    """
+    def decorate(fn):
+        fn.__emu_control_vacuous__ = reason
+        return fn
+    return decorate
+
+
+def is_control_vacuous(fn):
+    """The declared reason `fn` legitimately has no numerical effect."""
+    return getattr(fn, "__emu_control_vacuous__", None)
+
+
 class Core:
     def __init__(self, prog, lanes=32, vgprs=192, lds_size=4096, lds_fill=0,
-                 wavebase=0, mem=None):
+                 wavebase=0, mem=None, mode=EmuMode.CONTROL_ONLY):
+        if mode not in EmuMode.ALL:
+            raise ValueError(
+                f"mode {mode!r} is not one of {EmuMode.ALL}")
+        self.mode = mode
         self.prog = prog
         self.pc = 0
         self.lanes = lanes
@@ -527,6 +620,18 @@ class Core:
                 addr = ins.get("address")
                 loc = f"{addr:#x}" if isinstance(addr, int) else ins.get("text", "?")
                 raise NotImpl(f"{loc} {ins['mnemonic']} {ins['operands']}")
+            if self.mode == EmuMode.NUMERICAL:
+                # The one gate that makes NUMERICAL mean something. It fires
+                # on the declaration rather than on the body, so a handler
+                # that is a stub and says so is refused, and a handler that
+                # is a stub without saying so is caught by the module scan in
+                # tests/host/test_emu_modes.py rather than by luck.
+                reason = is_value_stub(fn)
+                if reason is not None:
+                    addr = ins.get("address")
+                    loc = f"{addr:#x}" if isinstance(addr, int) else ins.get("text", "?")
+                    raise UnsupportedNumeric(
+                        mnem, f"{loc}: {reason}")
             fn(ins, ops)
 
     # ---------------- scalar ALU/control ----------------
@@ -1247,9 +1352,15 @@ class Core:
                 val = self.mem.get(addr, 0)
                 self.vset(lane, dst, val)
 
+    @value_stub(
+        "the native WMMA matrix multiply-accumulate is not modelled: this "
+        "handler leaves the accumulator untouched, so a NUMERICAL run would "
+        "report the pre-instruction value as the product. The comment that "
+        "used to sit here said it 'accumulates conservative junk' while the "
+        "body accumulated nothing, which is the silent-success shape this "
+        "mode exists to refuse. Use the software path (v_dot2c_f32_f16 plus "
+        "v_fmac_f32), which IS modelled, or supply a model.")
     def op_v_wmma_f32_16x16x16_f16(self, ins, ops):
-        # value-stub: no control impact; accumulate conservative junk so any
-        # later data-dependent compare still exercises all paths deterministically
         dst = ops[0]
         for lane in range(self.lanes):
             if (self.exec_l >> lane) & 1:
@@ -1353,6 +1464,10 @@ class Core:
                 b = self.vget(lane, src1) & U32
                 self.vset(lane, dst, fma_f32_bits(a, b, c))
 
+    @value_stub(
+        "registered placeholder with no body at all; it exists so a mnemonic "
+        "resolves, not so it computes. There is no arithmetic to be wrong "
+        "about, which is exactly why a NUMERICAL run must not accept it.")
     def op_v_wmma_stub(self, ins, ops):
         pass
 
@@ -1829,6 +1944,10 @@ class Core:
     def op_ds_store_b64(self, ins, ops):
         self._ds_store(ins, ops, 8)
 
+    @value_stub(
+        "ds_store_b128 writes 16 bytes to LDS and this handler writes none "
+        "of them. A NUMERICAL run over a kernel that uses it would see the "
+        "quadrant unchanged and read that as the store having happened.")
     def op_ds_store_b128(self, ins, ops):
         # vdst(4 dwords) via addr vreg + data in 4 consecutive? handle 2addr form
         for lane in range(self.lanes):
@@ -1898,12 +2017,23 @@ class Core:
 
     op_global_store_byte = op_global_store_b8
 
+    @value_stub(
+        "global_load_b8 loads a byte into a destination VGPR and this "
+        "handler leaves the destination untouched, so a NUMERICAL run would "
+        "read the pre-load value as the loaded byte. The one-byte width is "
+        "why it exists separately from op_global_load_u16.")
     def op_global_load_b8(self, ins, ops):
         pass
 
     op_global_load_byte = op_global_load_b8
 
     # ---- no-ops ----
+    @control_only_vacuous(
+        "scheduling and synchronisation forms: s_nop, s_waitcnt, "
+        "s_waitcnt_depctr, s_delay_alu, s_clause, s_sendmsg. They have no "
+        "destination, so having no effect is the correct model in both "
+        "modes rather than an unimplemented one. Note this is the one "
+        "handler shared by six mnemonics, so the declaration covers all six.")
     def _noop(self, ins, ops):
         pass
 

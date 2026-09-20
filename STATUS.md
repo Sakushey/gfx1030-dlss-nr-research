@@ -94,7 +94,10 @@ The project does **not** claim, and must not be described as claiming:
 - that any game frame has been produced;
 - that host-validated behaviour implies hardware-valid behaviour;
 - that the host emulator is a complete or formally verified gfx1030 model;
-- that the bridge makes any proprietary workload work.
+- that the bridge makes any proprietary workload work;
+- that any result obtained on the target card transfers to another RDNA2
+  die, to another Navi 21 card, or to any other AMD GPU. Hardware scope is
+  stated in [README.md](README.md#hardware-scope-and-generalization).
 
 ## Immediate next steps
 

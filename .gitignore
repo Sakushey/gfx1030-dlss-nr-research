@@ -21,6 +21,13 @@ temp/
 scratch/
 *.log
 
+# Compiled host fixtures. `scripts/run_test.ps1 -BuildOnly` compiles
+# `tests/soft_wmma_test.cpp` into an executable next to its source by default;
+# that artifact is a build product, never a published file, and
+# `scripts/verify_publication.py` fails closed on a committed `.exe`. Pass
+# `-Exe <path>` to put it outside the tree instead.
+tests/*.exe
+
 # Logs and captured output
 logs/
 *.csv.tmp
