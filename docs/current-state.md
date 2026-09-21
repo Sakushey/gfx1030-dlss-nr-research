@@ -15,7 +15,12 @@ statement that any particular game, mod, or workload works on `gfx1030`.
 | `gfx1030` ISA / code-object research | Active development | `HOST_STATIC` | Decode, rebuild, and memory-model gates exist; coverage tracks the traced workload, not the whole ISA. |
 | Host semantic emulator / oracles | Advanced experimental | `HOST_VALIDATED`, `HOST_INDEPENDENT_ORACLE` | Per-instruction records and an independently written scalar oracle; validated against each other on bounded cases. |
 | J3 host oracle | Available | `HOST_INDEPENDENT_ORACLE` | Runs host-only; no GPU needed. |
-| J3 physical execution | Kernel launches; liveness failure under investigation | `PHYSICAL_DIAGNOSTIC` | Reaches the physical HIP runtime; does not complete before the watchdog recovers the engine. |
+| Project-owned physical control | Completes on the device | `PHYSICAL_COMPLETED` | A project-owned control kernel completes in ~0.5 ms with guards intact and no watchdog event. This is a control, not the workload. |
+| J3 physical execution | Launches; does not complete under the canonical input | `PHYSICAL_DIAGNOSTIC` | Reaches the physical HIP runtime with the canonical input bytes and the measured argument block; the watchdog recovers the engine. Cause **unknown**. |
+| First native `gfx1030` operator | Host-qualified only | `HOST_VALIDATED` | Selected, with a reference model, a measured ABI, a liveness proof and a prepare-only chain. **Not** physically run. |
+| Vendor payload for RDNA2 | Absent | `HOST_STATIC` | The shipped bundle carries no `gfx1030`/`gfx1032`/generic `gfx10.3` code object. |
+| Vendor host acceptance of `gfx1030` | Rejected | `HOST_STATIC` | The host rejects `gfx1030` through separate architecture-name, capability and target-selection gates. |
+| Job-contract capture tooling | Built, not yet qualified | `HOST_STATIC` | A recorder exists and has been exercised against a mock backend only; it has never observed a real launch. |
 | T32 host model | Experimental | `HOST_STATIC` | An experimental host-side model; not qualified, not a basis for a physical claim. |
 | Complete neural job | Not qualified | `PROPOSED` | No complete neural job has been assembled and validated. |
 | D3D12/HIP interop | Not demonstrated | `PROPOSED` | Requirements are mapped only at the level of an open question; see [issue #7](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/7). |
@@ -60,6 +65,21 @@ point, the leading explanation:
 The remaining problem is therefore being treated as **physical kernel liveness**.
 These host-side checks do not prove that every hardware-specific synchronization,
 initialization, scheduling, or model-fidelity hypothesis is impossible.
+
+Two further results narrow it and are stated here because each removes a
+previously live explanation:
+
+- **Wrong input bytes are excluded.** An instrument defect once delivered three of
+  four input regions offset from what the fixture declares. That defect was located,
+  repaired, and re-measured: a run with the **correct** canonical bytes behaves the
+  same way. The timeout is therefore not explained by the historical mis-slice.
+- **The apparatus is exonerated.** A project-owned control kernel completes on the
+  same device, runtime and harness family in ~0.5 ms with no watchdog event and
+  clean guards — so the reset is a property of this workload, not of the setup.
+
+What is **not** established is the causal origin. The cause remains **unknown**,
+and it is recorded as unknown rather than assigned to the nearest plausible
+mechanism.
 
 A B2 post-barrier checkpoint diagnostic has now also triggered watchdog
 recovery. That narrows the first physical failure to the **first 3,547 modeled
@@ -152,4 +172,9 @@ line should be treated as a bug in the documentation, not as a stronger claim.
 - No D3D12/HIP interoperability has been demonstrated.
 - No temporal stability, no sustained gameplay, and no performance result exists.
 - The T32 host model is experimental and is not a qualification of anything.
-- The physical path reaches the runtime but has not completed a single workgroup.
+- The physical path reaches the runtime. A **project-owned control** has completed
+  on the device; the J3 workload under its canonical input has **not**. A control
+  completing is evidence about the apparatus, not about the workload.
+- The `gfx1030` physical cause for J3 is **unknown**. It is not attributed, and
+  the J3 physical track is frozen pending an independent audit.
+- No complete neural job has been assembled, and no frame has been presented.
