@@ -83,6 +83,81 @@ SHA40_RX = re.compile(r"^[0-9a-fA-F]{40}$")
 MAX_BYTES = 100 * 1024 * 1024
 WARN_BYTES = 1 * 1024 * 1024
 
+# --- independent corroboration ----------------------------------------------
+#
+# `audit/PUBLICATION_MANIFEST.json` is written by the same program that copies
+# the published bytes, so it cannot corroborate itself. A separate program --
+# one that never writes a published file -- measures both sides and records
+# what it found. This verifier consumes that artefact, and treats its `verified`
+# style summary fields as non-authoritative: the decision below is recomputed
+# from raw per-side facts plus bytes read here, so an author cannot satisfy the
+# verifier by asserting a flag.
+CORROBORATION_REL = "audit/PUBLICATION_BYTE_CORROBORATION.json"
+CORROBORATION_SCHEMA = 1
+
+CURATED_DERIVATIVE = (
+    "curated derivative: no mechanical transform reproduces the public bytes "
+    "from the private original"
+)
+
+#: Fields the manifest is FORBIDDEN to carry, because a measured fact asserted
+#: by the artefact's own author is not a measurement.
+FORBIDDEN_MANIFEST_FACT_KEYS = ("measured_byte_facts", "measured_facts",
+                                "corroborated_facts")
+
+#: The declarations a `modifications` value is allowed to make, and the exact
+#: chain each must be reproduced by. Anything not here is rejected.
+MECHANICAL_DECLARATIONS = {
+    "line endings normalised CRLF -> LF": ["crlf_to_lf"],
+    "UTF-8 BOM removed": ["strip_utf8_bom"],
+    "UTF-8 BOM added": ["add_utf8_bom"],
+}
+
+UTF8_BOM = b"\xef\xbb\xbf"
+UTF16LE_BOM = b"\xff\xfe"
+UTF16BE_BOM = b"\xfe\xff"
+UTF32LE_BOM = b"\xff\xfe\x00\x00"
+UTF32BE_BOM = b"\x00\x00\xfe\xff"
+_BOMS = ((UTF32LE_BOM, "UTF-32LE"), (UTF32BE_BOM, "UTF-32BE"),
+         (UTF8_BOM, "UTF-8"), (UTF16LE_BOM, "UTF-16LE"),
+         (UTF16BE_BOM, "UTF-16BE"))
+
+# --- private-identity leakage ------------------------------------------------
+#
+# The private tree's own name, and the LIVE private phase family. Historical
+# private-phase provenance tokens (`phase16o`, `phase16j`, ...) are pervasive in
+# the approved published tree -- 65 of 171 tracked files carry one -- and are
+# deliberately NOT matched here: rejecting them would reject the known-good
+# case. This constant is a maintenance point and must be advanced as the private
+# series advances.
+LIVE_PRIVATE_PHASE_FAMILY = "phase16a"
+
+IDENTITY_PATTERNS = {
+    "private_project_dirname": re.compile(rb"(?i)gfx1030_soft_wmma_phase1"),
+    "private_windows_profile": re.compile(
+        rb"(?i)[A-Z]:[\\/]+Users[\\/]+(?!<|path|your)"),
+    "live_private_phase_token": re.compile(
+        rb"(?i)" + LIVE_PRIVATE_PHASE_FAMILY.encode("ascii")),
+}
+
+#: A private absolute path written with TWO backslashes -- the form a C/C++
+#: string literal produces -- is invisible to the single-separator pattern
+#: `check_personal` uses. This pattern tolerates any escape depth. Measured: it
+#: finds a real private path in `src/bridge/bridge_config.h` that the
+#: single-separator pattern does not.
+PRIVATE_PATH_ANY_ESCAPE = re.compile(
+    rb"(?i)[A-Z]:[\\/]+Users[\\/]+(?!<|path|your)")
+
+#: Published files KNOWN to carry a private path, as an exact expected count of
+#: occurrences. A finite, reviewable register rather than a blanket exemption:
+#: a file NOT on this register fails, and a registered file whose count CHANGES
+#: fails too. Removing an entry from this register is publication work (the
+#: published bytes must change), which is why these are reported rather than
+#: silently accepted.
+KNOWN_PRIVATE_PATH_REGISTER = {
+    "src/bridge/bridge_config.h": 1,
+}
+
 RESULTS: list[tuple[bool, str, str]] = []
 
 
@@ -418,6 +493,439 @@ def check_no_pycache(files: list[str]) -> None:
            "; ".join(bad[:10]) if bad else "clean")
 
 
+# --- corroboration -----------------------------------------------------------
+
+
+def bom_label(data: bytes) -> str | None:
+    for prefix, name in _BOMS:
+        if len(prefix) >= 2 and data.startswith(prefix):
+            return name
+    return None
+
+
+def public_facts_bytes(data: bytes) -> dict:
+    """The public-side byte facts, recomputed here from the actual bytes."""
+    crlf = data.count(b"\r\n")
+    return {
+        "bytes": len(data),
+        "sha256": hashlib.sha256(data).hexdigest(),
+        "bom": bom_label(data),
+        "crlf_pairs": crlf,
+        "lone_lf": data.count(b"\n") - crlf,
+        "lone_cr": data.count(b"\r") - crlf,
+    }
+
+
+def read_public_facts(head: bool, rel: str) -> dict | None:
+    data = blob_bytes(head, rel)
+    return None if data is None else public_facts_bytes(data)
+
+
+def load_corroboration(head: bool):
+    """Return (artefact, error). Never raises."""
+    data = blob_bytes(head, CORROBORATION_REL)
+    if data is None:
+        scope = "HEAD" if head else "the working tree"
+        return None, f"{CORROBORATION_REL} is absent from {scope}"
+    try:
+        return json.loads(data.decode("utf-8")), None
+    except Exception as e:  # noqa: BLE001
+        return None, f"{CORROBORATION_REL} is unparseable: {e}"
+
+
+def _declaration_problems(rel: str, modification: str,
+                          src: dict, pub: dict, search: dict) -> list[str]:
+    """Is the declared transform TRUE of these measured facts?
+
+    A declaration is accepted only when it is the SHORTEST reproduction of the
+    public bytes from the source bytes. A longer chain that happens to end in
+    the right place would mean the declared transform is not what happened.
+    """
+    out: list[str] = []
+    chain = search.get("minimal_chain")
+    vocab = search.get("vocabulary")
+    if isinstance(vocab, list):
+        for op in (chain or []):
+            if op not in vocab:
+                out.append(f"{rel}: reproduction chain names {op!r}, which is "
+                           f"not in the declared vocabulary")
+
+    if modification == "none":
+        if src["sha256"] != pub["sha256"]:
+            out.append(f"{rel}: declares no transform but the measured bytes "
+                       f"differ ({src['sha256'][:12]} != {pub['sha256'][:12]})")
+        if not search.get("exact_match"):
+            out.append(f"{rel}: declares no transform but the search found no "
+                       f"reproduction at all")
+        return out
+
+    if modification == CURATED_DERIVATIVE:
+        if search.get("exact_match"):
+            out.append(
+                f"{rel}: declares a curated derivative, but "
+                f"{chain!r} reproduces the public bytes exactly, so a "
+                f"mechanical transform does exist and the declaration is false"
+            )
+        if src["sha256"] == pub["sha256"]:
+            out.append(f"{rel}: declares a curated derivative but the measured "
+                       f"bytes are identical")
+        return out
+
+    expected = MECHANICAL_DECLARATIONS.get(modification)
+    if expected is None:
+        out.append(f"{rel}: unrecognized modification declaration "
+                   f"{modification!r}")
+        return out
+
+    if chain != expected:
+        out.append(
+            f"{rel}: declares {modification!r}, which is {expected}, but the "
+            f"measured reproduction is {chain!r}"
+        )
+
+    if modification == "line endings normalised CRLF -> LF":
+        if src["crlf_pairs"] == 0:
+            out.append(f"{rel}: declares CRLF normalisation but the measured "
+                       f"source has 0 CRLF pairs, so the declaration is false")
+        if pub["crlf_pairs"] != 0:
+            out.append(f"{rel}: declares CRLF normalisation but the measured "
+                       f"public copy still has {pub['crlf_pairs']} CRLF pairs")
+    elif modification == "UTF-8 BOM removed":
+        if src["bom"] != "UTF-8":
+            out.append(f"{rel}: declares a UTF-8 BOM was removed but the "
+                       f"measured source BOM is {src['bom']!r}")
+        if pub["bom"] is not None:
+            out.append(f"{rel}: declares a UTF-8 BOM was removed but the "
+                       f"measured public BOM is {pub['bom']!r}")
+    elif modification == "UTF-8 BOM added":
+        if src["bom"] is not None:
+            out.append(f"{rel}: declares a UTF-8 BOM was added but the "
+                       f"measured source BOM is {src['bom']!r}")
+        if pub["bom"] != "UTF-8":
+            out.append(f"{rel}: declares a UTF-8 BOM was added but the "
+                       f"measured public BOM is {pub['bom']!r}")
+    return out
+
+
+def corroboration_problems(manifest: dict, corroboration, facts_of,
+                           load_error: str | None = None) -> list[str]:
+    """Pure decision function. Reads NO `verified`-style summary field.
+
+    `facts_of(public_path)` must return the public-side byte facts read from
+    the artefact under audit, or None. The verdict is a function of the
+    manifest facts, the corroborator's raw per-side facts, and bytes read by
+    the caller -- nothing else, so a flag cannot satisfy it.
+    """
+    if corroboration is None:
+        return [load_error or f"{CORROBORATION_REL} is unavailable"]
+
+    problems: list[str] = []
+    if corroboration.get("schema") != CORROBORATION_SCHEMA:
+        problems.append(f"{CORROBORATION_REL}: schema is "
+                        f"{corroboration.get('schema')!r}, expected "
+                        f"{CORROBORATION_SCHEMA}")
+
+    producer = str(corroboration.get("generated_by") or "")
+    independent_of = str(corroboration.get("independent_of") or "")
+    if not producer:
+        problems.append(f"{CORROBORATION_REL}: declares no generator")
+    if not independent_of:
+        problems.append(f"{CORROBORATION_REL}: does not declare what it is "
+                        f"independent of")
+    # The producer must not BE the manifest author. `independent_of` is
+    # expected to NAME the manifest author -- that is what it is for -- so it is
+    # checked for presence, not for the author's name.
+    if "build_public" in producer:
+        problems.append(f"{CORROBORATION_REL}: generated_by names the manifest "
+                        f"author, so it corroborates nothing")
+    if producer and producer == independent_of:
+        problems.append(f"{CORROBORATION_REL}: generator and the thing it "
+                        f"claims independence from are the same")
+
+    vocab = corroboration.get("defect_vocabulary")
+    if not isinstance(vocab, list) or not vocab:
+        problems.append(f"{CORROBORATION_REL}: declares no defect vocabulary, "
+                        f"so a 'no transform found' result would be vacuous")
+
+    pairs = corroboration.get("pairs")
+    if not isinstance(pairs, list) or not pairs:
+        problems.append(f"{CORROBORATION_REL}: contains no pairs")
+        return problems
+
+    by_path = {}
+    for p in pairs:
+        if isinstance(p, dict) and isinstance(p.get("public_path"), str):
+            by_path[p["public_path"]] = p
+
+    entries = manifest.get("files") or []
+    mapped = {}
+
+    # The manifest may not assert a measured fact; it may only point at one.
+    for entry in entries:
+        rel = entry.get("public_path")
+        if not isinstance(rel, str):
+            continue
+        mapped[rel] = entry
+        for key in FORBIDDEN_MANIFEST_FACT_KEYS:
+            if key in entry:
+                problems.append(
+                    f"{rel}: manifest asserts measured facts in {key!r}; "
+                    f"measured facts must come from the corroboration artefact"
+                )
+
+    for rel, entry in sorted(mapped.items()):
+        rec = by_path.get(rel)
+        if rec is None:
+            problems.append(f"{rel}: mapped in the manifest but absent from "
+                            f"{CORROBORATION_REL}, so nothing corroborates it")
+            continue
+        if rec.get("public_path") != entry.get("public_path"):
+            problems.append(f"{rel}: corroboration pair is mis-keyed")
+            continue
+
+        src = rec.get("source")
+        pub = rec.get("public")
+        search = rec.get("transform_search")
+        if not isinstance(src, dict) or not isinstance(pub, dict) \
+                or not isinstance(search, dict):
+            problems.append(f"{rel}: corroboration pair is unmeasured or "
+                            f"malformed")
+            continue
+        if search.get("n_chains_searched", 0) <= 0:
+            problems.append(f"{rel}: corroboration searched no chains")
+        if rec.get("source_path") != entry.get("source_path"):
+            problems.append(f"{rel}: corroboration maps a different source "
+                            f"path than the manifest")
+
+        # manifest vs corroborator, source side (facts the verifier cannot read)
+        if entry.get("source_sha256") != src.get("sha256"):
+            problems.append(
+                f"{rel}: manifest source_sha256 "
+                f"{str(entry.get('source_sha256'))[:12]} does not match the "
+                f"corroborated source hash {str(src.get('sha256'))[:12]}"
+            )
+        if entry.get("source_bytes") != src.get("bytes"):
+            problems.append(f"{rel}: manifest source_bytes "
+                            f"{entry.get('source_bytes')} does not match the "
+                            f"corroborated {src.get('bytes')}")
+
+        # manifest vs corroborator vs THE ACTUAL PUBLIC BYTES, read here
+        actual = facts_of(rel)
+        if actual is None:
+            problems.append(f"{rel}: mapped public file could not be read")
+            continue
+        for key in ("bytes", "sha256", "bom", "crlf_pairs", "lone_lf",
+                    "lone_cr"):
+            if actual.get(key) != pub.get(key):
+                problems.append(
+                    f"{rel}: corroborated public {key}={pub.get(key)!r} does "
+                    f"not match the file ({actual.get(key)!r})"
+                )
+        if entry.get("public_sha256") != actual["sha256"]:
+            problems.append(
+                f"{rel}: published bytes do not match the manifest's recorded "
+                f"public_sha256 ({actual['sha256'][:12]} != "
+                f"{str(entry.get('public_sha256'))[:12]})"
+            )
+        if entry.get("bytes") != actual["bytes"]:
+            problems.append(f"{rel}: manifest bytes={entry.get('bytes')} does "
+                            f"not match the published file ({actual['bytes']})")
+
+        modification = entry.get("modifications", "none")
+        problems.extend(_declaration_problems(rel, modification, src, pub,
+                                              search))
+
+        if modification == CURATED_DERIVATIVE:
+            ref = entry.get("measured_byte_facts_ref")
+            if not isinstance(ref, dict):
+                problems.append(f"{rel}: a curated derivative must carry a "
+                                f"measured_byte_facts_ref pointer")
+            elif ref.get("artefact") != CORROBORATION_REL:
+                problems.append(f"{rel}: measured_byte_facts_ref names "
+                                f"{ref.get('artefact')!r}, not "
+                                f"{CORROBORATION_REL!r}")
+            elif (ref.get("select") or {}).get("public_path") != rel:
+                problems.append(f"{rel}: measured_byte_facts_ref selects a "
+                                f"different public path")
+            if not entry.get("declared_intent"):
+                problems.append(f"{rel}: a curated derivative must carry "
+                                f"declared_intent")
+            if not entry.get("provenance_note"):
+                problems.append(f"{rel}: a curated derivative must carry "
+                                f"provenance_note")
+
+    unlisted = sorted(set(by_path) - set(mapped))
+    if unlisted:
+        problems.append(f"{CORROBORATION_REL}: corroborates "
+                        f"{len(unlisted)} path(s) the manifest does not map: "
+                        + "; ".join(unlisted[:10]))
+    return problems
+
+
+def check_corroboration(head: bool) -> None:
+    data = blob_bytes(head, "audit/PUBLICATION_MANIFEST.json")
+    if not data:
+        record(False, "independent corroboration",
+               "publication manifest missing, so nothing could be corroborated")
+        return
+    try:
+        manifest = json.loads(data.decode("utf-8"))
+    except Exception as e:  # noqa: BLE001
+        record(False, "independent corroboration", f"manifest unparseable: {e}")
+        return
+    corroboration, err = load_corroboration(head)
+    problems = corroboration_problems(
+        manifest, corroboration, lambda rel: read_public_facts(head, rel), err)
+    record(not problems, "independent corroboration",
+           ("; ".join(problems[:10]) + (f" (+{len(problems) - 10} more)"
+                                        if len(problems) > 10 else ""))
+           if problems else
+           f"{len(manifest.get('files') or [])} mapped pairs corroborated "
+           f"against {CORROBORATION_REL}")
+
+
+# --- private-identity leakage ------------------------------------------------
+
+
+def identity_strings(manifest: dict, corroboration) -> list[tuple[str, str]]:
+    """(where, value) for every prose string in the publication artefacts.
+
+    Every string is in scope, including values reached through a `source_path`
+    key. An earlier revision exempted `source_path` on the theory that its
+    historical phase tokens were approved provenance; MEASURED, the exemption
+    was unnecessary and was removed: all 176 source_path values are plain
+    relative paths, and scanning them changes the verdict on the known-good
+    artefacts not at all (0 hits either way). The patterns match the private
+    tree's own name and the LIVE phase family only, so a historical token such
+    as `phase16o` is not a match and never was. Keeping the exemption would have
+    meant a new mapping whose source_path named the live private phase would be
+    published unquestioned.
+    """
+    out: list[tuple[str, str]] = []
+
+    def walk(obj, where: str) -> None:
+        if isinstance(obj, str):
+            out.append((where, obj))
+        elif isinstance(obj, dict):
+            for k, v in obj.items():
+                walk(v, f"{where}.{k}")
+        elif isinstance(obj, list):
+            for i, v in enumerate(obj):
+                walk(v, f"{where}[{i}]")
+
+    walk(manifest, "PUBLICATION_MANIFEST.json")
+    if isinstance(corroboration, dict):
+        walk(corroboration, "PUBLICATION_BYTE_CORROBORATION.json")
+    return out
+
+
+def publication_identity_problems(manifest: dict, corroboration) -> list[str]:
+    """Private-identity leakage in strings an author writes by hand.
+
+    Matched text is never echoed -- only the location, the pattern name, and a
+    redacted fingerprint, matching this file's existing discipline.
+    """
+    problems: list[str] = []
+    for where, value in identity_strings(manifest, corroboration):
+        raw = value.encode("utf-8", "replace")
+        for name, rx in IDENTITY_PATTERNS.items():
+            m = rx.search(raw)
+            if m:
+                fp = hashlib.sha256(m.group(0)).hexdigest()[:12]
+                problems.append(f"{where} [{name} redacted:{fp}]")
+    return problems
+
+
+def check_publication_identity(head: bool) -> None:
+    data = blob_bytes(head, "audit/PUBLICATION_MANIFEST.json")
+    corroboration, _err = load_corroboration(head)
+    if not data:
+        record(False, "private-identity leakage",
+               "publication manifest missing, so nothing could be scanned")
+        return
+    try:
+        manifest = json.loads(data.decode("utf-8"))
+    except Exception as e:  # noqa: BLE001
+        record(False, "private-identity leakage", f"manifest unparseable: {e}")
+        return
+    problems = publication_identity_problems(manifest, corroboration)
+    record(not problems, "private-identity leakage",
+           "; ".join(problems[:10]) if problems else
+           f"{len(identity_strings(manifest, corroboration))} prose strings "
+           f"clean of the private tree name and the live private phase")
+
+
+def published_private_path_problems(manifest: dict, facts_of) -> list[str]:
+    """Escape-aware private-path scan over the published bytes.
+
+    Every mapped public file is scanned. A file absent from
+    KNOWN_PRIVATE_PATH_REGISTER must have zero occurrences; a registered file
+    must have exactly the recorded count, so the register cannot silently
+    absorb a new occurrence or be quietly outgrown.
+    """
+    problems: list[str] = []
+    counts: dict[str, int] = {}
+    entries = manifest.get("files") or []
+    for entry in entries:
+        rel = entry.get("public_path")
+        if not isinstance(rel, str):
+            continue
+        data = facts_of(rel)
+        if data is None:
+            continue  # unreadable files are reported by the corroboration check
+        n = len(list(PRIVATE_PATH_ANY_ESCAPE.finditer(data)))
+        if n:
+            counts[rel] = n
+
+    for rel, n in sorted(counts.items()):
+        expected = KNOWN_PRIVATE_PATH_REGISTER.get(rel)
+        if expected is None:
+            problems.append(f"{rel}: {n} private absolute path(s) in the "
+                            f"published bytes and the file is not on the "
+                            f"known-leak register")
+        elif n != expected:
+            problems.append(f"{rel}: register records {expected} private "
+                            f"absolute path(s), the published bytes carry {n}")
+
+    for rel, expected in sorted(KNOWN_PRIVATE_PATH_REGISTER.items()):
+        if rel not in counts:
+            problems.append(f"{rel}: on the known-leak register with "
+                            f"{expected} occurrence(s) but none was found; the "
+                            f"register is stale and must be re-reviewed")
+    return problems
+
+
+def _published_bytes_reader(head: bool):
+    cache: dict[str, bytes | None] = {}
+
+    def read(rel: str):
+        if rel not in cache:
+            cache[rel] = blob_bytes(head, rel)
+        return cache[rel]
+
+    return read
+
+
+def check_private_path_register(head: bool, files: list[str]) -> None:
+    data = blob_bytes(head, "audit/PUBLICATION_MANIFEST.json")
+    if not data:
+        record(False, "known private-path register",
+               "publication manifest missing, so nothing could be scanned")
+        return
+    try:
+        manifest = json.loads(data.decode("utf-8"))
+    except Exception as e:  # noqa: BLE001
+        record(False, "known private-path register", f"manifest unparseable: {e}")
+        return
+    problems = published_private_path_problems(
+        manifest, _published_bytes_reader(head))
+    registered = ", ".join(f"{k} ({v})" for k, v in
+                           sorted(KNOWN_PRIVATE_PATH_REGISTER.items()))
+    record(not problems, "known private-path register",
+           ("; ".join(problems[:10]) + "; " if problems else "")
+           + f"on the register: {registered}")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--git-head", action="store_true",
@@ -444,6 +952,9 @@ def main() -> int:
     check_yaml(args.git_head, files)
     check_required(files)
     check_manifest(args.git_head, files)
+    check_corroboration(args.git_head)
+    check_publication_identity(args.git_head)
+    check_private_path_register(args.git_head, files)
     check_readme_links(args.git_head)
     check_workflow_pins(args.git_head, files)
     check_no_pycache(files)

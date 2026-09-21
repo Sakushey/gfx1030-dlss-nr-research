@@ -47,8 +47,8 @@ The full chain, with every mandatory input and every gap named, is in
 and in machine-readable form in `bridge_payload_dag.json`. The short version:
 
 ```powershell
-python tools/p11_bundle_build.py --object <your translated .co> --out gfx1030_dlssnr.fatbin
-python tools/p11_embed_header.py --bundle gfx1030_dlssnr.fatbin --out bridge_gfx1030_fatbin.h
+python src/bridge/tools/p11_bundle_build.py --object <your translated .co> --out gfx1030_dlssnr.fatbin
+python src/bridge/tools/p11_embed_header.py --bundle gfx1030_dlssnr.fatbin --out bridge_gfx1030_fatbin.h
 ```
 
 ```powershell

@@ -242,7 +242,7 @@ class TestNegativeControls(unittest.TestCase):
         missing stage -- otherwise a future contributor could advance J3 by
         recording the stages it does own.
         """
-        key = a_key(source_profile="astra-final-head")
+        key = a_key(source_profile="external-final-head-gfx1030")
         led = ql.Ledger(passing_records(key, self.tmp), self.tmp)
         self.assertEqual(
             [led.status(key, s) for s in ALL_PASS_STAGES],

@@ -1,0 +1,5241 @@
+{
+  "schema": 1,
+  "generated_by": "p16_publication_byte_corroborator.py",
+  "independent_of": "audit/_build/build_public.py (the manifest author)",
+  "subject": "every source/public pair mapped by audit/PUBLICATION_MANIFEST.json",
+  "defect_vocabulary": [
+    "strip_utf8_bom",
+    "add_utf8_bom",
+    "crlf_to_lf",
+    "lf_to_crlf"
+  ],
+  "defect_vocabulary_semantics": {
+    "strip_utf8_bom": "drop a leading EF BB BF if present",
+    "add_utf8_bom": "prepend EF BB BF if absent",
+    "crlf_to_lf": "replace every CRLF pair with a single LF",
+    "lf_to_crlf": "normalise CRLF to LF first, then expand every LF to CRLF (idempotent on already-CRLF input)"
+  },
+  "authority_note": "The raw per-side facts and the transform search in this file are the authority. `claim_assessment` is informational and is marked non-authoritative: no checker may treat it as evidence.",
+  "mapped_pairs": 88,
+  "mechanical_relation_counts": {
+    "NONE_FOUND": 5,
+    "IDENTICAL": 75,
+    "MECHANICAL:crlf_to_lf": 8
+  },
+  "pairs": [
+    {
+      "source_path": "phase16o_final/a_regression/rev_harness_fixed/emu.py",
+      "public_path": "src/emulator/emu.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "curated derivative: no mechanical transform reproduces the public bytes from the private original",
+      "manifest_source_sha256": "c6afc641be3ce734789ec505eb7f23ca876db8787cbccb9f00426064edb17205",
+      "manifest_public_sha256": "4cca203a04c784cfc4253f79df8f22ad4ae393aa09f5274acf0b40ff884f0bdc",
+      "manifest_source_bytes": 81739,
+      "manifest_public_bytes": 85782,
+      "source": {
+        "bytes": 81739,
+        "sha256": "c6afc641be3ce734789ec505eb7f23ca876db8787cbccb9f00426064edb17205",
+        "bom": null,
+        "crlf_pairs": 2015,
+        "lone_lf": 0,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 85782,
+        "sha256": "4cca203a04c784cfc4253f79df8f22ad4ae393aa09f5274acf0b40ff884f0bdc",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 2145,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": false,
+        "n_matching_chains": 0,
+        "minimal_chain": null,
+        "minimal_chain_length": null,
+        "matching_chains": [],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "NONE_FOUND",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "no chain in the defect vocabulary reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "phase8_static/tools/disasm_lib.py",
+      "public_path": "src/emulator/disasm_lib.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "b67eca4230ba09e5b20ef82368a4620db7bf8c77ed293b2702d8559f2e62583d",
+      "manifest_public_sha256": "b67eca4230ba09e5b20ef82368a4620db7bf8c77ed293b2702d8559f2e62583d",
+      "manifest_source_bytes": 6497,
+      "manifest_public_bytes": 6497,
+      "source": {
+        "bytes": 6497,
+        "sha256": "b67eca4230ba09e5b20ef82368a4620db7bf8c77ed293b2702d8559f2e62583d",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 154,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 6497,
+        "sha256": "b67eca4230ba09e5b20ef82368a4620db7bf8c77ed293b2702d8559f2e62583d",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 154,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14d_static/tools/p14d_kd.py",
+      "public_path": "src/emulator/p14d_kd.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "3300c84daa1c6c606f2bfe15a3685198504ae1fafdd3ee583a6523ffc65092ab",
+      "manifest_public_sha256": "3300c84daa1c6c606f2bfe15a3685198504ae1fafdd3ee583a6523ffc65092ab",
+      "manifest_source_bytes": 3966,
+      "manifest_public_bytes": 3966,
+      "source": {
+        "bytes": 3966,
+        "sha256": "3300c84daa1c6c606f2bfe15a3685198504ae1fafdd3ee583a6523ffc65092ab",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 106,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 3966,
+        "sha256": "3300c84daa1c6c606f2bfe15a3685198504ae1fafdd3ee583a6523ffc65092ab",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 106,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14d_static/tools/p14d_dec.py",
+      "public_path": "src/emulator/p14d_dec.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "cbaf3e910be6125b351c3cf9504c53b7bf22048eef8b9013ec77c73f00170c8b",
+      "manifest_public_sha256": "cbaf3e910be6125b351c3cf9504c53b7bf22048eef8b9013ec77c73f00170c8b",
+      "manifest_source_bytes": 4779,
+      "manifest_public_bytes": 4779,
+      "source": {
+        "bytes": 4779,
+        "sha256": "cbaf3e910be6125b351c3cf9504c53b7bf22048eef8b9013ec77c73f00170c8b",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 139,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 4779,
+        "sha256": "cbaf3e910be6125b351c3cf9504c53b7bf22048eef8b9013ec77c73f00170c8b",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 139,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14d8_static/tools/p14d8_core.py",
+      "public_path": "src/emulator/p14d8_core.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "line endings normalised CRLF -> LF",
+      "manifest_source_sha256": "c4ce4d9e3633999f7cf3bd54f10303c61cf115fb6c2bc920768d55c0541faf24",
+      "manifest_public_sha256": "20ab8ade7dfc5bfdfe0637dc665bbc3ecbfb4c58fdea14fa2c2ab3be4b77d72a",
+      "manifest_source_bytes": 31109,
+      "manifest_public_bytes": 30315,
+      "source": {
+        "bytes": 31109,
+        "sha256": "c4ce4d9e3633999f7cf3bd54f10303c61cf115fb6c2bc920768d55c0541faf24",
+        "bom": null,
+        "crlf_pairs": 794,
+        "lone_lf": 0,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 30315,
+        "sha256": "20ab8ade7dfc5bfdfe0637dc665bbc3ecbfb4c58fdea14fa2c2ab3be4b77d72a",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 794,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 21,
+        "minimal_chain": [
+          "crlf_to_lf"
+        ],
+        "minimal_chain_length": 1,
+        "matching_chains": [
+          [
+            "crlf_to_lf"
+          ]
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "MECHANICAL:crlf_to_lf",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "CRLF -> LF alone reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "phase14d11_static/tools/p14d11_emu.py",
+      "public_path": "src/emulator/p14d11_emu.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "0324f659bff55d5191b41bfe64429475f2bddfc48f96093456a6c5e10def2aac",
+      "manifest_public_sha256": "0324f659bff55d5191b41bfe64429475f2bddfc48f96093456a6c5e10def2aac",
+      "manifest_source_bytes": 20193,
+      "manifest_public_bytes": 20193,
+      "source": {
+        "bytes": 20193,
+        "sha256": "0324f659bff55d5191b41bfe64429475f2bddfc48f96093456a6c5e10def2aac",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 479,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 20193,
+        "sha256": "0324f659bff55d5191b41bfe64429475f2bddfc48f96093456a6c5e10def2aac",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 479,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16k_pretest/tools/p16k_recorder.py",
+      "public_path": "src/emulator/p16k_recorder.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "2e17e920afea72926e775f5220817ba5ec70c48331eec6be616e140287a19bec",
+      "manifest_public_sha256": "2e17e920afea72926e775f5220817ba5ec70c48331eec6be616e140287a19bec",
+      "manifest_source_bytes": 14423,
+      "manifest_public_bytes": 14423,
+      "source": {
+        "bytes": 14423,
+        "sha256": "2e17e920afea72926e775f5220817ba5ec70c48331eec6be616e140287a19bec",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 373,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 14423,
+        "sha256": "2e17e920afea72926e775f5220817ba5ec70c48331eec6be616e140287a19bec",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 373,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14e_static/tools/p14e_emu.py",
+      "public_path": "src/emulator/p14e_emu.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "line endings normalised CRLF -> LF",
+      "manifest_source_sha256": "4ce29b62bd354c799729d34bc3e24179424eded57e48fbcd658034a04ffe8e9c",
+      "manifest_public_sha256": "bd57a73e33dc3d454c5ae04aa317b34f5a69a6236e41fa5037cb94a1258bf877",
+      "manifest_source_bytes": 45713,
+      "manifest_public_bytes": 44646,
+      "source": {
+        "bytes": 45713,
+        "sha256": "4ce29b62bd354c799729d34bc3e24179424eded57e48fbcd658034a04ffe8e9c",
+        "bom": null,
+        "crlf_pairs": 1067,
+        "lone_lf": 0,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 44646,
+        "sha256": "bd57a73e33dc3d454c5ae04aa317b34f5a69a6236e41fa5037cb94a1258bf877",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 1067,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 21,
+        "minimal_chain": [
+          "crlf_to_lf"
+        ],
+        "minimal_chain_length": 1,
+        "matching_chains": [
+          [
+            "crlf_to_lf"
+          ]
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "MECHANICAL:crlf_to_lf",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "CRLF -> LF alone reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "phase14e_static/tools/p14e_lds_audit.py",
+      "public_path": "src/emulator/p14e_lds_audit.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "4ddb60479922e5d37fbe1dbfeafbf9e9559e619cfd06b42b430626b6c127f52e",
+      "manifest_public_sha256": "4ddb60479922e5d37fbe1dbfeafbf9e9559e619cfd06b42b430626b6c127f52e",
+      "manifest_source_bytes": 6304,
+      "manifest_public_bytes": 6304,
+      "source": {
+        "bytes": 6304,
+        "sha256": "4ddb60479922e5d37fbe1dbfeafbf9e9559e619cfd06b42b430626b6c127f52e",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 154,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 6304,
+        "sha256": "4ddb60479922e5d37fbe1dbfeafbf9e9559e619cfd06b42b430626b6c127f52e",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 154,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14eg_tools/p14e_emu_g.py",
+      "public_path": "src/emulator/p14e_emu_g.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "46c972172fd3a8fd0a507fb6b99d0677afc5fe7b4d8ea49093b95dd761d40cb2",
+      "manifest_public_sha256": "46c972172fd3a8fd0a507fb6b99d0677afc5fe7b4d8ea49093b95dd761d40cb2",
+      "manifest_source_bytes": 12509,
+      "manifest_public_bytes": 12509,
+      "source": {
+        "bytes": 12509,
+        "sha256": "46c972172fd3a8fd0a507fb6b99d0677afc5fe7b4d8ea49093b95dd761d40cb2",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 303,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 12509,
+        "sha256": "46c972172fd3a8fd0a507fb6b99d0677afc5fe7b4d8ea49093b95dd761d40cb2",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 303,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14e_forensics/tools/wg_emu.py",
+      "public_path": "src/emulator/wg_emu.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "0764952ba6f7191feb522d59484ab20ced4815aef41c2a73e9972e7bb94371e9",
+      "manifest_public_sha256": "0764952ba6f7191feb522d59484ab20ced4815aef41c2a73e9972e7bb94371e9",
+      "manifest_source_bytes": 16075,
+      "manifest_public_bytes": 16075,
+      "source": {
+        "bytes": 16075,
+        "sha256": "0764952ba6f7191feb522d59484ab20ced4815aef41c2a73e9972e7bb94371e9",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 377,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 16075,
+        "sha256": "0764952ba6f7191feb522d59484ab20ced4815aef41c2a73e9972e7bb94371e9",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 377,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14eh_tools/p14eh.py",
+      "public_path": "src/emulator/p14eh.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "61365647e3abaf15c5425fc4dd5cb21719a632735168dd9d6a79111d7931e20a",
+      "manifest_public_sha256": "61365647e3abaf15c5425fc4dd5cb21719a632735168dd9d6a79111d7931e20a",
+      "manifest_source_bytes": 34981,
+      "manifest_public_bytes": 34981,
+      "source": {
+        "bytes": 34981,
+        "sha256": "61365647e3abaf15c5425fc4dd5cb21719a632735168dd9d6a79111d7931e20a",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 826,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 34981,
+        "sha256": "61365647e3abaf15c5425fc4dd5cb21719a632735168dd9d6a79111d7931e20a",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 826,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14eh_tools/p14eh_provenance.py",
+      "public_path": "src/emulator/p14eh_provenance.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "d7dc085016cfd28aec5cab609b7adec5d8b7eb4f59b736d988414c6c62caff48",
+      "manifest_public_sha256": "d7dc085016cfd28aec5cab609b7adec5d8b7eb4f59b736d988414c6c62caff48",
+      "manifest_source_bytes": 10201,
+      "manifest_public_bytes": 10201,
+      "source": {
+        "bytes": 10201,
+        "sha256": "d7dc085016cfd28aec5cab609b7adec5d8b7eb4f59b736d988414c6c62caff48",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 248,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 10201,
+        "sha256": "d7dc085016cfd28aec5cab609b7adec5d8b7eb4f59b736d988414c6c62caff48",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 248,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14eh_tools/p14eh_report.py",
+      "public_path": "src/emulator/p14eh_report.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "bd5c22e7d70f88818f97309263bb6d54d5b0b0a7350dc6476758137c4090fa70",
+      "manifest_public_sha256": "bd5c22e7d70f88818f97309263bb6d54d5b0b0a7350dc6476758137c4090fa70",
+      "manifest_source_bytes": 16039,
+      "manifest_public_bytes": 16039,
+      "source": {
+        "bytes": 16039,
+        "sha256": "bd5c22e7d70f88818f97309263bb6d54d5b0b0a7350dc6476758137c4090fa70",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 383,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 16039,
+        "sha256": "bd5c22e7d70f88818f97309263bb6d54d5b0b0a7350dc6476758137c4090fa70",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 383,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14eh_tools/p14eh_wg_report.py",
+      "public_path": "src/emulator/p14eh_wg_report.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "3d1879ee2ce4251a48bb6173443057c07f2c37c2229433afb60401a441d77b1b",
+      "manifest_public_sha256": "3d1879ee2ce4251a48bb6173443057c07f2c37c2229433afb60401a441d77b1b",
+      "manifest_source_bytes": 3159,
+      "manifest_public_bytes": 3159,
+      "source": {
+        "bytes": 3159,
+        "sha256": "3d1879ee2ce4251a48bb6173443057c07f2c37c2229433afb60401a441d77b1b",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 85,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 3159,
+        "sha256": "3d1879ee2ce4251a48bb6173443057c07f2c37c2229433afb60401a441d77b1b",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 85,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14eh_tools/p14eh_wg_summary.py",
+      "public_path": "src/emulator/p14eh_wg_summary.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "5821558df739409e2ddc927d8a4e950eaefb9d02789c6ffab7f2d31608876073",
+      "manifest_public_sha256": "5821558df739409e2ddc927d8a4e950eaefb9d02789c6ffab7f2d31608876073",
+      "manifest_source_bytes": 1234,
+      "manifest_public_bytes": 1234,
+      "source": {
+        "bytes": 1234,
+        "sha256": "5821558df739409e2ddc927d8a4e950eaefb9d02789c6ffab7f2d31608876073",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 32,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1234,
+        "sha256": "5821558df739409e2ddc927d8a4e950eaefb9d02789c6ffab7f2d31608876073",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 32,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16l_authoritative_rederive/isa_conformance/isa_oracle_scalar.py",
+      "public_path": "src/oracle/isa_oracle_scalar.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "line endings normalised CRLF -> LF",
+      "manifest_source_sha256": "bfd1c260a01ac6eebcf33dd131d3e7d980282eb70681ab291c143ff5389b99bb",
+      "manifest_public_sha256": "d81e1da4a930c36b5a1ef6aba5db28f5fc8b21e5211e091a3731f289439f89d6",
+      "manifest_source_bytes": 29818,
+      "manifest_public_bytes": 29051,
+      "source": {
+        "bytes": 29818,
+        "sha256": "bfd1c260a01ac6eebcf33dd131d3e7d980282eb70681ab291c143ff5389b99bb",
+        "bom": null,
+        "crlf_pairs": 767,
+        "lone_lf": 0,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 29051,
+        "sha256": "d81e1da4a930c36b5a1ef6aba5db28f5fc8b21e5211e091a3731f289439f89d6",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 767,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 21,
+        "minimal_chain": [
+          "crlf_to_lf"
+        ],
+        "minimal_chain_length": 1,
+        "matching_chains": [
+          [
+            "crlf_to_lf"
+          ]
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "MECHANICAL:crlf_to_lf",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "CRLF -> LF alone reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "phase16l_authoritative_rederive/frozen_16k/emulator_base__emu.py",
+      "public_path": "src/oracle/emulator_base__emu.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "4f4a64acabd5c1f8549168eb21e4dd7cde49334cecb28de8a70353e5c9dead11",
+      "manifest_public_sha256": "4f4a64acabd5c1f8549168eb21e4dd7cde49334cecb28de8a70353e5c9dead11",
+      "manifest_source_bytes": 46131,
+      "manifest_public_bytes": 46131,
+      "source": {
+        "bytes": 46131,
+        "sha256": "4f4a64acabd5c1f8549168eb21e4dd7cde49334cecb28de8a70353e5c9dead11",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 1284,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 46131,
+        "sha256": "4f4a64acabd5c1f8549168eb21e4dd7cde49334cecb28de8a70353e5c9dead11",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 1284,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14d_static/tools/p14d_mcbitmap.py",
+      "public_path": "src/isa/p14d_mcbitmap.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "8732cae26bd67f161fcc742cfbadd65b9d72ba153953a3b2dbcc13f9be9c5c22",
+      "manifest_public_sha256": "8732cae26bd67f161fcc742cfbadd65b9d72ba153953a3b2dbcc13f9be9c5c22",
+      "manifest_source_bytes": 8018,
+      "manifest_public_bytes": 8018,
+      "source": {
+        "bytes": 8018,
+        "sha256": "8732cae26bd67f161fcc742cfbadd65b9d72ba153953a3b2dbcc13f9be9c5c22",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 229,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 8018,
+        "sha256": "8732cae26bd67f161fcc742cfbadd65b9d72ba153953a3b2dbcc13f9be9c5c22",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 229,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14d_static/tools/p14d_rebuild.py",
+      "public_path": "src/isa/p14d_rebuild.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "3c8c75238cf5c484649d1948f1bd24da1bca129d8b55495306bc3a636d7a1e87",
+      "manifest_public_sha256": "3c8c75238cf5c484649d1948f1bd24da1bca129d8b55495306bc3a636d7a1e87",
+      "manifest_source_bytes": 6106,
+      "manifest_public_bytes": 6106,
+      "source": {
+        "bytes": 6106,
+        "sha256": "3c8c75238cf5c484649d1948f1bd24da1bca129d8b55495306bc3a636d7a1e87",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 153,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 6106,
+        "sha256": "3c8c75238cf5c484649d1948f1bd24da1bca129d8b55495306bc3a636d7a1e87",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 153,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14d_static/tools/p14d_live.py",
+      "public_path": "src/isa/p14d_live.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "59083828091df154dbdff28d1fe797b2768063e737660f63ef8f6b650cf9eaae",
+      "manifest_public_sha256": "59083828091df154dbdff28d1fe797b2768063e737660f63ef8f6b650cf9eaae",
+      "manifest_source_bytes": 14537,
+      "manifest_public_bytes": 14537,
+      "source": {
+        "bytes": 14537,
+        "sha256": "59083828091df154dbdff28d1fe797b2768063e737660f63ef8f6b650cf9eaae",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 391,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 14537,
+        "sha256": "59083828091df154dbdff28d1fe797b2768063e737660f63ef8f6b650cf9eaae",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 391,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16g_forensics/tools/p16g_isa.py",
+      "public_path": "src/isa/p16g_isa.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "3b77a15ccdd18728652b06ae7b538cfefb36814670bc0cea94414b3135568aff",
+      "manifest_public_sha256": "3b77a15ccdd18728652b06ae7b538cfefb36814670bc0cea94414b3135568aff",
+      "manifest_source_bytes": 16342,
+      "manifest_public_bytes": 16342,
+      "source": {
+        "bytes": 16342,
+        "sha256": "3b77a15ccdd18728652b06ae7b538cfefb36814670bc0cea94414b3135568aff",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 392,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 16342,
+        "sha256": "3b77a15ccdd18728652b06ae7b538cfefb36814670bc0cea94414b3135568aff",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 392,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16i_closure/tools/p16i_isa.py",
+      "public_path": "src/isa/p16i_isa.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "ace4acee6e01037485219f77ee4ffc4deb47606a3d392c058a9042dcdab3190c",
+      "manifest_public_sha256": "ace4acee6e01037485219f77ee4ffc4deb47606a3d392c058a9042dcdab3190c",
+      "manifest_source_bytes": 16808,
+      "manifest_public_bytes": 16808,
+      "source": {
+        "bytes": 16808,
+        "sha256": "ace4acee6e01037485219f77ee4ffc4deb47606a3d392c058a9042dcdab3190c",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 403,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 16808,
+        "sha256": "ace4acee6e01037485219f77ee4ffc4deb47606a3d392c058a9042dcdab3190c",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 403,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16h_pcrel_fix/tools/p16h_global_gate.py",
+      "public_path": "src/isa/p16h_global_gate.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "75bb29937e4e9a811b6429ebee689f075d9680aa7368e8a22569e24e200d3c90",
+      "manifest_public_sha256": "75bb29937e4e9a811b6429ebee689f075d9680aa7368e8a22569e24e200d3c90",
+      "manifest_source_bytes": 20059,
+      "manifest_public_bytes": 20059,
+      "source": {
+        "bytes": 20059,
+        "sha256": "75bb29937e4e9a811b6429ebee689f075d9680aa7368e8a22569e24e200d3c90",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 493,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 20059,
+        "sha256": "75bb29937e4e9a811b6429ebee689f075d9680aa7368e8a22569e24e200d3c90",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 493,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16h_pcrel_fix/tools/p16h_lib.py",
+      "public_path": "src/isa/p16h_lib.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "69f4b0b1e61177bbfda433edbc557d1486f764bbd9965a867a01ef9bfd4a4396",
+      "manifest_public_sha256": "69f4b0b1e61177bbfda433edbc557d1486f764bbd9965a867a01ef9bfd4a4396",
+      "manifest_source_bytes": 14735,
+      "manifest_public_bytes": 14735,
+      "source": {
+        "bytes": 14735,
+        "sha256": "69f4b0b1e61177bbfda433edbc557d1486f764bbd9965a867a01ef9bfd4a4396",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 376,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 14735,
+        "sha256": "69f4b0b1e61177bbfda433edbc557d1486f764bbd9965a867a01ef9bfd4a4396",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 376,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16e_candidate_e/tools/p16e_lib.py",
+      "public_path": "src/isa/p16e_lib.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "7e60f14527d835547276858f764f9a2c139a186d442a6450a48c85b4285dce88",
+      "manifest_public_sha256": "7e60f14527d835547276858f764f9a2c139a186d442a6450a48c85b4285dce88",
+      "manifest_source_bytes": 4817,
+      "manifest_public_bytes": 4817,
+      "source": {
+        "bytes": 4817,
+        "sha256": "7e60f14527d835547276858f764f9a2c139a186d442a6450a48c85b4285dce88",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 131,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 4817,
+        "sha256": "7e60f14527d835547276858f764f9a2c139a186d442a6450a48c85b4285dce88",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 131,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16e_candidate_e/tools/p16e_rec.py",
+      "public_path": "src/isa/p16e_rec.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "line endings normalised CRLF -> LF",
+      "manifest_source_sha256": "ab082a60e73122b94b83860920a7aae0627660b5433f203a304dac6d0c724615",
+      "manifest_public_sha256": "68d8c4e9397dfe5f326f7069ea2a867656ed9dd2afcb0da484eef29c135e335b",
+      "manifest_source_bytes": 18527,
+      "manifest_public_bytes": 18107,
+      "source": {
+        "bytes": 18527,
+        "sha256": "ab082a60e73122b94b83860920a7aae0627660b5433f203a304dac6d0c724615",
+        "bom": null,
+        "crlf_pairs": 420,
+        "lone_lf": 0,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 18107,
+        "sha256": "68d8c4e9397dfe5f326f7069ea2a867656ed9dd2afcb0da484eef29c135e335b",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 420,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 21,
+        "minimal_chain": [
+          "crlf_to_lf"
+        ],
+        "minimal_chain_length": 1,
+        "matching_chains": [
+          [
+            "crlf_to_lf"
+          ]
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "MECHANICAL:crlf_to_lf",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "CRLF -> LF alone reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/amdhip64_7.cpp",
+      "public_path": "src/bridge/amdhip64_7.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "3dd21a0ea290761180453a03d80d570035f4219f40b1b278bd15811ff405ea97",
+      "manifest_public_sha256": "3dd21a0ea290761180453a03d80d570035f4219f40b1b278bd15811ff405ea97",
+      "manifest_source_bytes": 16722,
+      "manifest_public_bytes": 16722,
+      "source": {
+        "bytes": 16722,
+        "sha256": "3dd21a0ea290761180453a03d80d570035f4219f40b1b278bd15811ff405ea97",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 403,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 16722,
+        "sha256": "3dd21a0ea290761180453a03d80d570035f4219f40b1b278bd15811ff405ea97",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 403,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/mock_hip6.cpp",
+      "public_path": "src/bridge/mock_hip6.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "9bb04e0bfa01a49219ed068e437179e17407e46a163a1ec2d848ed02f4951db9",
+      "manifest_public_sha256": "9bb04e0bfa01a49219ed068e437179e17407e46a163a1ec2d848ed02f4951db9",
+      "manifest_source_bytes": 10239,
+      "manifest_public_bytes": 10239,
+      "source": {
+        "bytes": 10239,
+        "sha256": "9bb04e0bfa01a49219ed068e437179e17407e46a163a1ec2d848ed02f4951db9",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 334,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 10239,
+        "sha256": "9bb04e0bfa01a49219ed068e437179e17407e46a163a1ec2d848ed02f4951db9",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 334,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/registry_ident.cpp",
+      "public_path": "src/bridge/registry_ident.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "9443ce6d80d71f8efe1cde7a774d740e47c11855eeaee9a211d43cdaa99c4fc1",
+      "manifest_public_sha256": "9443ce6d80d71f8efe1cde7a774d740e47c11855eeaee9a211d43cdaa99c4fc1",
+      "manifest_source_bytes": 8350,
+      "manifest_public_bytes": 8350,
+      "source": {
+        "bytes": 8350,
+        "sha256": "9443ce6d80d71f8efe1cde7a774d740e47c11855eeaee9a211d43cdaa99c4fc1",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 240,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 8350,
+        "sha256": "9443ce6d80d71f8efe1cde7a774d740e47c11855eeaee9a211d43cdaa99c4fc1",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 240,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/registry_ident.h",
+      "public_path": "src/bridge/registry_ident.h",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "dc83f197c3179be638be84455e68c2541b367da792c2d0f71fb186a7e6cad141",
+      "manifest_public_sha256": "dc83f197c3179be638be84455e68c2541b367da792c2d0f71fb186a7e6cad141",
+      "manifest_source_bytes": 2881,
+      "manifest_public_bytes": 2881,
+      "source": {
+        "bytes": 2881,
+        "sha256": "dc83f197c3179be638be84455e68c2541b367da792c2d0f71fb186a7e6cad141",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 72,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 2881,
+        "sha256": "dc83f197c3179be638be84455e68c2541b367da792c2d0f71fb186a7e6cad141",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 72,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/hip_bridge_smoke.cpp",
+      "public_path": "src/bridge/hip_bridge_smoke.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "e40afe2a385325e76187493bc59e22e4c1da42a1a8f44bf2245f33bbebe0f4a8",
+      "manifest_public_sha256": "e40afe2a385325e76187493bc59e22e4c1da42a1a8f44bf2245f33bbebe0f4a8",
+      "manifest_source_bytes": 9396,
+      "manifest_public_bytes": 9396,
+      "source": {
+        "bytes": 9396,
+        "sha256": "e40afe2a385325e76187493bc59e22e4c1da42a1a8f44bf2245f33bbebe0f4a8",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 201,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 9396,
+        "sha256": "e40afe2a385325e76187493bc59e22e4c1da42a1a8f44bf2245f33bbebe0f4a8",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 201,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/hip_bridge_reg_smoke.cpp",
+      "public_path": "src/bridge/hip_bridge_reg_smoke.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "line endings normalised CRLF -> LF",
+      "manifest_source_sha256": "599501a4b55d17eb356026a808268eeb6912609e8acbc7414622bdc402bfa548",
+      "manifest_public_sha256": "686788def16902f88e8a321122059a3bb50444940f5f775e87bf0b1379a0f0af",
+      "manifest_source_bytes": 9577,
+      "manifest_public_bytes": 9349,
+      "source": {
+        "bytes": 9577,
+        "sha256": "599501a4b55d17eb356026a808268eeb6912609e8acbc7414622bdc402bfa548",
+        "bom": null,
+        "crlf_pairs": 228,
+        "lone_lf": 0,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 9349,
+        "sha256": "686788def16902f88e8a321122059a3bb50444940f5f775e87bf0b1379a0f0af",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 228,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 21,
+        "minimal_chain": [
+          "crlf_to_lf"
+        ],
+        "minimal_chain_length": 1,
+        "matching_chains": [
+          [
+            "crlf_to_lf"
+          ]
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "MECHANICAL:crlf_to_lf",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "CRLF -> LF alone reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/abi_6_4_fingerprint.cpp",
+      "public_path": "src/bridge/abi_6_4_fingerprint.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "20222421498e647a66fc67acbe945d68878198e3784f4520960fe67b7d7e6cb5",
+      "manifest_public_sha256": "20222421498e647a66fc67acbe945d68878198e3784f4520960fe67b7d7e6cb5",
+      "manifest_source_bytes": 7368,
+      "manifest_public_bytes": 7368,
+      "source": {
+        "bytes": 7368,
+        "sha256": "20222421498e647a66fc67acbe945d68878198e3784f4520960fe67b7d7e6cb5",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 114,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 7368,
+        "sha256": "20222421498e647a66fc67acbe945d68878198e3784f4520960fe67b7d7e6cb5",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 114,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/abi_7_1_fingerprint.cpp",
+      "public_path": "src/bridge/abi_7_1_fingerprint.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "20222421498e647a66fc67acbe945d68878198e3784f4520960fe67b7d7e6cb5",
+      "manifest_public_sha256": "20222421498e647a66fc67acbe945d68878198e3784f4520960fe67b7d7e6cb5",
+      "manifest_source_bytes": 7368,
+      "manifest_public_bytes": 7368,
+      "source": {
+        "bytes": 7368,
+        "sha256": "20222421498e647a66fc67acbe945d68878198e3784f4520960fe67b7d7e6cb5",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 114,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 7368,
+        "sha256": "20222421498e647a66fc67acbe945d68878198e3784f4520960fe67b7d7e6cb5",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 114,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/bridge_config.h",
+      "public_path": "src/bridge/bridge_config.h",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "7bbda2569378b037663831ee61316a60d2dd8da916027dac7cd2f77d82e9a868",
+      "manifest_public_sha256": "7bbda2569378b037663831ee61316a60d2dd8da916027dac7cd2f77d82e9a868",
+      "manifest_source_bytes": 668,
+      "manifest_public_bytes": 668,
+      "source": {
+        "bytes": 668,
+        "sha256": "7bbda2569378b037663831ee61316a60d2dd8da916027dac7cd2f77d82e9a868",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 17,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 668,
+        "sha256": "7bbda2569378b037663831ee61316a60d2dd8da916027dac7cd2f77d82e9a868",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 17,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/exports.def",
+      "public_path": "src/bridge/exports.def",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "5d25d5b4389123b01e15c82bf03cf57f9a31a223b09d64ebdf7c589d4a0392ba",
+      "manifest_public_sha256": "5d25d5b4389123b01e15c82bf03cf57f9a31a223b09d64ebdf7c589d4a0392ba",
+      "manifest_source_bytes": 825,
+      "manifest_public_bytes": 825,
+      "source": {
+        "bytes": 825,
+        "sha256": "5d25d5b4389123b01e15c82bf03cf57f9a31a223b09d64ebdf7c589d4a0392ba",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 32,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 825,
+        "sha256": "5d25d5b4389123b01e15c82bf03cf57f9a31a223b09d64ebdf7c589d4a0392ba",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 32,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16_bridge_telemetry/src/kernel_policy_map.h",
+      "public_path": "src/bridge/kernel_policy_map.h",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "line endings normalised CRLF -> LF",
+      "manifest_source_sha256": "09a6877759c773f822ce232c2255d5fc8d9936aa991dcc30e54e85fc0b9456ed",
+      "manifest_public_sha256": "055b29d8ca8914f4a41f6e65b15f45ca84c0042c67000bea1adb474ec70589f9",
+      "manifest_source_bytes": 2029,
+      "manifest_public_bytes": 1986,
+      "source": {
+        "bytes": 2029,
+        "sha256": "09a6877759c773f822ce232c2255d5fc8d9936aa991dcc30e54e85fc0b9456ed",
+        "bom": "UTF-8",
+        "crlf_pairs": 43,
+        "lone_lf": 0,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1986,
+        "sha256": "055b29d8ca8914f4a41f6e65b15f45ca84c0042c67000bea1adb474ec70589f9",
+        "bom": "UTF-8",
+        "crlf_pairs": 0,
+        "lone_lf": 43,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 21,
+        "minimal_chain": [
+          "crlf_to_lf"
+        ],
+        "minimal_chain_length": 1,
+        "matching_chains": [
+          [
+            "crlf_to_lf"
+          ]
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "MECHANICAL:crlf_to_lf",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "CRLF -> LF alone reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/tools/audit_prod.bat",
+      "public_path": "src/bridge/tools/audit_prod.bat",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "8cf0cedacdb81a3985c93e4da51d1097f9cbda81dbf33e6bf64eadddbca29a80",
+      "manifest_public_sha256": "8cf0cedacdb81a3985c93e4da51d1097f9cbda81dbf33e6bf64eadddbca29a80",
+      "manifest_source_bytes": 545,
+      "manifest_public_bytes": 545,
+      "source": {
+        "bytes": 545,
+        "sha256": "8cf0cedacdb81a3985c93e4da51d1097f9cbda81dbf33e6bf64eadddbca29a80",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 7,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 545,
+        "sha256": "8cf0cedacdb81a3985c93e4da51d1097f9cbda81dbf33e6bf64eadddbca29a80",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 7,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/tools/build_bridge.bat",
+      "public_path": "src/bridge/tools/build_bridge.bat",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "015d1c98e8fab8403c85e110c95bb2af48922c2f1064545c874c73c6ec26c9d1",
+      "manifest_public_sha256": "015d1c98e8fab8403c85e110c95bb2af48922c2f1064545c874c73c6ec26c9d1",
+      "manifest_source_bytes": 1790,
+      "manifest_public_bytes": 1790,
+      "source": {
+        "bytes": 1790,
+        "sha256": "015d1c98e8fab8403c85e110c95bb2af48922c2f1064545c874c73c6ec26c9d1",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 36,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1790,
+        "sha256": "015d1c98e8fab8403c85e110c95bb2af48922c2f1064545c874c73c6ec26c9d1",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 36,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/tools/build_fingerprints.bat",
+      "public_path": "src/bridge/tools/build_fingerprints.bat",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "b50fbd589bcb805847c1eaf8062df770bbddc9a7d4cc3370e6f54a3d3b43d591",
+      "manifest_public_sha256": "b50fbd589bcb805847c1eaf8062df770bbddc9a7d4cc3370e6f54a3d3b43d591",
+      "manifest_source_bytes": 747,
+      "manifest_public_bytes": 747,
+      "source": {
+        "bytes": 747,
+        "sha256": "b50fbd589bcb805847c1eaf8062df770bbddc9a7d4cc3370e6f54a3d3b43d591",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 9,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 747,
+        "sha256": "b50fbd589bcb805847c1eaf8062df770bbddc9a7d4cc3370e6f54a3d3b43d591",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 9,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/tools/p10_abi_matrix.py",
+      "public_path": "src/bridge/tools/p10_abi_matrix.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "537bd50609ddf6ffb5e3643612a65637edd10f48660db1b973d53ef26cec4b15",
+      "manifest_public_sha256": "537bd50609ddf6ffb5e3643612a65637edd10f48660db1b973d53ef26cec4b15",
+      "manifest_source_bytes": 7994,
+      "manifest_public_bytes": 7994,
+      "source": {
+        "bytes": 7994,
+        "sha256": "537bd50609ddf6ffb5e3643612a65637edd10f48660db1b973d53ef26cec4b15",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 180,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 7994,
+        "sha256": "537bd50609ddf6ffb5e3643612a65637edd10f48660db1b973d53ef26cec4b15",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 180,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase10_hip_bridge/tools/p10_manifest.py",
+      "public_path": "src/bridge/tools/p10_manifest.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "2453bf7d77d336fa9d8b60b3605c31ace33d4096f509bed75bd918e3cad314bb",
+      "manifest_public_sha256": "2453bf7d77d336fa9d8b60b3605c31ace33d4096f509bed75bd918e3cad314bb",
+      "manifest_source_bytes": 1197,
+      "manifest_public_bytes": 1197,
+      "source": {
+        "bytes": 1197,
+        "sha256": "2453bf7d77d336fa9d8b60b3605c31ace33d4096f509bed75bd918e3cad314bb",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 30,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1197,
+        "sha256": "2453bf7d77d336fa9d8b60b3605c31ace33d4096f509bed75bd918e3cad314bb",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 30,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14_runtime/p14_entry_probe_host.cpp",
+      "public_path": "src/harness/p14_entry_probe_host.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "abd37ea6d8c03ef514a640f6f3ac8b2b18d356b2ebea84df36e474833adcf341",
+      "manifest_public_sha256": "abd37ea6d8c03ef514a640f6f3ac8b2b18d356b2ebea84df36e474833adcf341",
+      "manifest_source_bytes": 3314,
+      "manifest_public_bytes": 3314,
+      "source": {
+        "bytes": 3314,
+        "sha256": "abd37ea6d8c03ef514a640f6f3ac8b2b18d356b2ebea84df36e474833adcf341",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 79,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 3314,
+        "sha256": "abd37ea6d8c03ef514a640f6f3ac8b2b18d356b2ebea84df36e474833adcf341",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 79,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14_runtime/p14_entry_probe2_host.cpp",
+      "public_path": "src/harness/p14_entry_probe2_host.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "086e3ea453e01f5b7a995824e293d3181b6a9aff3df9b84dff50c42601d26dfb",
+      "manifest_public_sha256": "086e3ea453e01f5b7a995824e293d3181b6a9aff3df9b84dff50c42601d26dfb",
+      "manifest_source_bytes": 3443,
+      "manifest_public_bytes": 3443,
+      "source": {
+        "bytes": 3443,
+        "sha256": "086e3ea453e01f5b7a995824e293d3181b6a9aff3df9b84dff50c42601d26dfb",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 84,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 3443,
+        "sha256": "086e3ea453e01f5b7a995824e293d3181b6a9aff3df9b84dff50c42601d26dfb",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 84,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14_runtime/p14_module_probe_host.cpp",
+      "public_path": "src/harness/p14_module_probe_host.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "3327cc5be5c63e374182271a229fb1f0056a85ef0f3fe3556f3328f3e55363f9",
+      "manifest_public_sha256": "3327cc5be5c63e374182271a229fb1f0056a85ef0f3fe3556f3328f3e55363f9",
+      "manifest_source_bytes": 4493,
+      "manifest_public_bytes": 4493,
+      "source": {
+        "bytes": 4493,
+        "sha256": "3327cc5be5c63e374182271a229fb1f0056a85ef0f3fe3556f3328f3e55363f9",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 132,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 4493,
+        "sha256": "3327cc5be5c63e374182271a229fb1f0056a85ef0f3fe3556f3328f3e55363f9",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 132,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14_runtime/ref_probe.cpp",
+      "public_path": "src/harness/ref_probe.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "ba45597b543d0ba165a39f8a65b4a43c70cdc5e6ac45e595a8357fb9133e867c",
+      "manifest_public_sha256": "ba45597b543d0ba165a39f8a65b4a43c70cdc5e6ac45e595a8357fb9133e867c",
+      "manifest_source_bytes": 615,
+      "manifest_public_bytes": 615,
+      "source": {
+        "bytes": 615,
+        "sha256": "ba45597b543d0ba165a39f8a65b4a43c70cdc5e6ac45e595a8357fb9133e867c",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 16,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 615,
+        "sha256": "ba45597b543d0ba165a39f8a65b4a43c70cdc5e6ac45e595a8357fb9133e867c",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 16,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14d10_probe/p14d10_entry_probe_host.cpp",
+      "public_path": "src/harness/p14d10_entry_probe_host.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "dfca96195fb237d9aadf9e8aec4c4b0692ff666c6dca3642b9fdef3d18829def",
+      "manifest_public_sha256": "dfca96195fb237d9aadf9e8aec4c4b0692ff666c6dca3642b9fdef3d18829def",
+      "manifest_source_bytes": 7886,
+      "manifest_public_bytes": 7886,
+      "source": {
+        "bytes": 7886,
+        "sha256": "dfca96195fb237d9aadf9e8aec4c4b0692ff666c6dca3642b9fdef3d18829def",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 185,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 7886,
+        "sha256": "dfca96195fb237d9aadf9e8aec4c4b0692ff666c6dca3642b9fdef3d18829def",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 185,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14ei_runtime/p14ei_a_host.cpp",
+      "public_path": "src/harness/p14ei_a_host.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "d2dea67d02ba2742b0fbe0a6f569a764f1471044880f114caea7d99e664afabd",
+      "manifest_public_sha256": "d2dea67d02ba2742b0fbe0a6f569a764f1471044880f114caea7d99e664afabd",
+      "manifest_source_bytes": 5571,
+      "manifest_public_bytes": 5571,
+      "source": {
+        "bytes": 5571,
+        "sha256": "d2dea67d02ba2742b0fbe0a6f569a764f1471044880f114caea7d99e664afabd",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 130,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 5571,
+        "sha256": "d2dea67d02ba2742b0fbe0a6f569a764f1471044880f114caea7d99e664afabd",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 130,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14ei_runtime/p14ei_b_host.cpp",
+      "public_path": "src/harness/p14ei_b_host.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "3c6b749f67715d02b135f0e602c7c5da1749dc593b08c0a923228ccf1310f391",
+      "manifest_public_sha256": "3c6b749f67715d02b135f0e602c7c5da1749dc593b08c0a923228ccf1310f391",
+      "manifest_source_bytes": 13515,
+      "manifest_public_bytes": 13515,
+      "source": {
+        "bytes": 13515,
+        "sha256": "3c6b749f67715d02b135f0e602c7c5da1749dc593b08c0a923228ccf1310f391",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 338,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 13515,
+        "sha256": "3c6b749f67715d02b135f0e602c7c5da1749dc593b08c0a923228ccf1310f391",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 338,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14ei_runtime/p14ei_c0_host.cpp",
+      "public_path": "src/harness/p14ei_c0_host.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "5c9add3b588fe541ddb201596642858bbc68a94e62161f84a5a3a5140361d533",
+      "manifest_public_sha256": "5c9add3b588fe541ddb201596642858bbc68a94e62161f84a5a3a5140361d533",
+      "manifest_source_bytes": 6187,
+      "manifest_public_bytes": 6187,
+      "source": {
+        "bytes": 6187,
+        "sha256": "5c9add3b588fe541ddb201596642858bbc68a94e62161f84a5a3a5140361d533",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 144,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 6187,
+        "sha256": "5c9add3b588fe541ddb201596642858bbc68a94e62161f84a5a3a5140361d533",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 144,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14ei_runtime/p14ei_c1_host.cpp",
+      "public_path": "src/harness/p14ei_c1_host.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "a19c5d53d8478547a3c3f25d4f480f4333447d80b5d63b14b81e0f1df780baf1",
+      "manifest_public_sha256": "a19c5d53d8478547a3c3f25d4f480f4333447d80b5d63b14b81e0f1df780baf1",
+      "manifest_source_bytes": 4836,
+      "manifest_public_bytes": 4836,
+      "source": {
+        "bytes": 4836,
+        "sha256": "a19c5d53d8478547a3c3f25d4f480f4333447d80b5d63b14b81e0f1df780baf1",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 116,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 4836,
+        "sha256": "a19c5d53d8478547a3c3f25d4f480f4333447d80b5d63b14b81e0f1df780baf1",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 116,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14ei_runtime/p14ei_c2_host.cpp",
+      "public_path": "src/harness/p14ei_c2_host.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "33b3ee50465177f463e3ace33efaf4d2da770a28750477fb6ea3c3aeb93431d7",
+      "manifest_public_sha256": "33b3ee50465177f463e3ace33efaf4d2da770a28750477fb6ea3c3aeb93431d7",
+      "manifest_source_bytes": 15143,
+      "manifest_public_bytes": 15143,
+      "source": {
+        "bytes": 15143,
+        "sha256": "33b3ee50465177f463e3ace33efaf4d2da770a28750477fb6ea3c3aeb93431d7",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 372,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 15143,
+        "sha256": "33b3ee50465177f463e3ace33efaf4d2da770a28750477fb6ea3c3aeb93431d7",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 372,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14ei_runtime/p14ei_c2_isa_check.cc",
+      "public_path": "src/harness/p14ei_c2_isa_check.cc",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "3610e22040b8fbb4aebba426a3478670ff9099c4dc47bae1895eedf25c40e840",
+      "manifest_public_sha256": "3610e22040b8fbb4aebba426a3478670ff9099c4dc47bae1895eedf25c40e840",
+      "manifest_source_bytes": 3004,
+      "manifest_public_bytes": 3004,
+      "source": {
+        "bytes": 3004,
+        "sha256": "3610e22040b8fbb4aebba426a3478670ff9099c4dc47bae1895eedf25c40e840",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 87,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 3004,
+        "sha256": "3610e22040b8fbb4aebba426a3478670ff9099c4dc47bae1895eedf25c40e840",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 87,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14ei_runtime/p14ei_enum_host.cpp",
+      "public_path": "src/harness/p14ei_enum_host.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "47a741eeb098149e5b6f5e2402b50793f9be0807b8f88033f331efb409b9eb76",
+      "manifest_public_sha256": "47a741eeb098149e5b6f5e2402b50793f9be0807b8f88033f331efb409b9eb76",
+      "manifest_source_bytes": 1795,
+      "manifest_public_bytes": 1795,
+      "source": {
+        "bytes": 1795,
+        "sha256": "47a741eeb098149e5b6f5e2402b50793f9be0807b8f88033f331efb409b9eb76",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 42,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1795,
+        "sha256": "47a741eeb098149e5b6f5e2402b50793f9be0807b8f88033f331efb409b9eb76",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 42,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14e_forensics/out/oracle/barrier_oracle_src_a.cpp",
+      "public_path": "src/harness/barrier_oracle_src_a.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "92dbaea820ed931744f26f999f67600ed0536cd53c03755fa3c5729826696a99",
+      "manifest_public_sha256": "92dbaea820ed931744f26f999f67600ed0536cd53c03755fa3c5729826696a99",
+      "manifest_source_bytes": 429,
+      "manifest_public_bytes": 429,
+      "source": {
+        "bytes": 429,
+        "sha256": "92dbaea820ed931744f26f999f67600ed0536cd53c03755fa3c5729826696a99",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 10,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 429,
+        "sha256": "92dbaea820ed931744f26f999f67600ed0536cd53c03755fa3c5729826696a99",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 10,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14e_forensics/out/oracle/barrier_oracle_src_b.cpp",
+      "public_path": "src/harness/barrier_oracle_src_b.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "a9d722645b39554f638259ffdb2ef284dffadb9c1dc5c8294bfb821d7c1af4e8",
+      "manifest_public_sha256": "a9d722645b39554f638259ffdb2ef284dffadb9c1dc5c8294bfb821d7c1af4e8",
+      "manifest_source_bytes": 525,
+      "manifest_public_bytes": 525,
+      "source": {
+        "bytes": 525,
+        "sha256": "a9d722645b39554f638259ffdb2ef284dffadb9c1dc5c8294bfb821d7c1af4e8",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 13,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 525,
+        "sha256": "a9d722645b39554f638259ffdb2ef284dffadb9c1dc5c8294bfb821d7c1af4e8",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 13,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14e_forensics/out/oracle/barrier_oracle_src_c.cpp",
+      "public_path": "src/harness/barrier_oracle_src_c.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "cffc691b030b0ba237c63a7039bb074da05558e813656f4d1c4bd36842fc4230",
+      "manifest_public_sha256": "cffc691b030b0ba237c63a7039bb074da05558e813656f4d1c4bd36842fc4230",
+      "manifest_source_bytes": 680,
+      "manifest_public_bytes": 680,
+      "source": {
+        "bytes": 680,
+        "sha256": "cffc691b030b0ba237c63a7039bb074da05558e813656f4d1c4bd36842fc4230",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 16,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 680,
+        "sha256": "cffc691b030b0ba237c63a7039bb074da05558e813656f4d1c4bd36842fc4230",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 16,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14e_forensics/out/oracle/barrier_oracle_src_d.cpp",
+      "public_path": "src/harness/barrier_oracle_src_d.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "e0aa36d968b71d61ff3ab9bbe19216da911ea7cecb6e9230015cb02e2efab43f",
+      "manifest_public_sha256": "e0aa36d968b71d61ff3ab9bbe19216da911ea7cecb6e9230015cb02e2efab43f",
+      "manifest_source_bytes": 468,
+      "manifest_public_bytes": 468,
+      "source": {
+        "bytes": 468,
+        "sha256": "e0aa36d968b71d61ff3ab9bbe19216da911ea7cecb6e9230015cb02e2efab43f",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 10,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 468,
+        "sha256": "e0aa36d968b71d61ff3ab9bbe19216da911ea7cecb6e9230015cb02e2efab43f",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 10,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16h_pcrel_fix/out/abi_probe/probe_hidden.cpp",
+      "public_path": "src/harness/probe_hidden.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "line endings normalised CRLF -> LF",
+      "manifest_source_sha256": "7d0cc5dfc8ccedf8fb060c2cd0f3a3a506b3b3e4c02a55c88bde1b9e9c13bb38",
+      "manifest_public_sha256": "57f55703f49c990e62acf4d2eb861d4a5b9c4dda764f062af82975e1c2855d2a",
+      "manifest_source_bytes": 386,
+      "manifest_public_bytes": 377,
+      "source": {
+        "bytes": 386,
+        "sha256": "7d0cc5dfc8ccedf8fb060c2cd0f3a3a506b3b3e4c02a55c88bde1b9e9c13bb38",
+        "bom": null,
+        "crlf_pairs": 9,
+        "lone_lf": 0,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 377,
+        "sha256": "57f55703f49c990e62acf4d2eb861d4a5b9c4dda764f062af82975e1c2855d2a",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 9,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 21,
+        "minimal_chain": [
+          "crlf_to_lf"
+        ],
+        "minimal_chain_length": 1,
+        "matching_chains": [
+          [
+            "crlf_to_lf"
+          ]
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "MECHANICAL:crlf_to_lf",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "CRLF -> LF alone reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "phase16h_pcrel_fix/out/abi_probe/probe_priv.cpp",
+      "public_path": "src/harness/probe_priv.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "line endings normalised CRLF -> LF",
+      "manifest_source_sha256": "ce105c0e2873ed3461268f74a6444a5a70bb7dcfecab99013ceb19a2ab406459",
+      "manifest_public_sha256": "496bd840facffd990a4d4a06620529f37c76cacdb6a5e5407cbd081c26d27a01",
+      "manifest_source_bytes": 592,
+      "manifest_public_bytes": 575,
+      "source": {
+        "bytes": 592,
+        "sha256": "ce105c0e2873ed3461268f74a6444a5a70bb7dcfecab99013ceb19a2ab406459",
+        "bom": null,
+        "crlf_pairs": 17,
+        "lone_lf": 0,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 575,
+        "sha256": "496bd840facffd990a4d4a06620529f37c76cacdb6a5e5407cbd081c26d27a01",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 17,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 21,
+        "minimal_chain": [
+          "crlf_to_lf"
+        ],
+        "minimal_chain_length": 1,
+        "matching_chains": [
+          [
+            "crlf_to_lf"
+          ]
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "MECHANICAL:crlf_to_lf",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "CRLF -> LF alone reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "phase16j_pre_gta/harness/p16j_pattern.h",
+      "public_path": "src/harness/p16j_pattern.h",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "ad639e31c11045113d066d8ade6a12dc3ea77ffb3d1b79ca49aee50f0663f1fa",
+      "manifest_public_sha256": "ad639e31c11045113d066d8ade6a12dc3ea77ffb3d1b79ca49aee50f0663f1fa",
+      "manifest_source_bytes": 1504,
+      "manifest_public_bytes": 1504,
+      "source": {
+        "bytes": 1504,
+        "sha256": "ad639e31c11045113d066d8ade6a12dc3ea77ffb3d1b79ca49aee50f0663f1fa",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 41,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1504,
+        "sha256": "ad639e31c11045113d066d8ade6a12dc3ea77ffb3d1b79ca49aee50f0663f1fa",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 41,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16j_pre_gta/harness/p16j_pattern_dump.cpp",
+      "public_path": "src/harness/p16j_pattern_dump.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "a1aa78a6f0ce9677df0b921bb14b676c497811401bf1c560fc9e20c5f94d83ff",
+      "manifest_public_sha256": "a1aa78a6f0ce9677df0b921bb14b676c497811401bf1c560fc9e20c5f94d83ff",
+      "manifest_source_bytes": 1065,
+      "manifest_public_bytes": 1065,
+      "source": {
+        "bytes": 1065,
+        "sha256": "a1aa78a6f0ce9677df0b921bb14b676c497811401bf1c560fc9e20c5f94d83ff",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 29,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1065,
+        "sha256": "a1aa78a6f0ce9677df0b921bb14b676c497811401bf1c560fc9e20c5f94d83ff",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 29,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16j_pre_gta/harness/p16j_sha256.h",
+      "public_path": "src/harness/p16j_sha256.h",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "b5930e8b01f7d232f7231c22536e6b3503069f4b29b223f458ec71d7679c0c90",
+      "manifest_public_sha256": "b5930e8b01f7d232f7231c22536e6b3503069f4b29b223f458ec71d7679c0c90",
+      "manifest_source_bytes": 4080,
+      "manifest_public_bytes": 4080,
+      "source": {
+        "bytes": 4080,
+        "sha256": "b5930e8b01f7d232f7231c22536e6b3503069f4b29b223f458ec71d7679c0c90",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 120,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 4080,
+        "sha256": "b5930e8b01f7d232f7231c22536e6b3503069f4b29b223f458ec71d7679c0c90",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 120,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14_runtime/p14_build_host.ps1",
+      "public_path": "src/harness/p14_build_host.ps1",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "5c8a073a82378a150cfbe29d017af4fa990e2747267744a9f7bee9465d628d31",
+      "manifest_public_sha256": "5c8a073a82378a150cfbe29d017af4fa990e2747267744a9f7bee9465d628d31",
+      "manifest_source_bytes": 1839,
+      "manifest_public_bytes": 1839,
+      "source": {
+        "bytes": 1839,
+        "sha256": "5c8a073a82378a150cfbe29d017af4fa990e2747267744a9f7bee9465d628d31",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 58,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1839,
+        "sha256": "5c8a073a82378a150cfbe29d017af4fa990e2747267744a9f7bee9465d628d31",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 58,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14d10_probe/p14d10_build_host.ps1",
+      "public_path": "src/harness/p14d10_build_host.ps1",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "52e299801dd06c01d75cc2cb2959bad33ead2094136d286ded9d16371999bc61",
+      "manifest_public_sha256": "52e299801dd06c01d75cc2cb2959bad33ead2094136d286ded9d16371999bc61",
+      "manifest_source_bytes": 1787,
+      "manifest_public_bytes": 1787,
+      "source": {
+        "bytes": 1787,
+        "sha256": "52e299801dd06c01d75cc2cb2959bad33ead2094136d286ded9d16371999bc61",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 57,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1787,
+        "sha256": "52e299801dd06c01d75cc2cb2959bad33ead2094136d286ded9d16371999bc61",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 57,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14d11_runtime/p14d11_build_host.ps1",
+      "public_path": "src/harness/p14d11_build_host.ps1",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "514153c8e6c5823a385e7147cdcfccf78257d24fe4185ed14646d523a5d8ddb0",
+      "manifest_public_sha256": "514153c8e6c5823a385e7147cdcfccf78257d24fe4185ed14646d523a5d8ddb0",
+      "manifest_source_bytes": 1787,
+      "manifest_public_bytes": 1787,
+      "source": {
+        "bytes": 1787,
+        "sha256": "514153c8e6c5823a385e7147cdcfccf78257d24fe4185ed14646d523a5d8ddb0",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 57,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1787,
+        "sha256": "514153c8e6c5823a385e7147cdcfccf78257d24fe4185ed14646d523a5d8ddb0",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 57,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14e_runtime/p14e_build_host.ps1",
+      "public_path": "src/harness/p14e_build_host.ps1",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "74456bd6dc303b53b5827c73321114a4f7b77b9e7d26412edfa285480fef885e",
+      "manifest_public_sha256": "74456bd6dc303b53b5827c73321114a4f7b77b9e7d26412edfa285480fef885e",
+      "manifest_source_bytes": 813,
+      "manifest_public_bytes": 813,
+      "source": {
+        "bytes": 813,
+        "sha256": "74456bd6dc303b53b5827c73321114a4f7b77b9e7d26412edfa285480fef885e",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 29,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 813,
+        "sha256": "74456bd6dc303b53b5827c73321114a4f7b77b9e7d26412edfa285480fef885e",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 29,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase14ei_runtime/p14ei_build.ps1",
+      "public_path": "src/harness/p14ei_build.ps1",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "56b3b7de2a4473e370f9718ac5c26e9d9c23a06d4c556c8fc4a8253fa4c5111e",
+      "manifest_public_sha256": "56b3b7de2a4473e370f9718ac5c26e9d9c23a06d4c556c8fc4a8253fa4c5111e",
+      "manifest_source_bytes": 2756,
+      "manifest_public_bytes": 2756,
+      "source": {
+        "bytes": 2756,
+        "sha256": "56b3b7de2a4473e370f9718ac5c26e9d9c23a06d4c556c8fc4a8253fa4c5111e",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 63,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 2756,
+        "sha256": "56b3b7de2a4473e370f9718ac5c26e9d9c23a06d4c556c8fc4a8253fa4c5111e",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 63,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16f_runtime/p16f_build_host.ps1",
+      "public_path": "src/harness/p16f_build_host.ps1",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "302f1205d339d3de73ae54c00c958663cdf505e349da3de8f3bd0f07a7b1a093",
+      "manifest_public_sha256": "302f1205d339d3de73ae54c00c958663cdf505e349da3de8f3bd0f07a7b1a093",
+      "manifest_source_bytes": 813,
+      "manifest_public_bytes": 813,
+      "source": {
+        "bytes": 813,
+        "sha256": "302f1205d339d3de73ae54c00c958663cdf505e349da3de8f3bd0f07a7b1a093",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 29,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 813,
+        "sha256": "302f1205d339d3de73ae54c00c958663cdf505e349da3de8f3bd0f07a7b1a093",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 29,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16c_artifacts/pe_scan.py",
+      "public_path": "tools/pe_scan.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "af0a55f3b393712107e310e43b2cdc5288010cd58d093c5b9b6e655366904793",
+      "manifest_public_sha256": "af0a55f3b393712107e310e43b2cdc5288010cd58d093c5b9b6e655366904793",
+      "manifest_source_bytes": 3524,
+      "manifest_public_bytes": 3524,
+      "source": {
+        "bytes": 3524,
+        "sha256": "af0a55f3b393712107e310e43b2cdc5288010cd58d093c5b9b6e655366904793",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 96,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 3524,
+        "sha256": "af0a55f3b393712107e310e43b2cdc5288010cd58d093c5b9b6e655366904793",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 96,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16c_artifacts/xref_find.py",
+      "public_path": "tools/xref_find.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "eca068349cb94db98268d827cf6005f77bca2007f8c72838f8eb6c6818a1e392",
+      "manifest_public_sha256": "eca068349cb94db98268d827cf6005f77bca2007f8c72838f8eb6c6818a1e392",
+      "manifest_source_bytes": 1772,
+      "manifest_public_bytes": 1772,
+      "source": {
+        "bytes": 1772,
+        "sha256": "eca068349cb94db98268d827cf6005f77bca2007f8c72838f8eb6c6818a1e392",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 49,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 1772,
+        "sha256": "eca068349cb94db98268d827cf6005f77bca2007f8c72838f8eb6c6818a1e392",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 49,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16g_forensics/tools/p16g_census.py",
+      "public_path": "tools/p16g_census.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "6abdbabf1ca256ad3a66f31a01c93653c55ec81f7601aaa899f725790d54786a",
+      "manifest_public_sha256": "6abdbabf1ca256ad3a66f31a01c93653c55ec81f7601aaa899f725790d54786a",
+      "manifest_source_bytes": 8665,
+      "manifest_public_bytes": 8665,
+      "source": {
+        "bytes": 8665,
+        "sha256": "6abdbabf1ca256ad3a66f31a01c93653c55ec81f7601aaa899f725790d54786a",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 237,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 8665,
+        "sha256": "6abdbabf1ca256ad3a66f31a01c93653c55ec81f7601aaa899f725790d54786a",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 237,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16g_forensics/tools/p16g_kernarg.py",
+      "public_path": "tools/p16g_kernarg.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "bbaae7569a7a249ce72864d7f9d77c3070fb4b924db982d5bb85ffcb8532ec31",
+      "manifest_public_sha256": "bbaae7569a7a249ce72864d7f9d77c3070fb4b924db982d5bb85ffcb8532ec31",
+      "manifest_source_bytes": 8218,
+      "manifest_public_bytes": 8218,
+      "source": {
+        "bytes": 8218,
+        "sha256": "bbaae7569a7a249ce72864d7f9d77c3070fb4b924db982d5bb85ffcb8532ec31",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 213,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 8218,
+        "sha256": "bbaae7569a7a249ce72864d7f9d77c3070fb4b924db982d5bb85ffcb8532ec31",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 213,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16g_forensics/tools/p16g_msgpack.py",
+      "public_path": "tools/p16g_msgpack.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "8c539064a3fb1517bfe3ff7c0c7f6201dcc3a37d23d690089e66aac38b13a287",
+      "manifest_public_sha256": "8c539064a3fb1517bfe3ff7c0c7f6201dcc3a37d23d690089e66aac38b13a287",
+      "manifest_source_bytes": 4033,
+      "manifest_public_bytes": 4033,
+      "source": {
+        "bytes": 4033,
+        "sha256": "8c539064a3fb1517bfe3ff7c0c7f6201dcc3a37d23d690089e66aac38b13a287",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 145,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 4033,
+        "sha256": "8c539064a3fb1517bfe3ff7c0c7f6201dcc3a37d23d690089e66aac38b13a287",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 145,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16j_pre_gta/tools/p16j_determinism.py",
+      "public_path": "tools/p16j_determinism.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "79ec2424cdc31928d83bde51cef56469ae6416e7748dce8b80a62641e04bd5df",
+      "manifest_public_sha256": "79ec2424cdc31928d83bde51cef56469ae6416e7748dce8b80a62641e04bd5df",
+      "manifest_source_bytes": 8151,
+      "manifest_public_bytes": 8151,
+      "source": {
+        "bytes": 8151,
+        "sha256": "79ec2424cdc31928d83bde51cef56469ae6416e7748dce8b80a62641e04bd5df",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 190,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 8151,
+        "sha256": "79ec2424cdc31928d83bde51cef56469ae6416e7748dce8b80a62641e04bd5df",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 190,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16j_pre_gta/tools/p16j_differential.py",
+      "public_path": "tools/p16j_differential.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "2e9ae4c9c7a7453b383e9c44a54b7d24ec9ef69724f42f27f83de97dbe41346b",
+      "manifest_public_sha256": "2e9ae4c9c7a7453b383e9c44a54b7d24ec9ef69724f42f27f83de97dbe41346b",
+      "manifest_source_bytes": 6134,
+      "manifest_public_bytes": 6134,
+      "source": {
+        "bytes": 6134,
+        "sha256": "2e9ae4c9c7a7453b383e9c44a54b7d24ec9ef69724f42f27f83de97dbe41346b",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 147,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 6134,
+        "sha256": "2e9ae4c9c7a7453b383e9c44a54b7d24ec9ef69724f42f27f83de97dbe41346b",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 147,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16j_pre_gta/tools/p16j_throughput.py",
+      "public_path": "tools/p16j_throughput.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "5118eb2c02560877049ffd73032cd76685ac6f3fceebe9dc69e196fea4661751",
+      "manifest_public_sha256": "5118eb2c02560877049ffd73032cd76685ac6f3fceebe9dc69e196fea4661751",
+      "manifest_source_bytes": 6054,
+      "manifest_public_bytes": 6054,
+      "source": {
+        "bytes": 6054,
+        "sha256": "5118eb2c02560877049ffd73032cd76685ac6f3fceebe9dc69e196fea4661751",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 165,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 6054,
+        "sha256": "5118eb2c02560877049ffd73032cd76685ac6f3fceebe9dc69e196fea4661751",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 165,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16j_pre_gta/tools/p16j_frozen_check.py",
+      "public_path": "tools/p16j_frozen_check.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "12ae6e569bd8b743f9e890da033fbc6bfa26bc6b107de979ea128977eede8d7a",
+      "manifest_public_sha256": "12ae6e569bd8b743f9e890da033fbc6bfa26bc6b107de979ea128977eede8d7a",
+      "manifest_source_bytes": 2747,
+      "manifest_public_bytes": 2747,
+      "source": {
+        "bytes": 2747,
+        "sha256": "12ae6e569bd8b743f9e890da033fbc6bfa26bc6b107de979ea128977eede8d7a",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 75,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 2747,
+        "sha256": "12ae6e569bd8b743f9e890da033fbc6bfa26bc6b107de979ea128977eede8d7a",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 75,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16j_pre_gta/tools/p16j_input.py",
+      "public_path": "tools/p16j_input.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "965dc754008f449f78ced7c2ee4877db2f0142d3f3470e70db3dfce195ce8f57",
+      "manifest_public_sha256": "965dc754008f449f78ced7c2ee4877db2f0142d3f3470e70db3dfce195ce8f57",
+      "manifest_source_bytes": 7948,
+      "manifest_public_bytes": 7948,
+      "source": {
+        "bytes": 7948,
+        "sha256": "965dc754008f449f78ced7c2ee4877db2f0142d3f3470e70db3dfce195ce8f57",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 210,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 7948,
+        "sha256": "965dc754008f449f78ced7c2ee4877db2f0142d3f3470e70db3dfce195ce8f57",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 210,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16j_pre_gta/tools/p16j_job_status.py",
+      "public_path": "tools/p16j_job_status.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "a7a19cb124b0e63be72525d5c220f3c498e27c830874f28dffc4cca49f5f4578",
+      "manifest_public_sha256": "a7a19cb124b0e63be72525d5c220f3c498e27c830874f28dffc4cca49f5f4578",
+      "manifest_source_bytes": 8525,
+      "manifest_public_bytes": 8525,
+      "source": {
+        "bytes": 8525,
+        "sha256": "a7a19cb124b0e63be72525d5c220f3c498e27c830874f28dffc4cca49f5f4578",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 205,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 8525,
+        "sha256": "a7a19cb124b0e63be72525d5c220f3c498e27c830874f28dffc4cca49f5f4578",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 205,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16o_final/c_freeze.py",
+      "public_path": "tools/c_freeze.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "3e2689156f8a664d20a8a2e7cb164a264a92f9b48f75554fa03f59a48d2c0bdc",
+      "manifest_public_sha256": "3e2689156f8a664d20a8a2e7cb164a264a92f9b48f75554fa03f59a48d2c0bdc",
+      "manifest_source_bytes": 4155,
+      "manifest_public_bytes": 4155,
+      "source": {
+        "bytes": 4155,
+        "sha256": "3e2689156f8a664d20a8a2e7cb164a264a92f9b48f75554fa03f59a48d2c0bdc",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 102,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 4155,
+        "sha256": "3e2689156f8a664d20a8a2e7cb164a264a92f9b48f75554fa03f59a48d2c0bdc",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 102,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "phase16o_final/k_readiness.py",
+      "public_path": "tools/k_readiness.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "curated derivative: no mechanical transform reproduces the public bytes from the private original",
+      "manifest_source_sha256": "c769ea77d7d26631fbc227d1c3649bd2f5c472d77d0f76173a5c9aef1261ef5a",
+      "manifest_public_sha256": "e0e0723a2bd5e51201ab945d48adf8f101b506400d2131202414ba7bd30ef719",
+      "manifest_source_bytes": 7316,
+      "manifest_public_bytes": 9889,
+      "source": {
+        "bytes": 7316,
+        "sha256": "c769ea77d7d26631fbc227d1c3649bd2f5c472d77d0f76173a5c9aef1261ef5a",
+        "bom": null,
+        "crlf_pairs": 168,
+        "lone_lf": 0,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 9889,
+        "sha256": "e0e0723a2bd5e51201ab945d48adf8f101b506400d2131202414ba7bd30ef719",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 219,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": false,
+        "n_matching_chains": 0,
+        "minimal_chain": null,
+        "minimal_chain_length": null,
+        "matching_chains": [],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "NONE_FOUND",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "no chain in the defect vocabulary reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "phase16k_pretest/k15_target_profile/tools/p16k_guard_test.py",
+      "public_path": "tools/p16k_guard_test.py",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "1844cea7f0032fe56da50ba494244e10fc8b67daf1e07132e867a0a7588fa8aa",
+      "manifest_public_sha256": "1844cea7f0032fe56da50ba494244e10fc8b67daf1e07132e867a0a7588fa8aa",
+      "manifest_source_bytes": 6071,
+      "manifest_public_bytes": 6071,
+      "source": {
+        "bytes": 6071,
+        "sha256": "1844cea7f0032fe56da50ba494244e10fc8b67daf1e07132e867a0a7588fa8aa",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 155,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 6071,
+        "sha256": "1844cea7f0032fe56da50ba494244e10fc8b67daf1e07132e867a0a7588fa8aa",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 155,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    },
+    {
+      "source_path": "soft_wmma_test.cpp",
+      "public_path": "tests/soft_wmma_test.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "curated derivative: no mechanical transform reproduces the public bytes from the private original",
+      "manifest_source_sha256": "c559b161b05c8ebb7123e4638157805ba61f77e9ed99e13f658ea68409ec072a",
+      "manifest_public_sha256": "dfda440b5932dec4e79f7df5c1ba0b763a1c3e3f69d919a94ce23726f02865e5",
+      "manifest_source_bytes": 6489,
+      "manifest_public_bytes": 9451,
+      "source": {
+        "bytes": 6489,
+        "sha256": "c559b161b05c8ebb7123e4638157805ba61f77e9ed99e13f658ea68409ec072a",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 196,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 9451,
+        "sha256": "dfda440b5932dec4e79f7df5c1ba0b763a1c3e3f69d919a94ce23726f02865e5",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 240,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": false,
+        "n_matching_chains": 0,
+        "minimal_chain": null,
+        "minimal_chain_length": null,
+        "matching_chains": [],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "NONE_FOUND",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "no chain in the defect vocabulary reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "soft_wmma_bench.cpp",
+      "public_path": "tests/soft_wmma_bench.cpp",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "curated derivative: no mechanical transform reproduces the public bytes from the private original",
+      "manifest_source_sha256": "0bc7defd0092d070b768ade5a33718baf85a52d05ef986da3ad54a275992a696",
+      "manifest_public_sha256": "327498626a8ef4e4a4955ef9226805d09c45fece7d641afb20882ee728437e17",
+      "manifest_source_bytes": 8585,
+      "manifest_public_bytes": 11003,
+      "source": {
+        "bytes": 8585,
+        "sha256": "0bc7defd0092d070b768ade5a33718baf85a52d05ef986da3ad54a275992a696",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 236,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 11003,
+        "sha256": "327498626a8ef4e4a4955ef9226805d09c45fece7d641afb20882ee728437e17",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 278,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": false,
+        "n_matching_chains": 0,
+        "minimal_chain": null,
+        "minimal_chain_length": null,
+        "matching_chains": [],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "NONE_FOUND",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "no chain in the defect vocabulary reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "run_test.ps1",
+      "public_path": "scripts/run_test.ps1",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "curated derivative: no mechanical transform reproduces the public bytes from the private original",
+      "manifest_source_sha256": "02af7f8ccea46c9dd62c0327444570f7c2d8fb7ced6b9ecfcab3ea09adb94659",
+      "manifest_public_sha256": "e83afc4a667c6f5b4014dac26656bda44c6f39b0880aa7768503c4ef29fb6c6a",
+      "manifest_source_bytes": 3832,
+      "manifest_public_bytes": 11123,
+      "source": {
+        "bytes": 3832,
+        "sha256": "02af7f8ccea46c9dd62c0327444570f7c2d8fb7ced6b9ecfcab3ea09adb94659",
+        "bom": "UTF-8",
+        "crlf_pairs": 0,
+        "lone_lf": 123,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 11123,
+        "sha256": "e83afc4a667c6f5b4014dac26656bda44c6f39b0880aa7768503c4ef29fb6c6a",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 317,
+        "lone_cr": 0
+      },
+      "byte_identical": false,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": false,
+        "n_matching_chains": 0,
+        "minimal_chain": null,
+        "minimal_chain_length": null,
+        "matching_chains": [],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "NONE_FOUND",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "no chain in the defect vocabulary reproduces the public bytes"
+      }
+    },
+    {
+      "source_path": "run_host_job.ps1",
+      "public_path": "scripts/run_host_job.ps1",
+      "source_readable": true,
+      "public_readable": true,
+      "declared_modifications": "none",
+      "manifest_source_sha256": "a0e58fb39216cbbe394eb47eb10e8d643e24159db720511da415a379c272913c",
+      "manifest_public_sha256": "a0e58fb39216cbbe394eb47eb10e8d643e24159db720511da415a379c272913c",
+      "manifest_source_bytes": 5835,
+      "manifest_public_bytes": 5835,
+      "source": {
+        "bytes": 5835,
+        "sha256": "a0e58fb39216cbbe394eb47eb10e8d643e24159db720511da415a379c272913c",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 149,
+        "lone_cr": 0
+      },
+      "public": {
+        "bytes": 5835,
+        "sha256": "a0e58fb39216cbbe394eb47eb10e8d643e24159db720511da415a379c272913c",
+        "bom": null,
+        "crlf_pairs": 0,
+        "lone_lf": 149,
+        "lone_cr": 0
+      },
+      "byte_identical": true,
+      "transform_search": {
+        "max_chain_depth": 3,
+        "vocabulary": [
+          "strip_utf8_bom",
+          "add_utf8_bom",
+          "crlf_to_lf",
+          "lf_to_crlf"
+        ],
+        "n_chains_searched": 85,
+        "exact_match": true,
+        "n_matching_chains": 29,
+        "minimal_chain": [],
+        "minimal_chain_length": 0,
+        "matching_chains": [
+          []
+        ],
+        "matching_chains_note": "shortest reproductions only; n_matching_chains counts every reproduction"
+      },
+      "mechanical_relation": "IDENTICAL",
+      "manifest_agrees": {
+        "source_sha256": true,
+        "public_sha256": true,
+        "source_bytes": true,
+        "public_bytes": true
+      },
+      "claim_assessment": {
+        "authoritative": false,
+        "note": "informational only; the publication verifier recomputes this from the raw facts and never reads this field",
+        "verdict": "SUPPORTED",
+        "reason": "declared no transform and the bytes are identical"
+      }
+    }
+  ]
+}

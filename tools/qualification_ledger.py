@@ -102,7 +102,8 @@ J3_SOURCE_PROFILE = "swin<32,false>"
 #: project's chain. A PASS recorded under one of these must never be counted
 #: as evidence for J3, however green it is, because it was measured on a
 #: different source object under a different fixture.
-FINAL_HEAD_PROFILES: Tuple[str, ...] = ("final-head", "astra-final-head")
+FINAL_HEAD_PROFILES: Tuple[str, ...] = (
+    "final-head", "external-final-head-gfx1030")
 
 #: Statuses that let a stage count toward an advance decision.
 ADVANCING = ("PASS",)

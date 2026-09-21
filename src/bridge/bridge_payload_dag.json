@@ -134,16 +134,19 @@
       ],
       "tool": {
         "kind": "UNPUBLISHED_TOOL",
-        "path": "phase9_static/tools/p9_meta.py",
+        "path": "phase9_static/tools/p9_module_audit.py",
         "historical_path": "phase9_static/tools/",
         "siblings": [
           "p9_resources.py",
           "p9_descriptor.py",
           "msgpack_min.py"
         ],
-        "invocation": "python phase9_static/tools/p9_meta.py",
+        "invocation": null,
+        "invocation_note": "NOT RUNNABLE FROM THIS REPOSITORY. phase9_static/tools/ is not carried in the published tree, so no command here would do anything. This field is deliberately null rather than a command that cannot run: a documented invocation that is a no-op is worse than an honestly unresolved stage, because a reader who runs it and sees no error concludes the step succeeded.",
+        "correction": "An earlier revision of this file named phase9_static/tools/p9_meta.py as the tool and `python phase9_static/tools/p9_meta.py` as its invocation. Both were wrong. p9_meta.py is a shared LIBRARY (an ELF section reader and AMD .note msgpack decoder) with no __main__ block, so the documented command parsed the module and exited without doing anything. The tool that actually writes phase9_symbol_map.csv and phase9_final_kernel_resources.csv is p9_module_audit.py.",
         "does": "Reads the ELF symbol table and the AMD metadata note of the source object and writes the kernel symbol map and the resource table. Reads msgpack through a minimal in-tree decoder rather than a dependency.",
         "why_unpublished": "Part of a historical phase directory that is not carried in the published tree. It interprets AMD-specific metadata, and the decision to publish it was never made.",
+        "stage_status": "UNRESOLVED_IN_THE_PUBLISHED_TREE",
         "documented": true,
         "gap": "The symbol/resource metadata step is not reproducible from the published tree. The needed facts are conventional ELF and AMD-note facts, so a reader has a route, but no published tool performs it.",
         "acquisition": "Read the symbol table and the .note section of the source object with any ELF reader. The published src/isa/ tools model ISA semantics and are not a substitute for this step."

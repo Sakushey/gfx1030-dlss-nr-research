@@ -220,8 +220,17 @@
    "publication_category": "PUBLIC_ORIGINAL_SOURCE",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "line endings normalised CRLF -> LF; published copy additionally carries F6 (explicit CONTROL_ONLY/NUMERICAL emulation modes with a declared-stub registry and an UNSUPPORTED_NUMERIC refusal), so it is no longer byte-identical to the private original",
-   "reason": "original interoperability/emulation/validation tooling"
+   "modifications": "curated derivative: no mechanical transform reproduces the public bytes from the private original",
+   "reason": "original interoperability/emulation/validation tooling",
+   "declared_intent": "the published copy is intended to be the project's emulator with explicit CONTROL_ONLY and NUMERICAL emulation modes, a declared-stub registry, and an UNSUPPORTED_NUMERIC refusal, added on top of the private original",
+   "provenance_note": "the published copy was curated after review to carry the emulation modes and the declared-stub registry. The private original is a different, earlier revision of the same file, so the two byte streams are related by authorship, not by a transformation.",
+   "measured_byte_facts_ref": {
+    "artefact": "audit/PUBLICATION_BYTE_CORROBORATION.json",
+    "select": {
+     "public_path": "src/emulator/emu.py"
+    },
+    "note": "measured byte facts live in the corroboration artefact, produced by an independent program; this manifest may not assert them"
+   }
   },
   {
    "source_path": "phase8_static/tools/disasm_lib.py",
@@ -1286,8 +1295,17 @@
    "publication_category": "PUBLIC_ORIGINAL_TOOLING",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "line endings normalised CRLF -> LF; published copy additionally carries F7 (the four literal track flags are read from audit/QUALIFICATION_LEDGER.json via tools/qualification_ledger.py instead of being typed in)",
-   "reason": "original interoperability/emulation/validation tooling"
+   "modifications": "curated derivative: no mechanical transform reproduces the public bytes from the private original",
+   "reason": "original interoperability/emulation/validation tooling",
+   "declared_intent": "the published copy is intended to read the four track flags from audit/QUALIFICATION_LEDGER.json through tools/qualification_ledger.py instead of carrying them as typed-in literals",
+   "provenance_note": "the published copy was curated after review to source the track flags from the qualification ledger. The private original still holds the flags as literals, so the two files differ in content and not merely in encoding.",
+   "measured_byte_facts_ref": {
+    "artefact": "audit/PUBLICATION_BYTE_CORROBORATION.json",
+    "select": {
+     "public_path": "tools/k_readiness.py"
+    },
+    "note": "measured byte facts live in the corroboration artefact, produced by an independent program; this manifest may not assert them"
+   }
   },
   {
    "source_path": "phase16k_pretest/k15_target_profile/tools/p16k_guard_test.py",
@@ -1312,8 +1330,17 @@
    "publication_category": "PUBLIC_SAFE_TEST",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "line endings normalised CRLF -> LF; published copy additionally carries F2 (now includes tests/wmma_numeric_compare.h and the dense-fixture disclaimer required by F3)",
-   "reason": "original interoperability/emulation/validation tooling"
+   "modifications": "curated derivative: no mechanical transform reproduces the public bytes from the private original",
+   "reason": "original interoperability/emulation/validation tooling",
+   "declared_intent": "the published copy is intended to include tests/wmma_numeric_compare.h and to carry the dense-fixture disclaimer the numeric-comparison work requires",
+   "provenance_note": "the published copy was curated after review to include the shared numeric-comparison header and the dense-fixture disclaimer. Those are added lines, which no line-ending or encoding normalisation can produce.",
+   "measured_byte_facts_ref": {
+    "artefact": "audit/PUBLICATION_BYTE_CORROBORATION.json",
+    "select": {
+     "public_path": "tests/soft_wmma_test.cpp"
+    },
+    "note": "measured byte facts live in the corroboration artefact, produced by an independent program; this manifest may not assert them"
+   }
   },
   {
    "source_path": "soft_wmma_bench.cpp",
@@ -1325,8 +1352,17 @@
    "publication_category": "PUBLIC_SAFE_TEST",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "line endings normalised CRLF -> LF; published copy additionally carries F2 (now includes tests/wmma_numeric_compare.h)",
-   "reason": "original interoperability/emulation/validation tooling"
+   "modifications": "curated derivative: no mechanical transform reproduces the public bytes from the private original",
+   "reason": "original interoperability/emulation/validation tooling",
+   "declared_intent": "the published copy is intended to include tests/wmma_numeric_compare.h so the benchmark and the test share one comparison definition",
+   "provenance_note": "the published copy was curated after review to include the shared numeric-comparison header. The private original predates that header, so the published copy is strictly larger.",
+   "measured_byte_facts_ref": {
+    "artefact": "audit/PUBLICATION_BYTE_CORROBORATION.json",
+    "select": {
+     "public_path": "tests/soft_wmma_bench.cpp"
+    },
+    "note": "measured byte facts live in the corroboration artefact, produced by an independent program; this manifest may not assert them"
+   }
   },
   {
    "source_path": "run_test.ps1",
@@ -1338,8 +1374,17 @@
    "publication_category": "PUBLIC_ORIGINAL_TOOLING",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "line endings normalised CRLF -> LF; published copy additionally carries F1 (source resolved under tests\\, a -BuildOnly switch, an explicit -HipRoot, and layered Visual Studio discovery)",
-   "reason": "original interoperability/emulation/validation tooling"
+   "modifications": "curated derivative: no mechanical transform reproduces the public bytes from the private original",
+   "reason": "original interoperability/emulation/validation tooling",
+   "declared_intent": "the published copy is intended to resolve sources under tests\\, to offer a -BuildOnly switch, to take an explicit -HipRoot, and to discover Visual Studio in layers",
+   "provenance_note": "the published copy was curated after review and rewritten around the published tree's layout. The private original is a narrower script written for the private layout, so the two share a purpose and a name rather than a byte lineage.",
+   "measured_byte_facts_ref": {
+    "artefact": "audit/PUBLICATION_BYTE_CORROBORATION.json",
+    "select": {
+     "public_path": "scripts/run_test.ps1"
+    },
+    "note": "measured byte facts live in the corroboration artefact, produced by an independent program; this manifest may not assert them"
+   }
   },
   {
    "source_path": "run_host_job.ps1",
