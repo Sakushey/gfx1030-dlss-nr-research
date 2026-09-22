@@ -280,6 +280,12 @@ def _fill_defuse(ins: Insn):
         ins.uses_special.append("scc")
     if mn.startswith("s_cbranch_exec"):
         ins.uses_special.append("exec")
+    if mn.startswith("v_cmpx_"):
+        # CMPX predicates the comparison with the old EXEC mask and writes
+        # the resulting mask back to EXEC.  Omitting either edge hides the
+        # control dependency from def/use and liveness analyses.
+        ins.uses_special.append("exec")
+        ins.defs_special.append("exec")
     if mn in ("v_cndmask_b32", "v_cndmask_b32_e32"):
         if len(ops) > 2:
             ins.uses_special.append("vcc")
