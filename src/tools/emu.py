@@ -6,6 +6,7 @@ original gfx1100 stream and the translated gfx1030 stream on identical
 launch state. Deterministic; cycle detection on full state. No GPU use.
 """
 import math
+import re
 import struct
 
 U32 = 0xFFFFFFFF
@@ -1806,7 +1807,15 @@ class Core:
 
     def _ds_load(self, ins, ops, nbytes):
         dst = ops[0]
-        addr_tok, _, off = self._ds_parts(ins["text"], nbytes)
+        if len(ops) < 2:
+            raise NotImpl(f"ds load address parse: {ins['text']}")
+        addr_tok = ops[1]
+        om = re.search(r"offset:(-?[0-9a-fA-Fx]+)", ins["text"])
+        if om:
+            t = om.group(1)
+            off = int(t, 0) if t.lower().startswith("0x") else int(t)
+        else:
+            off = 0
         for lane in range(self.lanes):
             if (self.exec_l >> lane) & 1:
                 base = (self.vget(lane, addr_tok) + off) & 0xFFFFFFFF
@@ -1815,7 +1824,14 @@ class Core:
                 val = 0
                 for i in range(nbytes):
                     val |= self.lds[base + i] << (8 * i)
-                self.vset(lane, dst, val)
+                if dst.startswith("v[") and dst.endswith("]"):
+                    lo, hi = (int(x) for x in dst[2:-1].split(":"))
+                    if hi < lo or hi - lo + 1 != (nbytes + 3) // 4:
+                        raise NotImpl(f"ds load destination parse: {ins['text']}")
+                    for i in range(lo, hi + 1):
+                        self.vset(lane, f"v{i}", val >> (32 * (i - lo)))
+                else:
+                    self.vset(lane, dst, val)
 
     def op_ds_store_b32(self, ins, ops):
         self._ds_store(ins, ops, 4)
@@ -1852,6 +1868,9 @@ class Core:
 
     def op_ds_load_b64(self, ins, ops):
         self._ds_load(ins, ops, 8)
+
+    def op_ds_load_b128(self, ins, ops):
+        self._ds_load(ins, ops, 16)
 
     def op_ds_read_b32(self, ins, ops):
         self._ds_load(ins, ops, 4)
