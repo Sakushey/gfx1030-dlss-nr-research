@@ -1760,13 +1760,12 @@ class Core:
             off = int(t, 0) if t.lower().startswith("0x") else int(t)
             rest = rest[: om.start()].strip().rstrip(",").strip()
         datas = []
-        dm = re.match(r"^v(\d+)", rest)
-        if dm and rest.strip():
-            # possible v[a:b] range forms
-            if "[" in rest:
-                datas = [rest.strip()]
-            else:
-                datas = [rest.strip()]
+        token = rest.strip()
+        dm = re.match(r"^v(?:(\d+)|\[(\d+):(\d+)\])$", token)
+        if dm:
+            if dm.group(2) is not None and int(dm.group(2)) > int(dm.group(3)):
+                raise NotImpl(f"ds descending data range: {token}")
+            datas = [token]
         return addr, datas, off
 
     def _ds_data_dwords(self, lane, tok):
@@ -1830,10 +1829,7 @@ class Core:
         self._ds_store(ins, ops, 8)
 
     def op_ds_store_b128(self, ins, ops):
-        # vdst(4 dwords) via addr vreg + data in 4 consecutive? handle 2addr form
-        for lane in range(self.lanes):
-            if (self.exec_l >> lane) & 1:
-                pass  # handled via generic when needed
+        self._ds_store(ins, ops, 16)
 
     def op_ds_load_b32(self, ins, ops):
         self._ds_load(ins, ops, 4)
