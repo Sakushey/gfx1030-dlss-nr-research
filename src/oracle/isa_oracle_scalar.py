@@ -135,7 +135,10 @@ def s_add_u32(a, b):
 
 @_s("s_add_i32")
 def s_add_i32(a, b):
-    return {"value": u32(to_s32(a) + to_s32(b))}
+    aa, bb = u32(a), u32(b)
+    value = u32(to_s32(aa) + to_s32(bb))
+    return {"value": value,
+            "scc": 1 if ((aa ^ bb) & SIGN32) == 0 and ((aa ^ value) & SIGN32) else 0}
 
 
 @_s("s_addc_u32")
@@ -152,7 +155,10 @@ def s_sub_u32(a, b):
 
 @_s("s_sub_i32")
 def s_sub_i32(a, b):
-    return {"value": u32(to_s32(a) - to_s32(b))}
+    aa, bb = u32(a), u32(b)
+    value = u32(to_s32(aa) - to_s32(bb))
+    return {"value": value,
+            "scc": 1 if ((aa ^ bb) & SIGN32) and ((aa ^ value) & SIGN32) else 0}
 
 
 @_s("s_subb_u32")
