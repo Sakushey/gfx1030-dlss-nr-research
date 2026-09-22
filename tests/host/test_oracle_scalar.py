@@ -42,6 +42,12 @@ class TestSignedReinterpretation(unittest.TestCase):
     def test_add_i32_wraps_into_sign_bit(self):
         self.assertEqual(val(O.s_add_i32(0x7FFFFFFF, 1)), 0x80000000)
 
+    def test_signed_add_and_sub_report_overflow_in_scc(self):
+        self.assertEqual(O.s_add_i32(0x7FFFFFFF, 1)["scc"], 1)
+        self.assertEqual(O.s_add_i32(1, 1)["scc"], 0)
+        self.assertEqual(O.s_sub_i32(0x80000000, 1)["scc"], 1)
+        self.assertEqual(O.s_sub_i32(8, 3)["scc"], 0)
+
     def test_abs_of_int32_min_is_itself(self):
         self.assertEqual(val(O.s_abs_i32(0x80000000)), 0x80000000)
 
