@@ -64,12 +64,19 @@
   "native_status": {
     "execution_backend": "IMPLEMENTED (host-verified against a mock backend)",
     "positive_mock": "PASS",
-    "negative_mock_matrix": "17 of 17 expected refusals",
+    "negative_mock_matrix": "17 of 17 expected refusals, with the one unreachable fault classified INVALID and excluded",
     "loop_termination_proof": "PASS -- 33 of 33 natural loops carry a finite maximum trip count",
     "old_loop_proof": "RETIRED_UNSOUND, retained as the record of an unsound method rather than deleted",
     "memory_bounds": "PASS -- every machine memory operation accounted",
-    "qualification": "not yet green; a live authorization and a just-in-time device-health gate are outstanding",
-    "physical": "NOT_RUN"
+    "qualification": "FULL PASS against the current package: every predicate of the qualification gate reported PASS",
+    "authorization": "the experiment id is on the authorising batch's allow-list; the batch ceiling and ledger are unchanged",
+    "physical": "NOT_RUN -- no slot spent",
+    "why_not_run": "the physical door in the execute binary opens only on a 64-hex authorization carried by the descriptor, and the descriptor that the qualification binds declares none. Opening it needs a further descriptor revision, qualified in its own right, before a slot is spent."
+  },
+  "audit_status": {
+    "note": "the standing audit's claims are dispositioned individually; a claim is not resolved by being reclassified, and this project does not mark a claim fixed that is not fixed",
+    "launch_relevant_open": 0,
+    "project_level_open_claims": "several remain genuinely open and are named in the project's own state record"
   },
   "open_blockers": [
     {
