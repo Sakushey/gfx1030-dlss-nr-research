@@ -280,6 +280,9 @@ def _fill_defuse(ins: Insn):
         ins.uses_special.append("scc")
     if mn.startswith("s_cbranch_exec"):
         ins.uses_special.append("exec")
+    # Carry/borrow forms consume the prior SCC bit as carry/borrow-in.
+    if mn in ("s_addc_u32", "s_subb_u32"):
+        ins.uses_special.append("scc")
     if mn in ("v_cndmask_b32", "v_cndmask_b32_e32"):
         if len(ops) > 2:
             ins.uses_special.append("vcc")
