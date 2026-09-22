@@ -515,6 +515,12 @@ class Core:
                 if key in self._cyckeys:
                     self._cyckeys_full[key] = self._v_signature()
         self.pc += 1
+        if "dual_pair" in ins:
+            self._step_vopd(ins, ops)
+            return
+        self._dispatch(ins, mnem, ops)
+
+    def _dispatch(self, ins, mnem, ops):
         if mnem.startswith("v_dual_"):
             mnem = "v_" + mnem[len("v_dual_"):]
         if mnem.startswith("v_cmp_"):
@@ -528,6 +534,57 @@ class Core:
                 loc = f"{addr:#x}" if isinstance(addr, int) else ins.get("text", "?")
                 raise NotImpl(f"{loc} {ins['mnemonic']} {ins['operands']}")
             fn(ins, ops)
+
+    def _step_vopd(self, ins, left_ops):
+        """Execute both VOPD halves from one architectural pre-state.
+
+        A VOPD pair is one instruction: a write by one half cannot become a
+        source read by its partner. The supported VOPD subset is vector ALU
+        only; fail closed if either half changes scalar/control/memory state.
+        """
+        pair = ins["dual_pair"]
+        base = (self.s[:], [row[:] for row in self.v], self.vcc_l,
+                self.exec_l, self.scc, dict(self.mem), bytes(self.lds),
+                list(self.global_stores))
+
+        def restore(state):
+            self.s = state[0][:]
+            self.v = [row[:] for row in state[1]]
+            self.vcc_l, self.exec_l, self.scc = state[2:5]
+            self.mem = dict(state[5])
+            self.lds[:] = state[6]
+            self.global_stores = list(state[7])
+
+        def changed(state):
+            return (self.s != state[0] or self.vcc_l != state[2]
+                    or self.exec_l != state[3] or self.scc != state[4]
+                    or self.mem != state[5] or bytes(self.lds) != state[6]
+                    or self.global_stores != state[7])
+
+        self._dispatch(ins, ins["mnemonic"].replace("_e32", "").replace(
+            "_e64", ""), left_ops)
+        left = (self.s[:], [row[:] for row in self.v], self.vcc_l,
+                self.exec_l, self.scc, dict(self.mem), bytes(self.lds),
+                list(self.global_stores))
+        restore(base)
+        right_ops = [o.strip() for o in pair["operands"].split(",")]
+        self._dispatch(pair, pair["mnemonic"].replace("_e32", "").replace(
+            "_e64", ""), right_ops)
+        right = (self.s[:], [row[:] for row in self.v], self.vcc_l,
+                 self.exec_l, self.scc, dict(self.mem), bytes(self.lds),
+                 list(self.global_stores))
+        restore(base)
+        if changed(left) or changed(right):
+            raise NotImpl("VOPD half changed non-vector architectural state")
+        for lane in range(self.lanes):
+            for reg, old in enumerate(base[1][lane]):
+                a, b = left[1][lane][reg], right[1][lane][reg]
+                if a != old and b != old:
+                    raise NotImpl("VOPD halves have overlapping vector writes")
+                if a != old:
+                    self.v[lane][reg] = a
+                elif b != old:
+                    self.v[lane][reg] = b
 
     # ---------------- scalar ALU/control ----------------
     def op_s_mov_b32(self, ins, ops):
@@ -1921,29 +1978,20 @@ class Core:
 
 
 def split_dual(r):
-    """Split a dual-issue disassembly row into component instruction dicts."""
+    """Keep a dual-issue row as one atomic program instruction."""
     ops = r["operands"]
     if "::" not in ops:
         return [r]
     left, right = ops.split("::", 1)
-    out = []
-    # left side keeps the row mnemonic
     l = dict(r)
     l["operands"] = left.strip()
     l["text"] = r["mnemonic"] + " " + left.strip()
-    l["dual"] = True
-    out.append(l)
-    # right side carries its own mnemonic
     rtxt = right.strip()
     rm, _, rops = rtxt.partition(" ")
-    rr = dict(r)
-    rr["mnemonic"] = rm
-    rr["operands"] = rops.strip()
-    rr["text"] = rtxt
-    rr["dual"] = True
-    out.append(rr)
-    return out
-
+    l["dual_pair"] = {
+        **r, "mnemonic": rm, "operands": rops.strip(), "text": rtxt,
+    }
+    return [l]
 
 def build_orig_program(rows):
     prog = []
