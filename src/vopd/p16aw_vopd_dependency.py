@@ -119,7 +119,10 @@ def analyse_op(text: str):
         kind = parse_operand(op)
         if kind[0] == "imm":
             continue
-        reg = "%s%d" % kind
+        # Keep special architectural state distinct from numbered SGPR/VGPR
+        # names.  Treating every non-immediate as ``%s%d`` crashes on inputs
+        # such as ``vcc_lo`` rather than classifying the pair conservatively.
+        reg = kind[1] if kind[0] == "special" else "%s%d" % kind
         if role == "D":
             dest = reg
             writes.add(reg)
