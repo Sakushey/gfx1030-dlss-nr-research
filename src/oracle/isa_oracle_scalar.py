@@ -743,7 +743,7 @@ def _read_scalar(tok, setup, exec_lo, scc):
         return v
     if t.startswith("s") and t[1:].isdigit():
         return u32(setup.get("s%d" % int(t[1:]), 0))
-    if t.lower().startswith("0x") or t.lstrip("-").isdigit():
+    if t.lstrip("-").lower().startswith("0x") or t.lstrip("-").isdigit():
         return int(t, 0) & U32
     raise KeyError("cannot read scalar operand %r" % tok)
 

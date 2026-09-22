@@ -108,5 +108,25 @@ class TestComparisonWritesScc(unittest.TestCase):
                             O.SCALAR["s_cmp_gt_i32"](U32, 1)["scc"])
 
 
+class TestNegativeHexImmediate(unittest.TestCase):
+    def test_negative_hex_immediate_is_a_u32_word(self):
+        result = O.eval_scalar({
+            "mnem": "s_add_i32",
+            "setup": {"s1": 0},
+            "operands": ["s0", "s1", "-0x1"],
+        })
+        self.assertEqual(result["value"], U32)
+
+    def test_negative_hex_is_not_rejected_as_an_unknown_token(self):
+        try:
+            O.eval_scalar({
+                "mnem": "s_add_u32",
+                "setup": {"s1": 1},
+                "operands": ["s0", "s1", "-0x1"],
+            })
+        except KeyError as exc:
+            self.fail("negative hexadecimal immediate was rejected: %s" % exc)
+
+
 if __name__ == "__main__":
     unittest.main()
