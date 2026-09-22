@@ -1899,7 +1899,12 @@ class Core:
     op_global_store_byte = op_global_store_b8
 
     def op_global_load_b8(self, ins, ops):
-        pass
+        # A silent no-op leaves the destination VGPR unchanged.  That can make
+        # a memory-dependent trace appear to execute correctly using stale
+        # data, and therefore cannot support an arithmetic, liveness, or
+        # ordering conclusion.  Until byte-load semantics are implemented,
+        # stop the run explicitly instead.
+        raise NotImpl("global_load_b8 is not modelled")
 
     op_global_load_byte = op_global_load_b8
 
