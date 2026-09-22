@@ -348,7 +348,12 @@ def _fill_defuse(ins: Insn):
             # v_cmp_*_e32 (VOPC) writes VCC implicitly -> not a textual dst
             if mn.startswith("v_cmp") and mn.endswith("_e32"):
                 ins.defs_special.append("vcc")
-
+            # Carry-out forms have a second destination (typically VCC).
+            # Treating that operand as an ordinary source reverses the
+            # def-use edge for a vector carry chain.
+            if mn.startswith(("v_add_co_u32", "v_sub_co_u32",
+                              "v_add_co_ci_u32", "v_sub_co_ci_u32")) and len(ops) > 1:
+                vector_dst_positions.add(1)
     for pos, op in enumerate(ops):
         o = op.strip()
         if not o:
