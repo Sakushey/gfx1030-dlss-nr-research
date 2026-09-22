@@ -637,6 +637,19 @@ class Core:
         self.sset(ops[0], r)
         self.scc = 1 if r > U32 else 0
 
+    def op_s_sub_u32(self, ins, ops):
+        a = self.sget(ops[1]) & U32
+        b = self.sget(ops[2]) & U32
+        self.sset(ops[0], a - b)
+        self.scc = 1 if b > a else 0
+
+    def op_s_subb_u32(self, ins, ops):
+        a = self.sget(ops[1]) & U32
+        b = self.sget(ops[2]) & U32
+        borrow = self.scc
+        self.sset(ops[0], a - b - borrow)
+        self.scc = 1 if b + borrow > a else 0
+
     def op_s_sub_i32(self, ins, ops):
         self.sset(ops[0], self.sget(ops[1]) - self.sget(ops[2]))
 
