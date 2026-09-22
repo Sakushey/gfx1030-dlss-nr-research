@@ -158,6 +158,14 @@ IMPLICIT_READS = {
 # any v_cmp* with an explicit sNN destination writes VCC or an SGPR
 VOPC_SDST = re.compile(r"^v_cmp\w*_e64\b|^v_cmp\w*_s\b")
 
+# Saveexec forms read the old EXEC implicitly, write it to their scalar
+# destination, and replace EXEC with the operation result.  Keep the family
+# together: spelling variants such as ANDN2 and AND_NOT1 are easy to omit from
+# a hand-written chain of startswith checks.
+SAVEEXEC = re.compile(
+    r"^s_(?:and|andn2|and_not1|or|xor|nand|nor|xnor)_saveexec_b(?:32|64)$"
+)
+
 # msgs: operands that are *destinations* even though they appear late
 DEST_LATE = re.compile(r"^(buffer_load|global_load|flat_load|scratch_load|ds_read|"
                        r"s_load|s_buffer_load|s_scratch_load)")
@@ -287,9 +295,7 @@ def _fill_defuse(ins: Insn):
         ins.uses_special.append("vcc")
     if mn.startswith("v_add_co_u32") or mn.startswith("v_sub_co_u32"):
         pass
-    if mn.startswith("s_and_saveexec") or mn.startswith("s_or_saveexec") \
-       or mn.startswith("s_xor_saveexec") or mn.startswith("s_nand_saveexec") \
-       or mn.startswith("s_nor_saveexec") or mn.startswith("s_xnor_saveexec"):
+    if SAVEEXEC.match(mn):
         ins.uses_special.append("exec")
         ins.defs_special.append("exec")
     if mn in ("s_mov_b32", "s_mov_b64") and ops and ops[0] in ("exec_lo", "exec_hi", "exec"):
