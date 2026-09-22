@@ -1,0 +1,468 @@
+{
+  "phase": "16AW",
+  "brief_section": 31,
+  "title": "LOCAL DETERMINISTIC CONTRACT of the k_dec_upsample reference pair",
+  "host_only": true,
+  "no_hip_call": true,
+  "status": "DECLARED_AND_MEASURED",
+  "what_this_is": "The contract the PROJECT'S OWN two CPU references are required to implement, stated so that every clause is either a choice this project made or a measurement of these files.",
+  "what_this_is_not": [
+    "NOT a claim about the original DLSS-NR model's reduction order, reduction tree, or accumulator width.",
+    "NOT a claim that the vendor kernel implements this contract. What the frozen 16AS native object actually emits is a separate measurement (NATIVE_EMITTED_MATH_16AW.json).",
+    "NOT a claim that agreement between A and B is evidence about the model.  A and B agreeing is evidence that THESE TWO FILES implement THIS CONTRACT; the audit's finding was precisely that their agreement had been read as more than that."
+  ],
+  "provenance": {
+    "p16ar\\native\\cpu_reference\\k_dec_upsample_A.py": {
+      "sha256": "e396add08d1b10acd3ad3a46455ea4bf3c7cf19da727fce8189ad880a1bacc8c",
+      "bytes": 6915
+    },
+    "p16ar\\native\\cpu_reference\\k_dec_upsample_B.py": {
+      "sha256": "7d124fda9e5aba720e6acdd0c6b46b1cd878fe76b32ff4f0cabef07a703292df",
+      "bytes": 9356
+    },
+    "p16ar\\native\\cpu_reference\\NUMERICAL_CONTRACT_16AR.json": {
+      "sha256": "ac7335b00106c0f1eefc580cbf6e3b64b15a7893b9c8b4a68afb089f5ae1d851",
+      "bytes": 7788
+    },
+    "p16ar\\reference\\NUMERIC_PRECISION_PINNING_16AR.json": {
+      "sha256": "9e228a17e80ad6fd68875bd87db2e4d9840c0cbd0f331f134f0681c92a3343f9",
+      "bytes": 9515
+    },
+    "p16aw\\numeric\\k_dec_upsample_A_rn32.py": {
+      "sha256": "b46b6faef5d65fea53b19791ad23450066bc47b29739ecd7b6c634eb315e9d5b",
+      "bytes": 20540
+    },
+    "p16aw\\numeric\\k_dec_upsample_B_independent.py": {
+      "sha256": "b41f8c913ffefd1aff1ce5925f8907d801b4a3a6b0d4671618991c8e8c227de4",
+      "bytes": 14762
+    },
+    "p16ar\\native\\hip\\k_dec_upsample_fp8.h": {
+      "sha256": "df598a0755261f66f093b13b3a32d4f31e75f5b800eee26d86282c94e1361542",
+      "bytes": 7585
+    },
+    "p16ar\\native\\cpu_reference\\p16ar_ab_harness.py": {
+      "sha256": "0b0a0e78138d3a8b89e5b7b764978fef35d47fecd70a70a41667ce26a3a50d69",
+      "bytes": 19279
+    },
+    "p16aw\\numeric\\p16aw_s2_contract.py": {
+      "sha256": "f34bcbed6216dafbfad9016cd3e1aca78bcf90d0d9af0f3802d95696039f2672",
+      "bytes": 35541
+    }
+  },
+  "replaces": {
+    "16AR_contract_sentence_within_a_chunk": "the 32 products are summed in binary32; every partial sum is rounded to binary32 (IEEE-754 round-to-nearest-even, 24-bit significand)",
+    "16AR_contract_sentence_between_chunks": "the running accumulator is rounded to binary16 by H() after EVERY chunk",
+    "16AR_verdict": "A_AND_B_AGREE",
+    "16AR_frozen_tolerances": {
+      "absolute": 0,
+      "relative": 0
+    },
+    "A_16AR_code_it_described": {
+      "line 118": "s = 0.0",
+      "line 120": "s += a[a0 + t] * m[m0 + t]"
+    },
+    "B_16AR_code_it_described": {
+      "line 239": "s = _f32(s + a[a0 + t] * m[m0 + t])"
+    },
+    "why_the_sentence_was_false_of_A": "The sentence declares binary32 accumulation.  A_16AR implements `s = 0.0` / `s += a*m` in CPython, i.e. an IEEE-754 BINARY64 accumulator with a 53-bit significand, and calls no rounding helper inside the loop.  The sentence is true of B_16AR and false of A_16AR, so the recorded `A_AND_B_AGREE` was evidence limited to the fixture that was run through them."
+  },
+  "contract": {
+    "scope": "k_dec_upsample (block 39) on the 16AR/16AS geometry: 512x1024 weight matrix, 1024-wide reduction, 512 output channels, plus the skip path.",
+    "geometry": {
+      "chunk": 32,
+      "partition": 256,
+      "reduction_width": 1024,
+      "n_chunks_per_partition": 8,
+      "n_partitions": 4
+    },
+    "product": {
+      "kind": "CHOICE",
+      "statement": "The product of one activation and one weight is EXACT and is not rounded.  A binary16 activation carries at most 11 significand bits and an E4M3FN weight at most 4 (448 = 7 * 2**6 -> 3 explicit bits), so a product needs at most 15 significand bits and is exactly representable in binary32 (24 bits).",
+      "evidence": "measurement m_product_exactness below",
+      "consequence_for_fma": "Because the product is exact in binary32, a compiler that contracts mul+add into a single fused multiply-add introduces NO double rounding: FMA(a, b, c) == RN32(a*b exact + c) == the contract's mul-then-add.  FMA contraction is therefore contract-neutral here, and the native object's use of `v_fma_mix_f32` is not a deviation.  This is a statement about admissible values only; it is not a licence to assume the same about any other operator."
+    },
+    "accumulator": {
+      "kind": "CHOICE",
+      "statement": "binary32: 24-bit significand, round-to-nearest ties-to-even, subnormal range down to 2**-149, overflow to +/-inf.  Every partial sum is rounded to binary32 after EVERY accumulate, in ascending index order; there is exactly ONE rounding per accumulate step.",
+      "order": "ascending index t = 0..31 within a chunk; no tree, no pairwise scheme, no reordering.",
+      "implementation_of_the_choice": {
+        "A": "`chunk_dot` carries an exact dyadic (m, e) and calls `rn32_pair` -- integer-only, inspectable -- after every `dyadic_add`.",
+        "B": "`chunk_dot` calls `_f32` -- an exact rational divided by the binade's exact quantum, round-half-to-even -- after every add.",
+        "why_two_mechanisms": "brief section 33: the two references must not share the accumulator helper.  They share the SPECIFICATION and nothing else."
+      },
+      "code_check": {
+        "A_16AW": {
+          "calls": [
+            "as_dyadic",
+            "dyadic_add",
+            "dyadic_mul",
+            "dyadic_to_float",
+            "range",
+            "rn32_pair"
+          ],
+          "augassign_count": 0,
+          "rounds_explicitly": true
+        },
+        "A_16AR": {
+          "calls": [
+            "range"
+          ],
+          "augassign_count": 1,
+          "rounds_explicitly": false
+        },
+        "B_16AR": {
+          "calls": [
+            "Q",
+            "_f32",
+            "range"
+          ],
+          "augassign_count": 0,
+          "rounds_explicitly": true
+        },
+        "predicate": "calls rn32_pair or _f32 inside chunk_dot AND contains no bare float `+=` (an AugAssign on the accumulator)"
+      }
+    },
+    "chunk_boundaries": {
+      "kind": "CHOICE",
+      "statement": "The row reduction is split into 32-wide chunks (offsets 0,32,...,992 of the 1024-wide axis).  A chunk's 32-term sum is produced in binary32 as above; the running row accumulator is kept in binary16 and the chunk sum is combined with it by H(exact(acc + s)) -- the sum is taken EXACTLY and rounded ONCE to binary16.",
+      "explicitly_not": "H(H32(acc + s)): rounding the chunk sum to binary32 and THEN to binary16 is a different function (double rounding).  The contract picks round-once, which is what B_16AR has always computed and what the 16AR contract's own `between_chunks` sentence describes."
+    },
+    "partition_fold": {
+      "kind": "CHOICE",
+      "statement": "each partition's 256-wide result is a binary16 value; the four partition results are folded LEFT TO RIGHT as H(a + b) with the add taken exactly (round once)."
+    },
+    "rounding_mode": {
+      "kind": "CHOICE",
+      "statement": "round-to-nearest, ties-to-EVEN, at every rounding point: the binary32 accumulate, the binary16 chunk boundary, the partition fold, and the fused main + skip*scale combination.",
+      "no_other_modes": "no flush-to-zero, no round-toward-zero, no denormals-are-zero anywhere in the contract."
+    },
+    "intermediate_half_conversion": {
+      "kind": "CHOICE",
+      "statement": "H(v) is binary16 round-to-nearest ties-to-even returned as an exact value (a python float in A, an exact Fraction in B).  H does NOT saturate: a value whose magnitude exceeds the largest finite binary16 (65504) rounds to +/-inf, carrying the sign.  H preserves the sign of a zero: H(-0.0) = -0.0.",
+      "evidence": "measurement m_half_boundary below, whose population DELIBERATELY includes values above 65504 -- a population of in-range values cannot exercise this clause"
+    },
+    "fp8_conversion": {
+      "kind": "CHOICE",
+      "statement": "E4M3FN with SATFINITE semantics: bytes 0x7F and 0xFF decode to +/-448 (not NaN).  The ENCODER is the pinned arithmetic procedure, which for a finite input can never emit 0x7F or 0xFF: its last rule rewrites any 15/7 code to 0x7E.  Zero encodes to 0x00 (A) / 0x00 with the sign bit for -0.0.",
+      "note_on_the_device": "The device's own `kd::quantize_half_bits` DOES have a 0x7F path, for NON-FINITE input only; see non_finite_handling."
+    },
+    "saturation": {
+      "kind": "CHOICE",
+      "statement": "A FINITE value with magnitude >= 448 encodes to 0x7E (negative: 0xFE).  Saturation is a value, and it is specified: it is what the pinned procedure does and it is what B's nearest-representable search does.",
+      "not_saturation": "A value beyond binary16's range is NOT saturated to 65504; it becomes +/-inf (see intermediate_half_conversion) and, if it then reaches the encoder, it is refused (see non_finite_handling)."
+    },
+    "non_finite_handling": {
+      "kind": "OUT_OF_CONTRACT",
+      "statement": "A non-finite fused value has NO contract value.  Both references REFUSE it, raising the identically named `NonFiniteFusedValue` (an ArithmeticError) from the encoder.",
+      "why_it_is_not_a_number": "Three readings exist and the project will not silently pick one: (1) the device answers (sign<<7)|0x7F for non-finite half bits, labelled 'OUT OF CONTRACT; made loud' in k_dec_upsample_fp8.h; (2) the pinned procedure CANNOT emit 0x7F at all -- its final rule rewrites 15/7 to 0x7E; (3) 0x7F is the E4M3FN NaN code in the standard, which SATFINITE reinterprets as 448 on decode.  Publishing either byte here would be inventing a reference value so a comparison can go green.",
+      "reachability": "REACHABLE, not hypothetical: H is asked to round a binary32 chunk sum, and 32 terms of 65504 x 448 sum to 939,065,344, which is far outside binary16.  Measured below.",
+      "consequence_for_comparisons": "Any A-vs-B-vs-GPU comparison that reaches a non-finite fused value is VOID, and must be recorded as void rather than as agreement or disagreement."
+    },
+    "outputs": {
+      "out_h": "the fused binary16 value H(main + skip*scale) per channel, when the pre-quantization path is taken.",
+      "out_q": "the E4M3FN byte of that fused value; this is the byte 16AS froze into expected_out_q.bin.",
+      "publication_order": "channel index ascending, matching the frozen fixture's layout."
+    },
+    "nan": {
+      "kind": "UNREACHABLE",
+      "statement": "NaN is not reachable from admissible inputs: activations are binary16 values, weights are E4M3FN values whose only non-finite pattern (0x7F/0xFF) decodes to +/-448 under SATFINITE, and the skip/scale tables are binary16.  No NaN can enter the operator.  A NaN is nevertheless REFUSED rather than given a value: H passes NaN through and the encoder refuses it."
+    }
+  },
+  "measurements": {
+    "m_product_exactness": {
+      "domain": "every nonzero finite binary16 pattern x every nonzero E4M3FN byte, signs included, as the operator can meet them",
+      "n_pairs_enumerated": 16125444,
+      "max_product_significand_bits": 15,
+      "n_products_needing_more_than_binary32s_24_bits": 0,
+      "extremal_pair": {
+        "activation_bits": 1093,
+        "activation": 6.514787673950195e-05,
+        "weight_byte": "0x0F",
+        "weight": 0.029296875,
+        "product_odd_significand": 16395,
+        "product_significand_bits": 15
+      },
+      "distinct_magnitude_pairs": 3999618,
+      "distinct_magnitude_pairs_over_24_bits": 0,
+      "binary32_significand_bits": 24,
+      "conclusion": "every admissible product is EXACT in binary32"
+    },
+    "m_encoder_differential_repair_A2": {
+      "subject": "16AW Repair A-2 adds a non-finite guard to e4m3fn_quantize; this proves it changed NO FINITE value",
+      "n_compared": 63488,
+      "n_differing": 0,
+      "mutant": "mantissa tie rounds away from zero instead of to even",
+      "mutant_differing": 118,
+      "mutant_branch_reached": 208
+    },
+    "m_half_boundary": {
+      "population": 63527,
+      "population_above_65504": 37,
+      "A_16AR_vs_A_16AW_differing": 0,
+      "A_16AW_vs_B_16AW_differing": 0,
+      "overflow_examples": {
+        "H(2 * 65504)": "inf",
+        "H(31 * 65504 * 448)": "inf",
+        "H(2**20)": "inf",
+        "H(-31 * 65504 * 448)": "-inf"
+      },
+      "signed_zero": {
+        "H(+0.0)": "0.0",
+        "H(-0.0)": "-0.0",
+        "B.H(+0.0)": "0.0",
+        "B.H(-0.0)": "0.0"
+      },
+      "note": "the population deliberately contains values ABOVE 65504 so the no-saturation clause is exercised; an in-range-only population would compare the clause's easy half and report a pass"
+    },
+    "m_non_finite_disposition": {
+      "device_source_read": {
+        "path": "p16ar\\native\\hip\\k_dec_upsample_fp8.h",
+        "sha256": "df598a0755261f66f093b13b3a32d4f31e75f5b800eee26d86282c94e1361542",
+        "lines_with_nonlinear_marker": [
+          {
+            "line": 131,
+            "text": "    const bool nonfinite = (e == 31);          // OUT OF CONTRACT; made loud"
+          },
+          {
+            "line": 177,
+            "text": "    out = sel(nonfinite, (sign << 7) | 0x7F, out);"
+          }
+        ],
+        "lines_with_0x7F": [
+          {
+            "line": 62,
+            "text": "//   preserve finite evidence at NaN codes.\"  So 0x7F/0xFF decode to +/-448.0,"
+          },
+          {
+            "line": 177,
+            "text": "    out = sel(nonfinite, (sign << 7) | 0x7F, out);"
+          }
+        ],
+        "kind": "SOURCE_READ, not a measurement of executed device behaviour; this project is host-only and will not claim to have run it"
+      },
+      "probes": {
+        "H(32 * 65504 * 448)": {
+          "outcome": "VALUE",
+          "value": Infinity
+        },
+        "quantize(inf) via A_16AR": {
+          "outcome": "RAISED",
+          "type": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        "quantize(inf) via A_16AW": {
+          "outcome": "RAISED",
+          "type": "NonFiniteFusedValue",
+          "message": "e4m3fn_quantize: the fused value is inf.  A non-finite fused value is OUT OF CONTRACT: the kernel answers (sign<<7)|0x7F as a loud sentinel in kd::quantize_half_bits, and the pinned procedure cannot e"
+        },
+        "encode(inf) via B_16AR": {
+          "outcome": "VALUE",
+          "value": 126
+        },
+        "encode(inf) via B_16AW": {
+          "outcome": "RAISED",
+          "type": "NonFiniteFusedValue",
+          "message": "e4m3fn_encode: the fused value is inf.  OUT OF CONTRACT -- the kernel answers (sign<<7)|0x7F as a loud sentinel and no reference value exists."
+        },
+        "quantize(nan) via A_16AR": {
+          "outcome": "RAISED",
+          "type": "ValueError",
+          "message": "cannot convert float NaN to integer"
+        },
+        "quantize(nan) via A_16AW": {
+          "outcome": "RAISED",
+          "type": "NonFiniteFusedValue",
+          "message": "e4m3fn_quantize: the fused value is nan.  A non-finite fused value is OUT OF CONTRACT: the kernel answers (sign<<7)|0x7F as a loud sentinel in kd::quantize_half_bits, and the pinned procedure cannot e"
+        }
+      },
+      "reachability": {
+        "chunk_sum_of_32_maximal_products": 939065344.0,
+        "binary16_max_finite": 65504.0,
+        "so_the_fused_value_is": "inf"
+      }
+    },
+    "m_16AR_exclusion_justification": {
+      "path": "p16ar\\native\\cpu_reference\\p16ar_ab_harness.py",
+      "sha256": "0b0a0e78138d3a8b89e5b7b764978fef35d47fecd70a70a41667ce26a3a50d69",
+      "quoted": [
+        "\"n_excluded_non_finite\": 65536 - len(halves),",
+        "\"binary16 values, so this domain is the whole domain\"})",
+        "# 2. the FMA-contraction question, over the whole domain",
+        "\"the whole domain (see checks)\","
+      ],
+      "measured_verdict": "FALSE",
+      "why": "The justification is that quantize is only ever applied to H(...) results, i.e. to binary16 values, so excluding the non-finite binary16 patterns loses nothing.  Measured: H CAN return +/-inf (H(32*65504*448) = inf, above), so the two infinity patterns are REACHABLE and the exclusion drops them. Precisely: 65536 - 63488 = 2048 patterns were excluded (2 infinities and 2046 NaNs); of those, the 2 infinities are the reachable ones -- NaN is not reachable, because H's input here is a sum of finite products.  The harness line quotes its own count as `65536 - len(halves)`, i.e. 2048, while the sentence beside it was written as though the exclusion were the 2 infinity patterns; the sentence and the count disagree with each other as well as with the code.",
+      "consequence": "16AR's own two-reference comparison was blind to the one class of input where the two references and the device disagree about what to publish."
+    }
+  },
+  "checks": [
+    {
+      "check": "every admissible fp16 x E4M3FN product is exact in binary32 (and the extreme case is 15 bits, not 24)",
+      "ok": true,
+      "n_compared": 16125444,
+      "detail": {
+        "max_bits": 15,
+        "over_24": 0,
+        "extremal": {
+          "activation_bits": 1093,
+          "activation": 6.514787673950195e-05,
+          "weight_byte": "0x0F",
+          "weight": 0.029296875,
+          "product_odd_significand": 16395,
+          "product_significand_bits": 15
+        }
+      }
+    },
+    {
+      "check": "CONTROL: the same exactness test REJECTS a product truncated to 14 bits, and the truncation is reached",
+      "ok": true,
+      "n_compared": 2219640,
+      "detail": {
+        "reached": 2219640,
+        "differing": 2219640,
+        "widest_product_in_the_reached_set": 15
+      }
+    },
+    {
+      "check": "Repair A-2 changed no finite value: A_16AR.e4m3fn_quantize == A_rn32.e4m3fn_quantize on every finite binary16 value",
+      "ok": true,
+      "n_compared": 63488,
+      "detail": {
+        "differing": 0
+      }
+    },
+    {
+      "check": "CONTROL: the same value comparison rejects an encoder whose tie rule is different",
+      "ok": true,
+      "n_compared": 63488,
+      "detail": {
+        "mutant_differing": 118,
+        "mutant_branch_reached": 208
+      }
+    },
+    {
+      "check": "H's declared no-saturation and sign rules hold, and A and B agree on every value H is asked to round, INCLUDING overflow",
+      "ok": true,
+      "n_compared": 63527,
+      "detail": {
+        "A_vs_A_diff": 0,
+        "A_vs_B_diff": 0,
+        "above_65504": 37
+      }
+    },
+    {
+      "check": "CONTROL: the same comparison REJECTS a saturating H, and the saturation branch is reached",
+      "ok": true,
+      "n_compared": 63527,
+      "detail": {
+        "reached": 37,
+        "differing": 37
+      }
+    },
+    {
+      "check": "the DECLARED binary32-accumulate clause is what the repaired A's code actually does",
+      "ok": true,
+      "n_compared": 6,
+      "detail": {
+        "calls": [
+          "as_dyadic",
+          "dyadic_add",
+          "dyadic_mul",
+          "dyadic_to_float",
+          "range",
+          "rn32_pair"
+        ],
+        "augassign_count": 0,
+        "rounds_explicitly": true
+      }
+    },
+    {
+      "check": "CONTROL: the same predicate REJECTS A_16AR's chunk_dot, which is the defect the audit found",
+      "ok": true,
+      "n_compared": 1,
+      "detail": {
+        "A_16AR": {
+          "calls": [
+            "range"
+          ],
+          "augassign_count": 1,
+          "rounds_explicitly": false
+        },
+        "B_16AR_passes_the_same_predicate": true
+      }
+    },
+    {
+      "check": "a non-finite fused value is REACHABLE and both references refuse it identically (named exception), publishing no byte",
+      "ok": true,
+      "n_compared": 5,
+      "detail": {
+        "refusals": 3,
+        "probes": {
+          "H(32 * 65504 * 448)": {
+            "outcome": "VALUE",
+            "value": Infinity
+          },
+          "quantize(inf) via A_16AR": {
+            "outcome": "RAISED",
+            "type": "OverflowError",
+            "message": "cannot convert float infinity to integer"
+          },
+          "quantize(inf) via A_16AW": {
+            "outcome": "RAISED",
+            "type": "NonFiniteFusedValue",
+            "message": "e4m3fn_quantize: the fused value is inf.  A non-finite fused value is OUT OF CONTRACT: the kernel answers (sign<<7)|0x7F as a loud sentinel in kd::quantize_half_bits, and the pinned procedure cannot e"
+          },
+          "encode(inf) via B_16AR": {
+            "outcome": "VALUE",
+            "value": 126
+          },
+          "encode(inf) via B_16AW": {
+            "outcome": "RAISED",
+            "type": "NonFiniteFusedValue",
+            "message": "e4m3fn_encode: the fused value is inf.  OUT OF CONTRACT -- the kernel answers (sign<<7)|0x7F as a loud sentinel and no reference value exists."
+          },
+          "quantize(nan) via A_16AR": {
+            "outcome": "RAISED",
+            "type": "ValueError",
+            "message": "cannot convert float NaN to integer"
+          },
+          "quantize(nan) via A_16AW": {
+            "outcome": "RAISED",
+            "type": "NonFiniteFusedValue",
+            "message": "e4m3fn_quantize: the fused value is nan.  A non-finite fused value is OUT OF CONTRACT: the kernel answers (sign<<7)|0x7F as a loud sentinel in kd::quantize_half_bits, and the pinned procedure cannot e"
+          }
+        }
+      }
+    },
+    {
+      "check": "16AR's stated justification for excluding non-finite halves is refuted by the measurement above",
+      "ok": true,
+      "n_compared": 4,
+      "detail": {
+        "quoted": [
+          "\"n_excluded_non_finite\": 65536 - len(halves),",
+          "\"binary16 values, so this domain is the whole domain\"})",
+          "# 2. the FMA-contraction question, over the whole domain",
+          "\"the whole domain (see checks)\","
+        ]
+      }
+    }
+  ],
+  "n_checks": 10,
+  "n_checks_ok": 10,
+  "verdict": "CONTRACT_DECLARED_AND_MEASURED",
+  "steps_31_verdict": {
+    "product_precision": "DECLARED (exact) and MEASURED over the whole admissible pair domain",
+    "accumulator_precision": "DECLARED (binary32, RN-even, one rounding per accumulate) and MEASURED against both references' code",
+    "accumulation_order": "DECLARED (ascending index, no tree)",
+    "chunk_boundaries": "DECLARED (32-wide, round-once into binary16)",
+    "rounding_mode": "DECLARED (RN-even everywhere)",
+    "intermediate_half_conversion": "DECLARED (no saturation, sign of zero preserved) and MEASURED including overflow",
+    "fp8_conversion": "DECLARED (SATFINITE decode, pinned encoder, never 0x7F for finite input)",
+    "saturation": "DECLARED (finite >= 448 -> 0x7E/0xFE)",
+    "nan_inf_handling": "DECLARED OUT OF CONTRACT, both references refuse loudly; NaN unreachable; reachability MEASURED",
+    "what_could_not_be_measured": [
+      "whether the original DLSS-NR model implements any of this -- not measured, and not attempted: the model has never been executed here and the brief forbids running it."
+    ]
+  }
+}

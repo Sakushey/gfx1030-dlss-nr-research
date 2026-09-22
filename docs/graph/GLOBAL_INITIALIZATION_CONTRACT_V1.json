@@ -1,0 +1,1525 @@
+{
+ "schema": "p16ax/global-initialization-contract/1",
+ "phase": "16AX",
+ "task": "T-GRAPH",
+ "produced_by": "W5",
+ "host_only": true,
+ "gpu_execution_performed": false,
+ "hip_calls_made": 0,
+ "modules_loaded": 0,
+ "physical_launches": 0,
+ "purpose": "Record, per module global, its static bytes, the contents it must hold at runtime, the producer of those contents, the order in which that must happen, and the first consumer -- then expose the whole thing as predicates that CAN fail.  An offline replay cannot run a dependent operator until its globals are initialised, and on this module a missed initialisation is INVISIBLE to output comparison because the table is all-zero.",
+ "the_dependency_rule": {
+  "rule": "a global is ADMISSIBLE for a dependent operator only when it is (1) REGISTERED, (2) INITIALISED over a range that COVERS the whole symbol, and (3) the initialisation ORDER precedes first use.",
+  "inherited_from": "p16ad/bridge/GLOBAL_REGISTRATION_CONTRACT.json",
+  "inherited_verdict": "GLOBAL_REGISTRATION_CONTRACT_DEFINED_HOST_EVIDENCE_ONLY",
+  "violation_kinds": [
+   "UNREGISTERED",
+   "UNINITIALIZED",
+   "PARTIAL",
+   "ORDER"
+  ],
+  "what_this_artifact_adds": "the 16AD contract is a rule with no subject.  This record supplies the subject: the measured global inventory of the real module, and the concrete first consumer each rule must be evaluated against.",
+  "second_registration_rule": "a re-registration of the same symbol with a different size is a fault, not a silent overwrite"
+ },
+ "fact_sources": [
+  {
+   "path": "phase5_exact_fragment/gfx1100_code_object.o",
+   "sha256": "93e4a40b880b994860431309e9b2fd116efea585a23a830496050de88ee4800a",
+   "establishes": "the authentic parent module's .rodata, .symtab and the static image of every global"
+  },
+  {
+   "path": "phase5_exact_fragment/version.dll.static_copy",
+   "sha256": "e350e6137a5bb514f40465bafbd6d5411f2310b4ea9de2590f6229d5f9555212",
+   "establishes": "which device symbols the host names, and that the embedded fatbin accounts for all but one g_e4m3_lut occurrence"
+  },
+  {
+   "path": "phase11_fatbin/original_fatbin_extract.bin",
+   "sha256": "13018cbe95e2652fcccf1b958c0bf09e54172d03fa262a0c86539b8351300a54",
+   "establishes": "the exact byte span of the embedded fatbin used to separate host literals from fatbin-internal names"
+  },
+  {
+   "path": "phase16h_pcrel_fix/pcrel_site_ledger.csv",
+   "sha256": "06f6eb9d33065fa154876e9e91ef1935cf83b9a39257a9abc1ea6f2c261fb950",
+   "establishes": "the 82-site read census of the table, including that there are zero store sites"
+  },
+  {
+   "path": "phase16_authentic_launch_db.csv",
+   "sha256": "2b2b01858573795287a3c171d9710e73d6441b5d69168aa1745eda5058a6d874",
+   "establishes": "the authentic frame-1 dispatch order that fixes the first-consumer ordinal"
+  },
+  {
+   "path": "p16ad/bridge/GLOBAL_REGISTRATION_CONTRACT.json",
+   "sha256": "b2015803e0f9adaa9dc219b14bb7e2fb332dc5f5da86235a50da305eb439a20a",
+   "establishes": "the three-condition admissibility rule and the four violation kinds this record reuses"
+  },
+  {
+   "path": "phase12_host_runtime_audit.md",
+   "sha256": "87b49e527583ecf38e8d240b4574bb65b8d9dc025226fd377200bc5593781ea5",
+   "establishes": "an independent site census: exactly one __hipRegisterVar and one hipMemcpyToSymbol"
+  }
+ ],
+ "module_census": {
+  "PARENT_GFX1100": {
+   "path": "phase5_exact_fragment/gfx1100_code_object.o",
+   "sha256": "93e4a40b880b994860431309e9b2fd116efea585a23a830496050de88ee4800a",
+   "size_bytes": 1177984,
+   "sections": [
+    {
+     "name": ".note",
+     "type": 7,
+     "addr": "0x238",
+     "size": 35272
+    },
+    {
+     "name": ".dynsym",
+     "type": 11,
+     "addr": "0x8C00",
+     "size": 1728
+    },
+    {
+     "name": ".gnu.hash",
+     "type": 1879048182,
+     "addr": "0x92C0",
+     "size": 496
+    },
+    {
+     "name": ".hash",
+     "type": 5,
+     "addr": "0x94B0",
+     "size": 584
+    },
+    {
+     "name": ".dynstr",
+     "type": 3,
+     "addr": "0x96F8",
+     "size": 2123
+    },
+    {
+     "name": ".rodata",
+     "type": 1,
+     "addr": "0x9F80",
+     "size": 2658
+    },
+    {
+     "name": ".text",
+     "type": 1,
+     "addr": "0xBA00",
+     "size": 1111324
+    },
+    {
+     "name": ".dynamic",
+     "type": 6,
+     "addr": "0x11BF20",
+     "size": 112
+    },
+    {
+     "name": ".relro_padding",
+     "type": 8,
+     "addr": "0x11BF90",
+     "size": 112
+    },
+    {
+     "name": ".bss",
+     "type": 8,
+     "addr": "0x11CF90",
+     "size": 1
+    },
+    {
+     "name": ".AMDGPU.gpr_maximums",
+     "type": 1,
+     "addr": "0x0",
+     "size": 0
+    },
+    {
+     "name": ".comment",
+     "type": 1,
+     "addr": "0x0",
+     "size": 232
+    },
+    {
+     "name": ".symtab",
+     "type": 2,
+     "addr": "0x0",
+     "size": 8112
+    },
+    {
+     "name": ".shstrtab",
+     "type": 3,
+     "addr": "0x0",
+     "size": 138
+    },
+    {
+     "name": ".strtab",
+     "type": 3,
+     "addr": "0x0",
+     "size": 13516
+    }
+   ],
+   "rodata": {
+    "addr": "0x9F80",
+    "size": 2658,
+    "sha256": "24dc65e250c454532f172fe0006dbd86782170ca98d3a6a8770b50521d4c32e5",
+    "nonzero_bytes": 508
+   },
+   "object_symbols_total": 38,
+   "kernel_descriptors": {
+    "count": 33,
+    "each_size": 64,
+    "contiguous": true,
+    "all_size_64": true,
+    "first_address": "0x9F80",
+    "block_bytes": 2112,
+    "block_sha256": "7bdb21aa6e9b5aa9b0ebb940f02da1d13c7dc38cdcb989edd0d0c4a33805b7b4",
+    "block_nonzero_bytes": 492,
+    "symbols": [
+     "_Z16k_swin_1h_32_fp810SwinParams.kd",
+     "_Z21k_pre_block_1h_32_fp89PreParams.kd",
+     "_Z22k_post_block_1h_32_fp810PostParams.kd",
+     "_Z6k_ffwd10FfwdParams.kd",
+     "_Z10k_conv_res10ConvParams.kd",
+     "_Z10k_qkv_attn10AttnParams.kd",
+     "_Z7k_ffwd211Ffwd2Params.kd",
+     "_Z11k_conv_res211Conv2Params.kd",
+     "_Z11k_qkv_attn210AttnParams.kd",
+     "_Z8k_expand12ExpandParams.kd",
+     "_Z13k_conv_splitk12ConvParams1d.kd",
+     "_Z5k_qkv9QkvParams.kd",
+     "_Z11k_attention12AttnParams1d.kd",
+     "_Z9k_expand212ExpandParams.kd",
+     "_Z11k_contract212ConvParams1d.kd",
+     "_Z6k_qkv29QkvParams.kd",
+     "_Z12k_attention212AttnParams1d.kd",
+     "_Z14k_ffwd_inpview12FfwdPlParams.kd",
+     "_Z16k_conv_res_views12ConvPlParams.kd",
+     "_Z12k_final_head10HeadParams.kd",
+     "_Z8k_repack12RepackParams.kd",
+     "_Z14k_dec_upsample11DecUpParams.kd",
+     "_Z6k_mean10MeanParams.kd",
+     "_Z8k_import12ImportParams.kd",
+     "_Z8k_export12ExportParams.kd",
+     "_Z11k_reproject12ReprojParams.kd",
+     "_Z11k_flag_waitPjjj.kd",
+     "_Z10k_flag_setPjj.kd",
+     "_Z10k_swin_varILi32ELb1EEv9VarParams.kd",
+     "_Z10k_swin_varILi32ELb0EEv9VarParams.kd",
+     "_Z10k_swin_varILi64ELb0EEv9VarParams.kd",
+     "_Z10k_swin_varILi128ELb0EEv9VarParams.kd",
+     "_Z10k_swin_varILi256ELb0EEv9VarParams.kd"
+    ]
+   },
+   "non_kd_objects": [
+    {
+     "symbol": "g_e4m3_lut",
+     "value": "0xA7C0",
+     "value_int": 42944,
+     "size": 512,
+     "shndx": 6,
+     "in_rodata": true,
+     "section": ".rodata",
+     "sec_off": 2112,
+     "bytes_state": "PRESENT",
+     "sha256": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+     "nonzero_bytes": 0,
+     "all_zero": true,
+     "first_32_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+     "symbol": "_ZN12DlssNrEngine2SHE",
+     "value": "0xA9C0",
+     "value_int": 43456,
+     "size": 32,
+     "shndx": 6,
+     "in_rodata": true,
+     "section": ".rodata",
+     "sec_off": 2624,
+     "bytes_state": "PRESENT",
+     "sha256": "f34cfc5dd738efa4b2bcde4e7b64b5d26def2390dc4c98af569968aa9d7e9223",
+     "nonzero_bytes": 16,
+     "all_zero": false,
+     "first_32_hex": "0000000000000000fcfffffffcfffffffcffffff0000000000000000fcffffff"
+    },
+    {
+     "symbol": "D3D11_DEFAULT",
+     "value": "0xA9E0",
+     "value_int": 43488,
+     "size": 1,
+     "shndx": 6,
+     "in_rodata": true,
+     "section": ".rodata",
+     "sec_off": 2656,
+     "bytes_state": "PRESENT",
+     "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+     "nonzero_bytes": 0,
+     "all_zero": true,
+     "first_32_hex": "00"
+    },
+    {
+     "symbol": "D3D11_VIDEO_DEFAULT",
+     "value": "0xA9E1",
+     "value_int": 43489,
+     "size": 1,
+     "shndx": 6,
+     "in_rodata": true,
+     "section": ".rodata",
+     "sec_off": 2657,
+     "bytes_state": "PRESENT",
+     "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+     "nonzero_bytes": 0,
+     "all_zero": true,
+     "first_32_hex": "00"
+    },
+    {
+     "symbol": "__hip_cuid_d63a1e356537062c",
+     "value": "0x11CF90",
+     "value_int": 1167248,
+     "size": 1,
+     "shndx": 10,
+     "in_rodata": false,
+     "section": ".bss",
+     "bytes_state": "NOBITS_NO_BYTES_ON_DISK",
+     "sec_off": 0
+    }
+   ]
+  },
+  "CANDIDATE_F": {
+   "path": "phase16h_candidate_f/gfx1030_dlssnr_candidate_f.co",
+   "sha256": "47b5d1d11041b034ac30eebac090ee922f415d8f08a0111e69641d7e0557524b",
+   "size_bytes": 1255632,
+   "sections": [
+    {
+     "name": ".note",
+     "type": 7,
+     "addr": "0x200",
+     "size": 35272
+    },
+    {
+     "name": ".dynsym",
+     "type": 11,
+     "addr": "0x8BC8",
+     "size": 1728
+    },
+    {
+     "name": ".gnu.hash",
+     "type": 1879048182,
+     "addr": "0x9288",
+     "size": 496
+    },
+    {
+     "name": ".hash",
+     "type": 5,
+     "addr": "0x9478",
+     "size": 584
+    },
+    {
+     "name": ".dynstr",
+     "type": 3,
+     "addr": "0x96C0",
+     "size": 2137
+    },
+    {
+     "name": ".rodata",
+     "type": 1,
+     "addr": "0x9F40",
+     "size": 2658
+    },
+    {
+     "name": ".text",
+     "type": 1,
+     "addr": "0xBA00",
+     "size": 1206972
+    },
+    {
+     "name": ".dynamic",
+     "type": 6,
+     "addr": "0x1334C0",
+     "size": 112
+    },
+    {
+     "name": ".relro_padding",
+     "type": 8,
+     "addr": "0x133530",
+     "size": 2768
+    },
+    {
+     "name": ".comment",
+     "type": 1,
+     "addr": "0x0",
+     "size": 106
+    },
+    {
+     "name": ".symtab",
+     "type": 2,
+     "addr": "0x0",
+     "size": 1752
+    },
+    {
+     "name": ".shstrtab",
+     "type": 3,
+     "addr": "0x0",
+     "size": 112
+    },
+    {
+     "name": ".strtab",
+     "type": 3,
+     "addr": "0x0",
+     "size": 2146
+    }
+   ],
+   "rodata": {
+    "addr": "0x9F40",
+    "size": 2658,
+    "sha256": "dfbf7dd4e8f08d061a919d202e8f8a53ce985c75885131c0dfac48c6bab05541",
+    "nonzero_bytes": 421
+   },
+   "object_symbols_total": 37,
+   "kernel_descriptors": {
+    "count": 33,
+    "each_size": 64,
+    "contiguous": true,
+    "all_size_64": true,
+    "first_address": "0x9F40",
+    "block_bytes": 2112,
+    "block_sha256": "248bc9bcdbad73ec1527102387cde83bb8df0c4f19237fa16d80e582119333e2",
+    "block_nonzero_bytes": 405,
+    "symbols": [
+     "_Z16k_swin_1h_32_fp810SwinParams.kd",
+     "_Z21k_pre_block_1h_32_fp89PreParams.kd",
+     "_Z22k_post_block_1h_32_fp810PostParams.kd",
+     "_Z6k_ffwd10FfwdParams.kd",
+     "_Z10k_conv_res10ConvParams.kd",
+     "_Z10k_qkv_attn10AttnParams.kd",
+     "_Z7k_ffwd211Ffwd2Params.kd",
+     "_Z11k_conv_res211Conv2Params.kd",
+     "_Z11k_qkv_attn210AttnParams.kd",
+     "_Z8k_expand12ExpandParams.kd",
+     "_Z13k_conv_splitk12ConvParams1d.kd",
+     "_Z5k_qkv9QkvParams.kd",
+     "_Z11k_attention12AttnParams1d.kd",
+     "_Z9k_expand212ExpandParams.kd",
+     "_Z11k_contract212ConvParams1d.kd",
+     "_Z6k_qkv29QkvParams.kd",
+     "_Z12k_attention212AttnParams1d.kd",
+     "_Z14k_ffwd_inpview12FfwdPlParams.kd",
+     "_Z16k_conv_res_views12ConvPlParams.kd",
+     "_Z12k_final_head10HeadParams.kd",
+     "_Z8k_repack12RepackParams.kd",
+     "_Z14k_dec_upsample11DecUpParams.kd",
+     "_Z6k_mean10MeanParams.kd",
+     "_Z8k_import12ImportParams.kd",
+     "_Z8k_export12ExportParams.kd",
+     "_Z11k_reproject12ReprojParams.kd",
+     "_Z11k_flag_waitPjjj.kd",
+     "_Z10k_flag_setPjj.kd",
+     "_Z10k_swin_varILi32ELb1EEv9VarParams.kd",
+     "_Z10k_swin_varILi32ELb0EEv9VarParams.kd",
+     "_Z10k_swin_varILi64ELb0EEv9VarParams.kd",
+     "_Z10k_swin_varILi128ELb0EEv9VarParams.kd",
+     "_Z10k_swin_varILi256ELb0EEv9VarParams.kd"
+    ]
+   },
+   "non_kd_objects": [
+    {
+     "symbol": "g_e4m3_lut",
+     "value": "0xA780",
+     "value_int": 42880,
+     "size": 512,
+     "shndx": 6,
+     "in_rodata": true,
+     "section": ".rodata",
+     "sec_off": 2112,
+     "bytes_state": "PRESENT",
+     "sha256": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+     "nonzero_bytes": 0,
+     "all_zero": true,
+     "first_32_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+     "symbol": "_ZN12DlssNrEngine2SHE",
+     "value": "0xA980",
+     "value_int": 43392,
+     "size": 32,
+     "shndx": 6,
+     "in_rodata": true,
+     "section": ".rodata",
+     "sec_off": 2624,
+     "bytes_state": "PRESENT",
+     "sha256": "f34cfc5dd738efa4b2bcde4e7b64b5d26def2390dc4c98af569968aa9d7e9223",
+     "nonzero_bytes": 16,
+     "all_zero": false,
+     "first_32_hex": "0000000000000000fcfffffffcfffffffcffffff0000000000000000fcffffff"
+    },
+    {
+     "symbol": "D3D11_DEFAULT",
+     "value": "0xA9A0",
+     "value_int": 43424,
+     "size": 1,
+     "shndx": 6,
+     "in_rodata": true,
+     "section": ".rodata",
+     "sec_off": 2656,
+     "bytes_state": "PRESENT",
+     "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+     "nonzero_bytes": 0,
+     "all_zero": true,
+     "first_32_hex": "00"
+    },
+    {
+     "symbol": "D3D11_VIDEO_DEFAULT",
+     "value": "0xA9A1",
+     "value_int": 43425,
+     "size": 1,
+     "shndx": 6,
+     "in_rodata": true,
+     "section": ".rodata",
+     "sec_off": 2657,
+     "bytes_state": "PRESENT",
+     "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+     "nonzero_bytes": 0,
+     "all_zero": true,
+     "first_32_hex": "00"
+    }
+   ]
+  },
+  "CANDIDATE_E": {
+   "path": "phase16e_candidate_e/gfx1030_dlssnr_candidate_e.co",
+   "sha256": "caca8034a995b922a334be6f4d3d2403f9087fbc9f9ea6728127377732784ecb",
+   "size_bytes": 1254696,
+   "sections": [
+    {
+     "name": ".note",
+     "type": 7,
+     "addr": "0x200",
+     "size": 35272
+    },
+    {
+     "name": ".dynsym",
+     "type": 11,
+     "addr": "0x8BC8",
+     "size": 1632
+    },
+    {
+     "name": ".gnu.hash",
+     "type": 1879048182,
+     "addr": "0x9228",
+     "size": 476
+    },
+    {
+     "name": ".hash",
+     "type": 5,
+     "addr": "0x9404",
+     "size": 552
+    },
+    {
+     "name": ".dynstr",
+     "type": 3,
+     "addr": "0x962C",
+     "size": 2070
+    },
+    {
+     "name": ".rodata",
+     "type": 1,
+     "addr": "0x9E80",
+     "size": 2112
+    },
+    {
+     "name": ".text",
+     "type": 1,
+     "addr": "0xB700",
+     "size": 1206972
+    },
+    {
+     "name": ".dynamic",
+     "type": 6,
+     "addr": "0x1331C0",
+     "size": 112
+    },
+    {
+     "name": ".relro_padding",
+     "type": 8,
+     "addr": "0x133230",
+     "size": 3536
+    },
+    {
+     "name": ".comment",
+     "type": 1,
+     "addr": "0x0",
+     "size": 106
+    },
+    {
+     "name": ".symtab",
+     "type": 2,
+     "addr": "0x0",
+     "size": 1656
+    },
+    {
+     "name": ".shstrtab",
+     "type": 3,
+     "addr": "0x0",
+     "size": 112
+    },
+    {
+     "name": ".strtab",
+     "type": 3,
+     "addr": "0x0",
+     "size": 2079
+    }
+   ],
+   "rodata": {
+    "addr": "0x9E80",
+    "size": 2112,
+    "sha256": "476592d39037b3007f8e7686d8082459f60b7e038585b905b7a2841dde0d5883",
+    "nonzero_bytes": 405
+   },
+   "object_symbols_total": 33,
+   "kernel_descriptors": {
+    "count": 33,
+    "each_size": 64,
+    "contiguous": true,
+    "all_size_64": true,
+    "first_address": "0x9E80",
+    "block_bytes": 2112,
+    "block_sha256": "476592d39037b3007f8e7686d8082459f60b7e038585b905b7a2841dde0d5883",
+    "block_nonzero_bytes": 405,
+    "symbols": [
+     "_Z16k_swin_1h_32_fp810SwinParams.kd",
+     "_Z21k_pre_block_1h_32_fp89PreParams.kd",
+     "_Z22k_post_block_1h_32_fp810PostParams.kd",
+     "_Z6k_ffwd10FfwdParams.kd",
+     "_Z10k_conv_res10ConvParams.kd",
+     "_Z10k_qkv_attn10AttnParams.kd",
+     "_Z7k_ffwd211Ffwd2Params.kd",
+     "_Z11k_conv_res211Conv2Params.kd",
+     "_Z11k_qkv_attn210AttnParams.kd",
+     "_Z8k_expand12ExpandParams.kd",
+     "_Z13k_conv_splitk12ConvParams1d.kd",
+     "_Z5k_qkv9QkvParams.kd",
+     "_Z11k_attention12AttnParams1d.kd",
+     "_Z9k_expand212ExpandParams.kd",
+     "_Z11k_contract212ConvParams1d.kd",
+     "_Z6k_qkv29QkvParams.kd",
+     "_Z12k_attention212AttnParams1d.kd",
+     "_Z14k_ffwd_inpview12FfwdPlParams.kd",
+     "_Z16k_conv_res_views12ConvPlParams.kd",
+     "_Z12k_final_head10HeadParams.kd",
+     "_Z8k_repack12RepackParams.kd",
+     "_Z14k_dec_upsample11DecUpParams.kd",
+     "_Z6k_mean10MeanParams.kd",
+     "_Z8k_import12ImportParams.kd",
+     "_Z8k_export12ExportParams.kd",
+     "_Z11k_reproject12ReprojParams.kd",
+     "_Z11k_flag_waitPjjj.kd",
+     "_Z10k_flag_setPjj.kd",
+     "_Z10k_swin_varILi32ELb1EEv9VarParams.kd",
+     "_Z10k_swin_varILi32ELb0EEv9VarParams.kd",
+     "_Z10k_swin_varILi64ELb0EEv9VarParams.kd",
+     "_Z10k_swin_varILi128ELb0EEv9VarParams.kd",
+     "_Z10k_swin_varILi256ELb0EEv9VarParams.kd"
+    ]
+   },
+   "non_kd_objects": []
+  }
+ },
+ "candidate_e_layout_delta": {
+  "candidate_e_rodata_addr": "0x9E80",
+  "candidate_e_rodata_size": 2112,
+  "candidate_e_non_kd_object_count": 0,
+  "parent_non_kd_object_count": 5,
+  "candidate_f_non_kd_object_count": 4,
+  "measured": "Candidate E's .rodata is EXACTLY the 33 .kd descriptors (2112 bytes) and nothing else.  It dropped g_e4m3_lut, _ZN12DlssNrEngine2SHE and both D3D11_* objects entirely, so the symbol the 79 sites address does not exist in it."
+ },
+ "host_runtime_census": {
+  "path": "phase5_exact_fragment/version.dll.static_copy",
+  "sha256": "e350e6137a5bb514f40465bafbd6d5411f2310b4ea9de2590f6229d5f9555212",
+  "size_bytes": 4480512,
+  "sections": [
+   {
+    "name": ".text",
+    "va": "0x1000",
+    "size": 340678
+   },
+   {
+    "name": ".rdata",
+    "va": "0x55000",
+    "size": 116100
+   },
+   {
+    "name": ".data",
+    "va": "0x72000",
+    "size": 17200
+   },
+   {
+    "name": ".pdata",
+    "va": "0x77000",
+    "size": 13896
+   },
+   {
+    "name": ".fptable",
+    "va": "0x7B000",
+    "size": 256
+   },
+   {
+    "name": ".hipFatB",
+    "va": "0x7C000",
+    "size": 24
+   },
+   {
+    "name": ".hip_fat",
+    "va": "0x7D000",
+    "size": 3982944
+   },
+   {
+    "name": ".retarc",
+    "va": "0x44A000",
+    "size": 8688
+   },
+   {
+    "name": ".retard",
+    "va": "0x44D000",
+    "size": 24
+   },
+   {
+    "name": ".tls",
+    "va": "0x44E000",
+    "size": 9
+   },
+   {
+    "name": "_RDATA",
+    "va": "0x44F000",
+    "size": 500
+   },
+   {
+    "name": ".reloc",
+    "va": "0x450000",
+    "size": 4244
+   }
+  ],
+  "embedded_fatbin": {
+   "section": ".hip_fat",
+   "file_span": [
+    "0x75C00",
+    "0x442260"
+   ],
+   "bytes": 3982944,
+   "equals_phase11_extract": true,
+   "extract_sha256": "13018cbe95e2652fcccf1b958c0bf09e54172d03fa262a0c86539b8351300a54"
+  },
+  "symbol_name_literals": {
+   "g_e4m3_lut": {
+    "occurrences": 9,
+    "inside_fatbin": 8,
+    "host_side_literals": 1,
+    "detail": [
+     {
+      "file_offset": "0x55184",
+      "section": ".rdata",
+      "va": "0x180056984",
+      "inside_embedded_fatbin": false
+     },
+     {
+      "file_offset": "0x803F0",
+      "section": ".hip_fat",
+      "va": "0x1800877F0",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x195A22",
+      "section": ".hip_fat",
+      "va": "0x18019CE22",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x1A03F0",
+      "section": ".hip_fat",
+      "va": "0x1801A77F0",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x2B5922",
+      "section": ".hip_fat",
+      "va": "0x1802BCD22",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x2C03F0",
+      "section": ".hip_fat",
+      "va": "0x1802C77F0",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x3D7B5A",
+      "section": ".hip_fat",
+      "va": "0x1803DEF5A",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x3E2AE4",
+      "section": ".hip_fat",
+      "va": "0x1803E9EE4",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x441DF4",
+      "section": ".hip_fat",
+      "va": "0x1804491F4",
+      "inside_embedded_fatbin": true
+     }
+    ]
+   },
+   "_ZN12DlssNrEngine2SHE": {
+    "occurrences": 8,
+    "inside_fatbin": 8,
+    "host_side_literals": 0,
+    "detail": [
+     {
+      "file_offset": "0x80AEF",
+      "section": ".hip_fat",
+      "va": "0x180087EEF",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x196121",
+      "section": ".hip_fat",
+      "va": "0x18019D521",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x1A0AEF",
+      "section": ".hip_fat",
+      "va": "0x1801A7EEF",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x2B6021",
+      "section": ".hip_fat",
+      "va": "0x1802BD421",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x2C0AEF",
+      "section": ".hip_fat",
+      "va": "0x1802C7EEF",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x3D8259",
+      "section": ".hip_fat",
+      "va": "0x1803DF659",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x3E2AEF",
+      "section": ".hip_fat",
+      "va": "0x1803E9EEF",
+      "inside_embedded_fatbin": true
+     },
+     {
+      "file_offset": "0x441DFF",
+      "section": ".hip_fat",
+      "va": "0x1804491FF",
+      "inside_embedded_fatbin": true
+     }
+    ]
+   }
+  },
+  "host_side_name_block": {
+   "count": 34,
+   "kernels": 33,
+   "non_kernel": [
+    "g_e4m3_lut"
+   ],
+   "names": [
+    {
+     "file_offset": "0x54DC0",
+     "name": "_Z16k_swin_1h_32_fp810SwinParams"
+    },
+    {
+     "file_offset": "0x54DE1",
+     "name": "_Z21k_pre_block_1h_32_fp89PreParams"
+    },
+    {
+     "file_offset": "0x54E05",
+     "name": "_Z22k_post_block_1h_32_fp810PostParams"
+    },
+    {
+     "file_offset": "0x54E2C",
+     "name": "_Z6k_ffwd10FfwdParams"
+    },
+    {
+     "file_offset": "0x54E42",
+     "name": "_Z10k_conv_res10ConvParams"
+    },
+    {
+     "file_offset": "0x54E5D",
+     "name": "_Z10k_qkv_attn10AttnParams"
+    },
+    {
+     "file_offset": "0x54E78",
+     "name": "_Z7k_ffwd211Ffwd2Params"
+    },
+    {
+     "file_offset": "0x54E90",
+     "name": "_Z11k_conv_res211Conv2Params"
+    },
+    {
+     "file_offset": "0x54EAD",
+     "name": "_Z11k_qkv_attn210AttnParams"
+    },
+    {
+     "file_offset": "0x54EC9",
+     "name": "_Z8k_expand12ExpandParams"
+    },
+    {
+     "file_offset": "0x54EE3",
+     "name": "_Z13k_conv_splitk12ConvParams1d"
+    },
+    {
+     "file_offset": "0x54F03",
+     "name": "_Z5k_qkv9QkvParams"
+    },
+    {
+     "file_offset": "0x54F16",
+     "name": "_Z11k_attention12AttnParams1d"
+    },
+    {
+     "file_offset": "0x54F34",
+     "name": "_Z9k_expand212ExpandParams"
+    },
+    {
+     "file_offset": "0x54F4F",
+     "name": "_Z11k_contract212ConvParams1d"
+    },
+    {
+     "file_offset": "0x54F6D",
+     "name": "_Z6k_qkv29QkvParams"
+    },
+    {
+     "file_offset": "0x54F81",
+     "name": "_Z12k_attention212AttnParams1d"
+    },
+    {
+     "file_offset": "0x54FA0",
+     "name": "_Z14k_ffwd_inpview12FfwdPlParams"
+    },
+    {
+     "file_offset": "0x54FC1",
+     "name": "_Z16k_conv_res_views12ConvPlParams"
+    },
+    {
+     "file_offset": "0x54FE4",
+     "name": "_Z12k_final_head10HeadParams"
+    },
+    {
+     "file_offset": "0x55001",
+     "name": "_Z8k_repack12RepackParams"
+    },
+    {
+     "file_offset": "0x5501B",
+     "name": "_Z14k_dec_upsample11DecUpParams"
+    },
+    {
+     "file_offset": "0x5503B",
+     "name": "_Z6k_mean10MeanParams"
+    },
+    {
+     "file_offset": "0x55051",
+     "name": "_Z8k_import12ImportParams"
+    },
+    {
+     "file_offset": "0x5506B",
+     "name": "_Z8k_export12ExportParams"
+    },
+    {
+     "file_offset": "0x55085",
+     "name": "_Z11k_reproject12ReprojParams"
+    },
+    {
+     "file_offset": "0x550A3",
+     "name": "_Z11k_flag_waitPjjj"
+    },
+    {
+     "file_offset": "0x550B7",
+     "name": "_Z10k_flag_setPjj"
+    },
+    {
+     "file_offset": "0x550C9",
+     "name": "_Z10k_swin_varILi32ELb1EEv9VarParams"
+    },
+    {
+     "file_offset": "0x550EE",
+     "name": "_Z10k_swin_varILi32ELb0EEv9VarParams"
+    },
+    {
+     "file_offset": "0x55113",
+     "name": "_Z10k_swin_varILi64ELb0EEv9VarParams"
+    },
+    {
+     "file_offset": "0x55138",
+     "name": "_Z10k_swin_varILi128ELb0EEv9VarParams"
+    },
+    {
+     "file_offset": "0x5515E",
+     "name": "_Z10k_swin_varILi256ELb0EEv9VarParams"
+    },
+    {
+     "file_offset": "0x55184",
+     "name": "g_e4m3_lut"
+    }
+   ]
+  }
+ },
+ "globals": [
+  {
+   "id": "GLOBAL_GE4M3_LUT",
+   "symbol": "g_e4m3_lut",
+   "class": "RODATA_TABLE_RUNTIME_FILLED",
+   "role": "the E4M3 (FP8) -> FP16 lookup table.  Consumers read it with `global_load_ushort`, i.e. as 256 u16 entries.",
+   "declared_in": "phase5_exact_fragment/gfx1100_code_object.o",
+   "section": ".rodata",
+   "section_offset": 2112,
+   "address_in_parent": "0xA7C0",
+   "address_in_candidate_f": "0xA780",
+   "address_in_candidate_e": null,
+   "size_bytes": 512,
+   "entry_count": 256,
+   "entry_width_bits": 16,
+   "static_bytes": {
+    "parent": {
+     "sha256": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+     "nonzero": 0,
+     "all_zero": true,
+     "first_32_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "candidate_f": {
+     "sha256": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+     "nonzero": 0,
+     "all_zero": true,
+     "first_32_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+   },
+   "static_bytes_are_identical_in_parent_and_translation": true,
+   "expected_runtime_contents": {
+    "state": "UNKNOWN",
+    "why_unknown": "the payload is not in this tree in any form.  The producer is identified below, but the bytes it uploads were never captured, and the static image is all-zero in BOTH the authentic parent module and the translation, so no static artifact can decide it.",
+    "discriminator": "u16 entry 0x7F and u16 entry 0xFF.  Under SATFINITE these are 0x5F00 (+448.0) and 0xDF00 (-448.0).  Under a pure-OCP NaN definition they are a NaN pattern (0x7E00 / 0xFE00).  Under the all-zero static image they are (0x0000, 0x0000) and every E4M3 byte decodes to +0.0.",
+    "project_established_reading": "SATFINITE -- p16ar/reference/_fetch_pinned/decode_tinlayout_global.py lines 23-34 carry the comment 'Original fused kernels use SATFINITE; preserve finite evidence at NaN codes.' and set exponent==15 & mantissa==7 to sign * 448.0"
+   },
+   "candidate_tables_computed_by_this_generator": {
+    "note": "COMPUTED HERE, NOT MEASURED FROM THE MODULE.  These exist so a future capture has something exact to compare against; they are NOT evidence about the module.",
+    "SATFINITE": {
+     "sha256": "074619a6d1758b66a1507cd45bf9842151d071fd13fa7b4e1174eb555fd0e71d",
+     "u16_0x7F": "0x5F00",
+     "u16_0xFF": "0xDF00"
+    },
+    "OCP_NAN": {
+     "sha256": "26f6424f23eb8c679a0602789b1c0a77d61cd603245d021dd64cc7a38e7c3ed2",
+     "u16_0x7F": "0x7E00",
+     "u16_0xFF": "0xFE00",
+     "caveat": "the OCP variant's exact NaN bit pattern is itself unestablished; only the (0x5F00, 0xDF00) SATFINITE prediction is pinned by an artifact in this tree."
+    },
+    "ALL_ZERO": {
+     "sha256": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+     "u16_0x7F": "0x0000",
+     "u16_0xFF": "0x0000"
+    }
+   },
+   "initialization_producer": {
+    "state": "IDENTIFIED_BY_CHAIN_OF_EVIDENCE",
+    "kind": "ONE HOST-SIDE SYMBOL COPY",
+    "identifies_as": "hipMemcpyToSymbol / __hipRegisterVar",
+    "host_module": "phase5_exact_fragment/version.dll.static_copy",
+    "payload_in_tree": false,
+    "payload_note": "the bytes uploaded were never captured.  This record identifies WHO writes the global, not WHAT is written.",
+    "evidence": [
+     "phase5_exact_fragment/version.dll.static_copy .rdata holds a single contiguous NUL-separated name block of 34 strings: the 33 kernel symbols plus exactly one non-kernel symbol, ['g_e4m3_lut'].  A host does not name a device symbol it never touches.",
+     "phase12_host_runtime_audit.md section 12D counts, independently of this analysis, exactly one __hipRegisterVar site, one unregister site and one hipMemcpyToSymbol site in this same host module.",
+     "phase12_weight_pipeline.md and 12F: no large weight blob exists inside the host; the payload is supplied from outside the analysed copy.",
+     "the 82-site pcrel ledger contains ZERO store sites, so the device code never writes the table."
+    ],
+    "ceiling": "no disassembly cross-reference was performed in this session.  The pairing of the single host-side name literal with the single __hipRegisterVar / hipMemcpyToSymbol site census is an INFERENCE from a measured string position plus an independently measured site count.  It is strong and it is not a disassembly-proven call edge."
+   },
+   "order_requirement": {
+    "must_precede": "the first consumer's first dispatch",
+    "first_consumer": {
+     "launch_in_frame": 2,
+     "ord_global": 3,
+     "kernel_mangled": "_Z10k_swin_varILi32ELb1EEv9VarParams",
+     "kernel_semantic": "k_swin_var",
+     "variant": "swin<32,true>",
+     "grid": [
+      "240",
+      "144",
+      "1"
+     ],
+     "block": [
+      "256",
+      "1",
+      "1"
+     ],
+     "stream": "0000000000000000",
+     "ledger_entry": {
+      "sites": 9,
+      "loads": 8
+     }
+    },
+    "measured_by": "phase16_authentic_launch_db.csv frame-1 dispatch order intersected with phase16h_pcrel_fix/pcrel_site_ledger.csv consumer census",
+    "ceiling": "the ledger is the phase16h pcrel site census.  It is NOT a whole-module dataflow analysis, so a consumer that reached the table without a PC-relative add would not appear in it.  k_import -- dispatch position 1, before the first swin block -- has NO site in the ledger."
+   },
+   "read_site_census": {
+    "sites_total": 82,
+    "targeting_this_table": 79,
+    "sites_carrying_a_load": 53,
+    "store_sites": 0,
+    "consumers": {
+     "_Z16k_swin_1h_32_fp810SwinParams": {
+      "sites": 1,
+      "loads": 0
+     },
+     "_Z21k_pre_block_1h_32_fp89PreParams": {
+      "sites": 1,
+      "loads": 0
+     },
+     "_Z22k_post_block_1h_32_fp810PostParams": {
+      "sites": 1,
+      "loads": 0
+     },
+     "_Z6k_ffwd10FfwdParams": {
+      "sites": 3,
+      "loads": 3
+     },
+     "_Z10k_conv_res10ConvParams": {
+      "sites": 1,
+      "loads": 1
+     },
+     "_Z10k_qkv_attn10AttnParams": {
+      "sites": 1,
+      "loads": 1
+     },
+     "_Z7k_ffwd211Ffwd2Params": {
+      "sites": 3,
+      "loads": 3
+     },
+     "_Z11k_conv_res211Conv2Params": {
+      "sites": 5,
+      "loads": 4
+     },
+     "_Z11k_qkv_attn210AttnParams": {
+      "sites": 6,
+      "loads": 5
+     },
+     "_Z8k_expand12ExpandParams": {
+      "sites": 1,
+      "loads": 1
+     },
+     "_Z9k_expand212ExpandParams": {
+      "sites": 1,
+      "loads": 0
+     },
+     "_Z11k_contract212ConvParams1d": {
+      "sites": 1,
+      "loads": 0
+     },
+     "_Z6k_qkv29QkvParams": {
+      "sites": 2,
+      "loads": 0
+     },
+     "_Z12k_attention212AttnParams1d": {
+      "sites": 2,
+      "loads": 0
+     },
+     "_Z14k_ffwd_inpview12FfwdPlParams": {
+      "sites": 3,
+      "loads": 3
+     },
+     "_Z16k_conv_res_views12ConvPlParams": {
+      "sites": 1,
+      "loads": 1
+     },
+     "_Z12k_final_head10HeadParams": {
+      "sites": 1,
+      "loads": 1
+     },
+     "_Z10k_swin_varILi32ELb1EEv9VarParams": {
+      "sites": 9,
+      "loads": 8
+     },
+     "_Z10k_swin_varILi32ELb0EEv9VarParams": {
+      "sites": 9,
+      "loads": 8
+     },
+     "_Z10k_swin_varILi64ELb0EEv9VarParams": {
+      "sites": 10,
+      "loads": 6
+     },
+     "_Z10k_swin_varILi128ELb0EEv9VarParams": {
+      "sites": 10,
+      "loads": 4
+     },
+     "_Z10k_swin_varILi256ELb0EEv9VarParams": {
+      "sites": 10,
+      "loads": 4
+     }
+    }
+   },
+   "degenerate_failure_mode": {
+    "what": "while the table is all-zero every E4M3 byte decodes to +0.0, so a dependent operator emits a well-formed but degenerate result",
+    "why_output_comparison_cannot_see_it": "the failure is silent in the same way a missing initialisation was silent in Phase 16F: the values are wrong, not malformed",
+    "recorded_at": "phase16h_pcrel_fix/p6_global_oob_gate.md section 1",
+    "gate": "G5_NOT_ALL_ZERO_AT_USE"
+   }
+  },
+  {
+   "id": "GLOBAL_DLSSNRENGINE_SHE",
+   "symbol": "_ZN12DlssNrEngine2SHE",
+   "class": "RODATA_STATIC_OBJECT",
+   "role": "a static data member of DlssNrEngine, 32 bytes = 8 int32",
+   "declared_in": "phase5_exact_fragment/gfx1100_code_object.o",
+   "section": ".rodata",
+   "section_offset": 2624,
+   "address_in_parent": "0xA9C0",
+   "address_in_candidate_f": "0xA980",
+   "size_bytes": 32,
+   "static_bytes": {
+    "sha256": "f34cfc5dd738efa4b2bcde4e7b64b5d26def2390dc4c98af569968aa9d7e9223",
+    "nonzero": 16,
+    "first_32_hex": "0000000000000000fcfffffffcfffffffcffffff0000000000000000fcffffff"
+   },
+   "static_bytes_identical_in_translation": true,
+   "decoded": "eight little-endian int32: [0, 0, -4, -4, -4, 0, 0, -4]",
+   "expected_runtime_contents": {
+    "state": "STATIC_IMAGE_SUFFICIENT",
+    "why": "the host module contains NO literal for this symbol, so the host never names it: it is not a registration or copy target.  Its initialiser is in the static image."
+   },
+   "initialization_producer": {
+    "state": "ELF_STATIC_IMAGE",
+    "payload_in_tree": true
+   },
+   "order_requirement": {
+    "must_precede": "any read; automatically satisfied by the load of the static image"
+   },
+   "first_consumer": {
+    "state": "NOT_ESTABLISHED",
+    "why": "this session did not perform a dataflow search for readers of this object; it is recorded for completeness, not as a replay dependency"
+   }
+  },
+  {
+   "id": "GLOBAL_D3D11_DEFAULT",
+   "symbol": "D3D11_DEFAULT",
+   "class": "RODATA_SCALAR_OBJECT",
+   "role": "a D3D11 feature-level constant; not a compute global",
+   "section": ".rodata",
+   "section_offset": 2656,
+   "address_in_parent": "0xA9E0",
+   "size_bytes": 1,
+   "static_bytes": {
+    "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+    "nonzero": 0,
+    "first_32_hex": "00"
+   },
+   "expected_runtime_contents": {
+    "state": "STATIC_IMAGE_SUFFICIENT",
+    "why": "single zero byte == D3D11_DEFAULT feature level 0; the static value IS the default."
+   },
+   "initialization_producer": {
+    "state": "ELF_STATIC_IMAGE",
+    "payload_in_tree": true
+   },
+   "order_requirement": {
+    "must_precede": "any read"
+   },
+   "first_consumer": {
+    "state": "NOT_ESTABLISHED",
+    "why": "host-side D3D11 code, outside the offline-replay path"
+   }
+  },
+  {
+   "id": "GLOBAL_D3D11_VIDEO_DEFAULT",
+   "symbol": "D3D11_VIDEO_DEFAULT",
+   "class": "RODATA_SCALAR_OBJECT",
+   "role": "a D3D11 feature-level constant; not a compute global",
+   "section": ".rodata",
+   "section_offset": 2657,
+   "address_in_parent": "0xA9E1",
+   "size_bytes": 1,
+   "static_bytes": {
+    "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+    "nonzero": 0,
+    "first_32_hex": "00"
+   },
+   "expected_runtime_contents": {
+    "state": "STATIC_IMAGE_SUFFICIENT",
+    "why": "single zero byte == D3D11_DEFAULT feature level 0; the static value IS the default."
+   },
+   "initialization_producer": {
+    "state": "ELF_STATIC_IMAGE",
+    "payload_in_tree": true
+   },
+   "order_requirement": {
+    "must_precede": "any read"
+   },
+   "first_consumer": {
+    "state": "NOT_ESTABLISHED",
+    "why": "host-side D3D11 code, outside the offline-replay path"
+   }
+  },
+  {
+   "id": "GLOBAL_HIP_CUID",
+   "symbol": "__hip_cuid_d63a1e356537062c",
+   "class": "BSS_LOADER_WRITTEN",
+   "role": "the HIP module unique id, one byte, in .bss",
+   "declared_in": "phase5_exact_fragment/gfx1100_code_object.o",
+   "section": ".bss",
+   "address_in_parent": "0x11CF90",
+   "size_bytes": 1,
+   "static_bytes": {
+    "bytes_state": "NOBITS_NO_BYTES_ON_DISK"
+   },
+   "present_in_parent": true,
+   "present_in_candidate_f": false,
+   "expected_runtime_contents": {
+    "state": "UNKNOWN",
+    "why": "written by the loader at module load.  This is the byte the project has already established as the ONLY thing that varies the whole-object hash across rebuilds."
+   },
+   "initialization_producer": {
+    "state": "HIP_LOADER",
+    "payload_in_tree": false
+   },
+   "order_requirement": {
+    "must_precede": "module load"
+   },
+   "first_consumer": {
+    "state": "NONE_OBSERVED",
+    "why": "Candidate F declares no .bss and no undefined symbol referencing it, so no consumer is reachable in the translation.  Flagged as an unexplained structural delta, not as a defect."
+   }
+  },
+  {
+   "id": "GLOBAL_KERNEL_DESCRIPTOR_TABLE",
+   "symbol": "33 x <mangled>.kd",
+   "class": "KERNEL_DESCRIPTOR_TABLE",
+   "role": "one 64-byte descriptor per exported kernel, at the start of .rodata in every module.  Consumed by the HIP loader to build the kernel table; not a compute global.",
+   "count": 33,
+   "each_size": 64,
+   "parent": {
+    "first_address": "0x9F80",
+    "block_sha256": "7bdb21aa6e9b5aa9b0ebb940f02da1d13c7dc38cdcb989edd0d0c4a33805b7b4",
+    "nonzero_bytes": 492
+   },
+   "candidate_f": {
+    "first_address": "0x9F40",
+    "block_sha256": "248bc9bcdbad73ec1527102387cde83bb8df0c4f19237fa16d80e582119333e2",
+    "nonzero_bytes": 405
+   },
+   "candidate_e": {
+    "first_address": "0x9E80",
+    "block_sha256": "476592d39037b3007f8e7686d8082459f60b7e038585b905b7a2841dde0d5883",
+    "nonzero_bytes": 405
+   },
+   "translation_changed_these_bytes": true,
+   "expected_runtime_contents": {
+    "state": "STATIC_IMAGE_SUFFICIENT",
+    "why": "the loader copies the descriptor; the image value is the runtime value."
+   },
+   "initialization_producer": {
+    "state": "ELF_STATIC_IMAGE",
+    "payload_in_tree": true
+   },
+   "order_requirement": {
+    "must_precede": "module registration"
+   },
+   "first_consumer": {
+    "state": "HIP_LOADER_AT_REGISTRATION",
+    "why": "load-time, not dispatch-time; it cannot be a replay ordering hazard for a dependent operator"
+   },
+   "symbols": [
+    "_Z16k_swin_1h_32_fp810SwinParams.kd",
+    "_Z21k_pre_block_1h_32_fp89PreParams.kd",
+    "_Z22k_post_block_1h_32_fp810PostParams.kd",
+    "_Z6k_ffwd10FfwdParams.kd",
+    "_Z10k_conv_res10ConvParams.kd",
+    "_Z10k_qkv_attn10AttnParams.kd",
+    "_Z7k_ffwd211Ffwd2Params.kd",
+    "_Z11k_conv_res211Conv2Params.kd",
+    "_Z11k_qkv_attn210AttnParams.kd",
+    "_Z8k_expand12ExpandParams.kd",
+    "_Z13k_conv_splitk12ConvParams1d.kd",
+    "_Z5k_qkv9QkvParams.kd",
+    "_Z11k_attention12AttnParams1d.kd",
+    "_Z9k_expand212ExpandParams.kd",
+    "_Z11k_contract212ConvParams1d.kd",
+    "_Z6k_qkv29QkvParams.kd",
+    "_Z12k_attention212AttnParams1d.kd",
+    "_Z14k_ffwd_inpview12FfwdPlParams.kd",
+    "_Z16k_conv_res_views12ConvPlParams.kd",
+    "_Z12k_final_head10HeadParams.kd",
+    "_Z8k_repack12RepackParams.kd",
+    "_Z14k_dec_upsample11DecUpParams.kd",
+    "_Z6k_mean10MeanParams.kd",
+    "_Z8k_import12ImportParams.kd",
+    "_Z8k_export12ExportParams.kd",
+    "_Z11k_reproject12ReprojParams.kd",
+    "_Z11k_flag_waitPjjj.kd",
+    "_Z10k_flag_setPjj.kd",
+    "_Z10k_swin_varILi32ELb1EEv9VarParams.kd",
+    "_Z10k_swin_varILi32ELb0EEv9VarParams.kd",
+    "_Z10k_swin_varILi64ELb0EEv9VarParams.kd",
+    "_Z10k_swin_varILi128ELb0EEv9VarParams.kd",
+    "_Z10k_swin_varILi256ELb0EEv9VarParams.kd"
+   ]
+  },
+  {
+   "id": "GLOBAL_REGISTERED_VARS_IN_HOST",
+   "symbol": "(host-side registration table)",
+   "class": "HOST_REGISTRATION_RECORD",
+   "role": "the set of device symbols the HOST names.  This is the authoritative list of globals the host is willing to register/initialise, because __hipRegisterVar and hipMemcpyToSymbol take a symbol NAME.",
+   "measured": {
+    "host_name_block_strings": 34,
+    "kernel_names": 33,
+    "non_kernel_names": [
+     "g_e4m3_lut"
+    ]
+   },
+   "conclusion": "EXACTLY ONE device global is named by the host: g_e4m3_lut.  _ZN12DlssNrEngine2SHE is NOT named by the host (zero host-side literals; all 8 occurrences lie inside the embedded fatbin).  D3D11_DEFAULT and D3D11_VIDEO_DEFAULT are not named either.",
+   "host_literal_addresses": {
+    "g_e4m3_lut": "0x180056984"
+   },
+   "independent_site_census": {
+    "source": "phase12_host_runtime_audit.md section 12D",
+    "register_var_sites": 1,
+    "unregister_sites": 1,
+    "hipMemcpyToSymbol_sites": 1,
+    "hipRegisterFunction_sites": 33,
+    "cross_check": "33 named kernels + 1 named non-kernel symbol matches 33 __hipRegisterFunction sites + 1 __hipRegisterVar site.  Two measurements that do not share a parser."
+   }
+  }
+ ],
+ "replay_gate": {
+  "how_to_use": "call evaluate_gate() in p16ax_global_init.py with the LUT bytes that are actually resident at the moment of first use, the registration state, the coverage and the two ordinals.  Every predicate returns PASS/FAIL with the measured value that decided it.",
+  "predicates": [
+   "G1_LUT_IS_READ_ONLY_IN_DEVICE_CODE",
+   "G2_REGISTERED_BEFORE_USE",
+   "G3_FULL_COVERAGE",
+   "G4_INIT_PRECEDES_FIRST_USE",
+   "G5_NOT_ALL_ZERO_AT_USE",
+   "G6_SATFINITE_DISCRIMINATOR"
+  ],
+  "demonstration_on_known_inputs": {
+   "all_zero_static_image_as_shipped": {
+    "gate": {
+     "G1_LUT_IS_READ_ONLY_IN_DEVICE_CODE": {
+      "verdict": "PASS",
+      "detail": "no store site exists in the 82-site pcrel ledger; every site is a load or an address computation.  So the runtime contents cannot come from the device code and MUST come from the host."
+     },
+     "G2_REGISTERED_BEFORE_USE": {
+      "verdict": "FAIL",
+      "detail": "the symbol must be registered before any copy can be shown to cover it"
+     },
+     "G3_FULL_COVERAGE": {
+      "verdict": "FAIL",
+      "detail": "coverage=0 of 512 bytes"
+     },
+     "G4_INIT_PRECEDES_FIRST_USE": {
+      "verdict": "FAIL",
+      "detail": "producer ordinal None < first-use ordinal 3"
+     },
+     "G5_NOT_ALL_ZERO_AT_USE": {
+      "verdict": "FAIL",
+      "detail": "nonzero bytes at the moment of use = 0.  All-zero decodes EVERY E4M3 byte to +0.0 -- a degenerate but well-formed output that no reference comparison can detect."
+     },
+     "G6_SATFINITE_DISCRIMINATOR": {
+      "verdict": "FAIL",
+      "detail": "u16[0x7F]=0x0000 u16[0xFF]=0x0000 ; SATFINITE predicts (0x5F00, 0xDF00) = (+448.0, -448.0); a pure-OCP NaN table predicts (0x7E00, 0xFE00); an all-zero table predicts (0x0000, 0x0000)"
+     }
+    },
+    "all_pass": false,
+    "expected": "REJECTED -- this is the shipped static state, and it must not be admissible"
+   },
+   "satfinite_table": {
+    "gate": {
+     "G1_LUT_IS_READ_ONLY_IN_DEVICE_CODE": {
+      "verdict": "PASS",
+      "detail": "no store site exists in the 82-site pcrel ledger; every site is a load or an address computation.  So the runtime contents cannot come from the device code and MUST come from the host."
+     },
+     "G2_REGISTERED_BEFORE_USE": {
+      "verdict": "PASS",
+      "detail": "the symbol must be registered before any copy can be shown to cover it"
+     },
+     "G3_FULL_COVERAGE": {
+      "verdict": "PASS",
+      "detail": "coverage=512 of 512 bytes"
+     },
+     "G4_INIT_PRECEDES_FIRST_USE": {
+      "verdict": "PASS",
+      "detail": "producer ordinal 0 < first-use ordinal 3"
+     },
+     "G5_NOT_ALL_ZERO_AT_USE": {
+      "verdict": "PASS",
+      "detail": "nonzero bytes at the moment of use = 373.  All-zero decodes EVERY E4M3 byte to +0.0 -- a degenerate but well-formed output that no reference comparison can detect."
+     },
+     "G6_SATFINITE_DISCRIMINATOR": {
+      "verdict": "PASS",
+      "detail": "u16[0x7F]=0x5F00 u16[0xFF]=0xDF00 ; SATFINITE predicts (0x5F00, 0xDF00) = (+448.0, -448.0); a pure-OCP NaN table predicts (0x7E00, 0xFE00); an all-zero table predicts (0x0000, 0x0000)"
+     }
+    },
+    "all_pass": true,
+    "expected": "ACCEPTED -- the known-good case the gate must not reject"
+   },
+   "ocp_nan_table": {
+    "gate": {
+     "G1_LUT_IS_READ_ONLY_IN_DEVICE_CODE": {
+      "verdict": "PASS",
+      "detail": "no store site exists in the 82-site pcrel ledger; every site is a load or an address computation.  So the runtime contents cannot come from the device code and MUST come from the host."
+     },
+     "G2_REGISTERED_BEFORE_USE": {
+      "verdict": "PASS",
+      "detail": "the symbol must be registered before any copy can be shown to cover it"
+     },
+     "G3_FULL_COVERAGE": {
+      "verdict": "PASS",
+      "detail": "coverage=512 of 512 bytes"
+     },
+     "G4_INIT_PRECEDES_FIRST_USE": {
+      "verdict": "PASS",
+      "detail": "producer ordinal 0 < first-use ordinal 3"
+     },
+     "G5_NOT_ALL_ZERO_AT_USE": {
+      "verdict": "PASS",
+      "detail": "nonzero bytes at the moment of use = 373.  All-zero decodes EVERY E4M3 byte to +0.0 -- a degenerate but well-formed output that no reference comparison can detect."
+     },
+     "G6_SATFINITE_DISCRIMINATOR": {
+      "verdict": "FAIL",
+      "detail": "u16[0x7F]=0x7E00 u16[0xFF]=0xFE00 ; SATFINITE predicts (0x5F00, 0xDF00) = (+448.0, -448.0); a pure-OCP NaN table predicts (0x7E00, 0xFE00); an all-zero table predicts (0x0000, 0x0000)"
+     }
+    },
+    "all_pass": false,
+    "expected": "REJECTED by G6 alone, with G1-G5 all passing.  This is the discriminating control: it shows the SATFINITE predicate is doing work rather than restating the zero check."
+   }
+  }
+ },
+ "probes_that_were_INCONCLUSIVE": [
+  {
+   "probe": "scan the host .rdata for a 512-byte window whose 256 u16 entries are all finite FP16",
+   "result": "29728 windows matched",
+   "verdict": "VACUOUS -- the predicate accepts almost any byte sequence, so a hit would have proved nothing.  Run and recorded, deliberately NOT used as evidence.  A check that cannot discriminate is worse than none."
+  },
+  {
+   "probe": "count occurrences of the u16 0x5F00 (+448.0 in FP16) as a marker for the LUT preimage",
+   "result": "2066 in the host, 2710 in Candidate F, 411 in the parent",
+   "verdict": "NON-DISCRIMINATING -- the byte pair is common in 1 MB of code.  Recorded, not used."
+  }
+ ],
+ "what_this_does_NOT_establish": [
+  "That the host's single __hipRegisterVar / hipMemcpyToSymbol site is the call that writes g_e4m3_lut.  No disassembly cross-reference was performed; the pairing is an inference from a measured string position plus a separately measured site count.",
+  "WHAT the runtime contents of g_e4m3_lut are.  They are UNKNOWN.  The producer is identified; the payload was never captured and is not in this tree.",
+  "That the SATFINITE reading is the one the shipping module uses.  An artifact in this tree asserts it for the fused kernels; no artifact measures the table.",
+  "That the pcrel ledger is a complete dataflow census.  It is the phase16h site census; a consumer reaching the table by a non-PC-relative path would not appear.",
+  "That the first consumer is the first READ in time.  The ordinal used is the frame-1 DISPATCH ordinal of the earliest ledger consumer; lanes within a dispatch are not ordered here.",
+  "Any physical or GPU result.  Nothing was launched, no module was loaded, and no HIP call was made."
+ ],
+ "no_gpu_evidence": {
+  "gpu_execution_performed": false,
+  "hip_calls_made": 0,
+  "physical_launches": 0,
+  "modules_loaded": 0,
+  "armed": false
+ }
+}

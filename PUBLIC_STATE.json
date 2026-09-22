@@ -1,0 +1,133 @@
+{
+  "schema": "gfx1030-dlss-nr-research/public-state/1",
+  "what_this_file_is": "The machine-readable public state surface for this project.  It exists so a reviewer can read the project's actual current position from the public repository alone, without access to the private working tree.  It is written to be read as a LIMITS statement first: every field below is a fact about what has been MEASURED, and the ceilings section says what none of it establishes.",
+  "how_to_read_this": "Read `proof_ladder` before `candidate_ids`, and read `ceilings` last.  A rung that is not claimed is not implied by a lower rung being reached.",
+  "phase": "16AY",
+  "generated_note": "Regenerated for each development phase.  Values come from the private machine-readable state record, not from prose.",
+  "proof_ladder": [
+    {
+      "rung": 1,
+      "name": "host static correctness",
+      "state": "DEMONSTRATED"
+    },
+    {
+      "rung": 2,
+      "name": "host dynamic / independent oracle",
+      "state": "DEMONSTRATED, BOUNDED COVERAGE"
+    },
+    {
+      "rung": 3,
+      "name": "one-workgroup physical operator",
+      "state": "NUMERIC PASS ACHIEVED ON A PROJECT-OWNED POSITIVE CONTROL; the translated workload candidate is FROZEN"
+    },
+    {
+      "rung": 4,
+      "name": "multi-workgroup",
+      "state": "NOT REACHED"
+    },
+    {
+      "rung": 5,
+      "name": "authentic full dispatch",
+      "state": "NOT REACHED"
+    },
+    {
+      "rung": 6,
+      "name": "complete neural job",
+      "state": "NOT REACHED"
+    },
+    {
+      "rung": 7,
+      "name": "D3D12 / HIP interop",
+      "state": "NOT REACHED"
+    },
+    {
+      "rung": 8,
+      "name": "presented frame",
+      "state": "NOT REACHED"
+    }
+  ],
+  "candidate_ids": {
+    "translated_candidate": {
+      "id": "Candidate F",
+      "kind": "translated RDNA2 GNARLY workload",
+      "state": "J3_TDR_CORRECT_INPUT",
+      "watchdog_cause": "UNKNOWN",
+      "known_semantic_defect": "VOPD_SEQUENTIALIZATION_SEMANTIC_DEFECT",
+      "physical_track": "FROZEN"
+    },
+    "native_candidate": {
+      "id": "NATIVE_K_DEC_UPSAMPLE_V1_SYNTHETIC",
+      "kind": "natively authored gfx1030 operator, SYNTHETIC weights",
+      "operator": "k_dec_upsample"
+    }
+  },
+  "native_status": {
+    "execution_backend": "IMPLEMENTED (host-verified against a mock backend)",
+    "positive_mock": "PASS",
+    "negative_mock_matrix": "17 of 17 expected refusals",
+    "loop_termination_proof": "PASS -- 33 of 33 natural loops carry a finite maximum trip count",
+    "old_loop_proof": "RETIRED_UNSOUND, retained as the record of an unsound method rather than deleted",
+    "memory_bounds": "PASS -- every machine memory operation accounted",
+    "qualification": "not yet green; a live authorization and a just-in-time device-health gate are outstanding",
+    "physical": "NOT_RUN"
+  },
+  "open_blockers": [
+    {
+      "track": "AUDITS",
+      "blocker": "8 of 16 claims remain OPEN; 5 of them are launch-relevant",
+      "next_acceptance": "every launch-relevant finding carries a typed disposition"
+    },
+    {
+      "track": "CANDIDATE_F_TRANSLATION",
+      "blocker": "corrected artifact CANDIDATE_F_VOPD_CORRECTED_V1 is not built",
+      "next_acceptance": "a corrected translation bound to the actual parent, statically qualified, with no physical run"
+    },
+    {
+      "track": "CAPTURE",
+      "blocker": "real-backend bridge equivalence is not established; RAW_DUMP argument and frame semantics are defective",
+      "next_acceptance": "bridge equivalence PASS, then one authorized story-mode cold + warm capture"
+    },
+    {
+      "track": "GAME_INTEGRATION",
+      "blocker": "no complete offline job has run; the game resource contract is unwritten",
+      "next_acceptance": "one authenticated complete offline job with nontrivial output"
+    },
+    {
+      "track": "GRAPH_REFERENCE",
+      "blocker": "no instance-level authentic DAG; weight provenance is collapsed into one boolean",
+      "next_acceptance": "AUTHENTIC_JOB_DAG_V1 built from captured instances"
+    },
+    {
+      "track": "NATIVE_SLOT5",
+      "blocker": "no real execution backend; the loop-termination proof is unsound; the numerical contract has an unpinned parameter",
+      "next_acceptance": "execute backend + sound loop proof + repaired numerical oracle, all bound to the same experiment id"
+    },
+    {
+      "track": "PHYSICAL",
+      "blocker": "the final qualification program is not green; do not launch from the old 24/26 gate",
+      "next_acceptance": "a full SLOT5_QUALIFICATION_V3 pass with a demonstrated positive path"
+    },
+    {
+      "track": "PUBLICATION",
+      "blocker": "none engineering; no draft PR can be opened from this environment",
+      "next_acceptance": "a coherent public-safe checkpoint pushed fast-forward"
+    }
+  ],
+  "published_evidence_hashes": {
+    "note": "Hashes of artefacts that are themselves published in this repository, so a reader can check that what they have is what was verified.  Hashes of withheld artefacts are excluded by publication policy, and their absence here is policy, not an oversight."
+  },
+  "public_tool_versions": {
+    "verification_entry_points": [
+      "scripts/verify_publication.py",
+      "scripts/prepare_publication_sync.py",
+      "scripts/verify-publication.ps1"
+    ],
+    "how_to_run": "See REPRODUCIBILITY.md."
+  },
+  "ceilings": [
+    "Nothing here is a compatibility claim, a performance claim, or a statement that any game, mod or workload works on gfx1030.",
+    "A physical numeric pass on a SYNTHETIC operator is not evidence about a real network, a real model, or a real frame.",
+    "A host-verified execution backend is not evidence that the backend is correct on hardware.",
+    "The published code is the host-side tooling; the device code object and its disassembly are deliberately withheld."
+  ]
+}

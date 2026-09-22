@@ -1,0 +1,523 @@
+{
+ "schema": "p16aw/loop-proof-summary/1",
+ "phase": "16AW",
+ "brief_sections": [
+  71,
+  72,
+  73,
+  74,
+  75,
+  76,
+  77
+ ],
+ "object_under_test": {
+  "path": "p16as/native/hip/build/k_dec_upsample_b64.co",
+  "text_sha256": "ec11c135cf9a548cfd2e263757723a178b74bb148496be35bd47b2a95a85312e",
+  "text_sha256_quoted_in_the_brief": "ec11c135cf9a548cfd2e263757723a178b74bb148496be35bd47b2a95a85312e",
+  "matches": true
+ },
+ "artifacts": [
+  {
+   "artifact": "machine_loop_recurrence_proofs",
+   "path": "p16aw/liveness/MACHINE_LOOP_RECURRENCE_PROOFS_16AW.json",
+   "readable": true,
+   "sha256": "ab8b8373394fc6dc927d99229745f7562b0c0581a0f03b8a127acae5cca4e38a"
+  },
+  {
+   "artifact": "loop_prover_controls",
+   "path": "p16aw/liveness/LOOP_PROVER_CONTROLS_16AW.json",
+   "readable": true,
+   "sha256": "fa36704860d6603ab6ea89336a6ddff1bbcd5e3e18adee8c9ced74bc2e3dcda8"
+  },
+  {
+   "artifact": "unsoundness_reproduction",
+   "path": "p16aw/liveness/UNSOUNDNESS_REPRODUCTION_16AW.json",
+   "readable": true,
+   "sha256": "674173a0b9ce9b6afa08ac58d4e2b90deecf99403e1723c4c75f2b3c9917f37c"
+  }
+ ],
+ "the_code_that_produced_them": {
+  "p16aw_loop_recurrence_prover.py": {
+   "present": true,
+   "sha256": "138b4391628d6821057d8564c6deba9a8d72791fda9775453be45068cdb3775f"
+  },
+  "p16aw_prove_slot5.py": {
+   "present": true,
+   "sha256": "6a0f201c337461bcf224470db7a7b55b6b056a49dfba3f4eced36d63b40ced3b"
+  },
+  "p16aw_synthetic.py": {
+   "present": true,
+   "sha256": "e6b7f33732dae75eeae075b5666d076d78cd8632ac31ec7ebac445b2fd1469cb"
+  },
+  "p16aw_prover_controls.py": {
+   "present": true,
+   "sha256": "f418d55dda6fc316ef50d8e479932fdc3f4a46b931986d65cab92efa6317c311"
+  },
+  "p16aw_old_classifier.py": {
+   "present": true,
+   "sha256": "17d6193d70b78ff9b176e31ee1edd78d32852bcd4ae2d08fea5ee9677aa29ec9"
+  },
+  "p16aw_unsoundness_reproduction.py": {
+   "present": true,
+   "sha256": "66bcec1a3af96f2740a5ba9361a7112eadf9f8ef054eae9270be7f38ec59f3e6"
+  }
+ },
+ "prover_that_produced_the_proofs_sha256": "138b4391628d6821057d8564c6deba9a8d72791fda9775453be45068cdb3775f",
+ "the_four_questions_answered": {
+  "did_the_audit_regression_reproduce_against_the_old_classifier": "YES",
+  "does_the_replacement_accept_the_positive_control": "YES: 8 of 8 positive controls accepted, including the archived Slot-5 object itself",
+  "does_the_replacement_reject_every_negative_control": "YES: 16 of 16 negative controls refused AT THE REQUIREMENT NAMED FOR THEM, each having first been shown to reach that comparison",
+  "per_loop_outcome_on_the_final_slot5_object": "33 of 33 machine loops proved with a finite maximum trip count (histogram {'8': 33}); 33 backward branches, all covered by a natural loop; the .text hash is the one the brief quotes (True)",
+  "what_could_not_be_measured": [
+   "nothing in sections 72-77 was left unmeasured: the disassembly of the final Slot-5 object WAS obtainable (llvm-objdump 6.4, gfx1030), so there is no NOT_MEASURED loop table",
+   "what the prover does NOT establish is stated per artefact: loops outside its supported recurrence form are REFUSED, and a refusal is not a proof that such a loop fails to terminate; no kernel was launched, no GPU was touched, and the trip counts are static maxima rather than runtime behaviour",
+   "the ordered-comparison closed form is credited only when the bit-exact simulation agrees with it, so a loop whose true exit lies beyond the 1<<20 cap is refused (N8i, N7) even though it does terminate"
+  ]
+ },
+ "1_replacement_prover_over_the_final_slot5_object": {
+  "the_object": {
+   "path": "p16as/native/hip/build/k_dec_upsample_b64.co",
+   "whole_file_sha256": "24f53bd0f621215c232c782444e7aa364d0e57622b1fd9360e78efdb43572224",
+   "text_section": {
+    "sha256": "ec11c135cf9a548cfd2e263757723a178b74bb148496be35bd47b2a95a85312e",
+    "size": 26112,
+    "file_offset": 2048,
+    "vma": "0x1800",
+    "n_bytes_hashed": 26112,
+    "how_the_offset_was_obtained": "parsed from the object's own ELF section header table",
+    "second_route_to_the_section_layout": {
+     "tool": "llvm-objdump -h",
+     "size": 26112,
+     "vma": 6144,
+     "agrees": true
+    },
+    "sections_parsed": {
+     "elf_section_headers": 15,
+     "objdump_sections": 10
+    }
+   },
+   "text_sha256_quoted_in_the_brief": "ec11c135cf9a548cfd2e263757723a178b74bb148496be35bd47b2a95a85312e",
+   "text_sha256_matches_the_brief": true,
+   "n_instructions": 3881
+  },
+  "text_sha256_matches_the_brief": true,
+  "n_loops": 33,
+  "n_loops_proven_with_a_finite_bound": 33,
+  "per_loop_outcome": [
+   {
+    "head_pc": "0x1878",
+    "latch_pc": "0x1ad4",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s28"
+   },
+   {
+    "head_pc": "0x1ae0",
+    "latch_pc": "0x1d94",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x1da0",
+    "latch_pc": "0x2060",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x206c",
+    "latch_pc": "0x2330",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x233c",
+    "latch_pc": "0x2600",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x260c",
+    "latch_pc": "0x28d0",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x28dc",
+    "latch_pc": "0x2ba0",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x2bac",
+    "latch_pc": "0x2e70",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x2e80",
+    "latch_pc": "0x3138",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x3144",
+    "latch_pc": "0x3408",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x3414",
+    "latch_pc": "0x36d8",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x36e4",
+    "latch_pc": "0x39a8",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x39b4",
+    "latch_pc": "0x3c78",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x3c84",
+    "latch_pc": "0x3f48",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x3f54",
+    "latch_pc": "0x4218",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x4224",
+    "latch_pc": "0x44e8",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x44f8",
+    "latch_pc": "0x47b0",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x47bc",
+    "latch_pc": "0x4a80",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x4a8c",
+    "latch_pc": "0x4d50",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x4d5c",
+    "latch_pc": "0x5020",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x502c",
+    "latch_pc": "0x52f0",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x52fc",
+    "latch_pc": "0x55c0",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x55cc",
+    "latch_pc": "0x5890",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x589c",
+    "latch_pc": "0x5b60",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x5b70",
+    "latch_pc": "0x5e28",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x5e34",
+    "latch_pc": "0x60f8",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x6104",
+    "latch_pc": "0x63c8",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x63d4",
+    "latch_pc": "0x6698",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x66a4",
+    "latch_pc": "0x6968",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x6974",
+    "latch_pc": "0x6c38",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x6c44",
+    "latch_pc": "0x6f08",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x6f14",
+    "latch_pc": "0x71d8",
+    "n_nodes": 1,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s8"
+   },
+   {
+    "head_pc": "0x1868",
+    "latch_pc": "0x7d28",
+    "n_nodes": 65,
+    "verdict": "PROVEN_COUNTED_LOOP_WITH_STATIC_BOUND",
+    "requirements_proven": 14,
+    "max_trip_count": 8,
+    "induction_register": "s30"
+   }
+  ],
+  "n_distinct_max_trip_counts": 1,
+  "max_trip_count_histogram": {
+   "8": 33
+  },
+  "backward_branches_covered_by_a_natural_loop": 33,
+  "n_backward_branches": 33,
+  "the_fairness_check_against_the_retired_classifier": {
+   "n_agree": 33,
+   "n_disagree": 0,
+   "why_this_is_here": "on the REAL object the two classifiers agree on every loop. A replacement that rejected the kernel it was built to clear would be strict and useless; the disagreements are all on the control programs, where they are the point."
+  },
+  "slot5_disposition": "NOT BLOCKED by brief section 77: all 33 machine loops carry a proved finite maximum trip count"
+ },
+ "2_controls": {
+  "verdict": "PASS",
+  "n_controls": 24,
+  "n_positive": 8,
+  "n_positive_accepted": 8,
+  "n_positive_not_accepted": 0,
+  "positive_controls_not_accepted": [],
+  "n_negative": 16,
+  "n_negative_rejected_at_the_named_requirement": 16,
+  "n_negative_not_rejected_as_expected": 0,
+  "negative_controls_not_rejected_as_expected": [],
+  "n_controls_whose_planted_word_did_not_decode_as_requested": 0,
+  "n_controls_where_the_two_classifiers_disagree": 12,
+  "the_direct_load_test_versus_the_transitive_one": [
+   {
+    "control": "N9",
+    "direct_test_says_spin": false,
+    "transitive_analysis_says_spin": [
+     true
+    ],
+    "the_load_the_direct_test_looked_at": null
+   },
+   {
+    "control": "N10",
+    "direct_test_says_spin": false,
+    "transitive_analysis_says_spin": [
+     true
+    ],
+    "the_load_the_direct_test_looked_at": null
+   },
+   {
+    "control": "N11",
+    "direct_test_says_spin": true,
+    "transitive_analysis_says_spin": [
+     true
+    ],
+    "the_load_the_direct_test_looked_at": "s_load_dword s0, s[0:1], null"
+   }
+  ],
+  "the_audit_regression_row": {
+   "verdict": [
+    "UNKNOWN_BLOCKING"
+   ],
+   "requirement_that_fired": [
+    "R06"
+   ],
+   "retired_verdicts": [
+    "COUNTED_LOOP_WITH_STATIC_BOUND"
+   ],
+   "retired_bounds": [
+    null
+   ],
+   "valid": true,
+   "reached": true,
+   "applied": true
+  }
+ },
+ "3_unsoundness_reproduction": {
+  "verdict": "UNSOUNDNESS_REPRODUCED",
+  "the_slice_it_ran": {
+   "source_file": "p16at/native/p16at_machine_cfg.py",
+   "source_file_sha256": "62913930eeb25af2baac9ef50b8e2aee59b4663d366cf291a27a8c1ecef3be4c",
+   "first_line_1_indexed": 896,
+   "last_line_1_indexed": 934,
+   "n_lines": 39,
+   "slice_sha256": "2084f7dd624e492605a0b2d5410fb995ebaab5e1133cd79e06c888d8ae933d9c",
+   "slice_sha256_recorded_at_measurement": "2084f7dd624e492605a0b2d5410fb995ebaab5e1133cd79e06c888d8ae933d9c",
+   "slice_hash_matches_the_recorded_one": true,
+   "slice_first_line": "    # ---- finite-termination argument per natural loop -------------------",
+   "slice_last_line": "        })"
+  },
+  "harness_validated_on_the_known_good_case": true,
+  "n_loops_compared_in_the_validation": 33,
+  "audit_claim_reproduced": true,
+  "the_retired_verdict_on_the_regression": {
+   "verdict": "COUNTED_LOOP_WITH_STATIC_BOUND",
+   "max_trip_count": null,
+   "induction_register": "s0",
+   "guard": "s_cmp_lg_u32 s0, 1",
+   "advances_it_counted": [
+    {
+     "at": "0x7004",
+     "insn": "s_add_u32 s0, s0, 0",
+     "step": 0
+    }
+   ]
+  },
+  "the_replacement_verdict_on_the_regression": {
+   "verdict": "UNKNOWN_BLOCKING",
+   "requirement_that_fired": "R06",
+   "detail": "the step is ZERO: `s_add_u32 s0, s0, 0` adds nothing, so the induction register never changes and the guard's value is fixed for every trip"
+  },
+  "the_gate": {
+   "rows_not_counted": 0,
+   "acceptance_key_evaluates_to": true
+  },
+  "n_other_defect_rows": 23,
+  "n_other_defect_rows_where_they_disagree": 12
+ },
+ "what_remains_open": [
+  "the proof is of the MACHINE LOOPS of one object; the mapping from those loops to the source constructs is the 16AT work and is not re-derived here",
+  "the bound is a static maximum; that each loop stays within its buffers is the memory-bounds argument, and that the kernel does what it is meant to do is the numerical work -- neither is claimed here",
+  "the replacement refuses loops outside its form rather than approximating them, so its coverage is a claim about THIS object and not about every kernel"
+ ],
+ "verdict": "LOOP_PROOF_REPLACED_AND_REGRESSION_REPRODUCED"
+}
