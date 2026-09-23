@@ -6,7 +6,12 @@
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <vector>
+
+#ifndef EXPECTED_GFX
+#error EXPECTED_GFX must be defined explicitly (for example -DEXPECTED_GFX=\"gfx1031\")
+#endif
 
 #define HIP_CHECK(call)                                                        \
     do {                                                                       \
@@ -101,7 +106,7 @@ static void cpu_reference(const std::vector<float>& A,
 
 int main()
 {
-    std::cout << "gfx1030 soft-WMMA phase-1 smoke test\n";
+    std::cout << "RDNA2 soft-WMMA phase-1 smoke test\n";
     std::cout << "------------------------------------\n";
 
     int count = 0;
@@ -114,19 +119,35 @@ int main()
     hipDeviceProp_t prop{};
     HIP_CHECK(hipGetDeviceProperties(&prop, 0));
 
+    std::string detected_arch = prop.gcnArchName;
+    const std::size_t feature_sep = detected_arch.find(':');
+    if (feature_sep != std::string::npos) {
+        detected_arch.resize(feature_sep);
+    }
+
     std::cout << "GPU:       " << prop.name << "\n";
+    std::cout << "GCN Arch:  " << prop.gcnArchName << "\n";
+    std::cout << "Expected:  " << EXPECTED_GFX << "\n";
     std::cout << "warpSize:  " << prop.warpSize << "\n";
     std::cout << "VRAM:      "
               << std::fixed << std::setprecision(2)
               << (static_cast<double>(prop.totalGlobalMem) / (1024.0 * 1024.0 * 1024.0))
               << " GiB\n";
 
-    if (prop.warpSize != 32) {
-        std::cerr << "STOP: this test expects wave32. Nothing was benchmarked.\n";
+    if (detected_arch != EXPECTED_GFX) {
+        std::cerr << "STOP: detected architecture " << detected_arch
+                  << " does not match compile target " << EXPECTED_GFX << ".\n";
         return 4;
     }
 
-    std::vector<float> A(256), B(256), ref(256), got(256, 0.0f);
+    if (prop.warpSize != 32) {
+        std::cerr << "STOP: this test expects wave32. Nothing was benchmarked.\n";
+        return 5;
+    }
+
+    constexpr float kSentinel = 12345.25f;
+    std::vector<float> A(256), B(256), ref(256), got(256, kSentinel);
+    std::vector<float> initial_output(256, kSentinel);
 
     // Binary fractions -> exactly representable in fp16.
     for (int r = 0; r < 16; ++r) {
@@ -149,7 +170,7 @@ int main()
 
     HIP_CHECK(hipMemcpy(dA, A.data(), 256 * sizeof(float), hipMemcpyHostToDevice));
     HIP_CHECK(hipMemcpy(dB, B.data(), 256 * sizeof(float), hipMemcpyHostToDevice));
-    HIP_CHECK(hipMemset(dC, 0, 256 * sizeof(float)));
+    HIP_CHECK(hipMemcpy(dC, initial_output.data(), 256 * sizeof(float), hipMemcpyHostToDevice));
 
     // Deliberately tiny bounded launch: one block, one wave, one matrix tile.
     hipLaunchKernelGGL(soft_wmma_16x16x16,
@@ -162,7 +183,16 @@ int main()
 
     double max_abs = 0.0;
     int worst = -1;
+    int untouched = 0;
+    bool finite = true;
     for (int i = 0; i < 256; ++i) {
+        if (got[i] == kSentinel) {
+            ++untouched;
+        }
+        if (!std::isfinite(got[i])) {
+            finite = false;
+            continue;
+        }
         const double e = std::abs(static_cast<double>(got[i]) -
                                   static_cast<double>(ref[i]));
         if (e > max_abs) {
@@ -173,18 +203,20 @@ int main()
 
     std::cout << "\nCorrectness:\n";
     std::cout << "  max abs error = " << std::scientific << max_abs << "\n";
+    std::cout << "  untouched sentinel elements = " << untouched << "\n";
+    std::cout << "  all outputs finite = " << (finite ? "yes" : "no") << "\n";
     if (worst >= 0) {
         std::cout << "  worst element = [" << (worst / 16) << "," << (worst % 16)
                   << "]  GPU=" << got[worst] << "  CPU=" << ref[worst] << "\n";
     }
 
-    const bool pass = max_abs <= 1.0e-3;
+    const bool pass = finite && untouched == 0 && max_abs <= 1.0e-3;
 
     std::cout << "\nResult: " << (pass ? "PASS" : "FAIL") << "\n";
 
     if (pass) {
         std::cout
-            << "gfx1030 reproduced the 16x16x16 fp16->fp32 matrix arithmetic\n"
+            << EXPECTED_GFX << " reproduced the 16x16x16 fp16->fp32 matrix arithmetic\n"
             << "using the RDNA2 v_dot2 path. No long stress test was run.\n";
     }
 
