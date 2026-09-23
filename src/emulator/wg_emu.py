@@ -233,6 +233,12 @@ def run_workgroup(prog, dw16_, label, grid, block, fields, text_path=None,
         if not any_active:
             outcome = ("ALL_ENDED", ticks)
             break
+        # A faulted wave cannot be treated as a terminated participant.
+        # Otherwise a remaining wave could appear to complete a rendezvous
+        # although another required wave never executed its barrier path.
+        if any(w["state"] == "FAULTED" for w in waves):
+            outcome = ("FAULT", ticks)
+            break
         # ---- barrier release check (end of round) ----
         alive = [w for w in waves if w["state"] not in ("ENDED", "FAULTED")]
         if alive and all(w["state"] == "WAITING" for w in alive):
@@ -251,15 +257,20 @@ def run_workgroup(prog, dw16_, label, grid, block, fields, text_path=None,
                                                   else 0)) for w in []],
                                    "arrivals": [w["bar_epochs"][-1]
                                                 for w in alive]})
+            release_fault = False
             for w in alive:
                 # release: execute the (no-op) barrier instruction
                 try:
                     w["core"].step()
                     w["steps_done"] += 1
+                    w["state"] = "RUNNABLE"
                 except Exception as e:
                     w["state"] = "FAULTED"
                     w["fault"] = ("RELEASE-EXC", str(e))
-                w["state"] = "RUNNABLE"
+                    release_fault = True
+            if release_fault:
+                outcome = ("FAULT", ticks)
+                break
         elif alive and not any(w["state"] == "RUNNABLE" for w in alive):
             # alive waves: mixture of WAITING + FAULTED impossible here
             # (faulted are not alive); all waiting handled above -> any
