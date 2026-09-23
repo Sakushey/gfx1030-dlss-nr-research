@@ -25,11 +25,11 @@ if (-not (Test-Path $HipRoot)) {
     throw "HIP 6.4 root not found: $HipRoot"
 }
 
-$Hipcc = Join-Path $HipRoot "bin\hipcc.exe"
+$Clang = Join-Path $HipRoot "bin\clang++.exe"
 $HipInfo = Join-Path $HipRoot "bin\hipInfo.exe"
 
-if (-not (Test-Path $Hipcc)) {
-    throw "hipcc.exe not found at $Hipcc"
+if (-not (Test-Path $Clang)) {
+    throw "clang++.exe not found at $Clang"
 }
 if (-not (Test-Path $HipInfo)) {
     throw "hipInfo.exe not found at $HipInfo"
@@ -39,8 +39,6 @@ if (-not (Test-Path $Source)) {
 }
 
 # Session-only environment. This does NOT change Machine/User environment variables.
-# On Windows, hipcc uses HIP_PATH. Do not also pass --hip-path with this
-# "Program Files" installation: ROCm 6.4 hipcc can split that wrapper argument.
 $env:HIP_PATH = $HipRoot
 $env:HIP_PLATFORM = "amd"
 $env:Path = "$($HipRoot)\bin;$env:Path"
@@ -95,7 +93,7 @@ if (-not (Get-Command link.exe -ErrorAction SilentlyContinue)) {
 
 Write-Host ""
 Write-Host "=== COMPILER ===" -ForegroundColor Cyan
-& $Hipcc --version | Select-Object -First 3
+& $Clang --version | Select-Object -First 3
 
 if (Test-Path $Exe) {
     Remove-Item $Exe -Force
@@ -104,10 +102,14 @@ if (Test-Path $Exe) {
 Write-Host ""
 Write-Host "=== COMPILE FOR $Target ONLY ===" -ForegroundColor Cyan
 
+# Use clang++ directly on Windows. ROCm 6.4 hipcc is a Perl wrapper and has
+# been observed to split a Program Files path passed through its CLI. Passing
+# --rocm-path as one PowerShell array element to clang++ preserves the path.
 $ExpectedDefine = "-DEXPECTED_GFX=`"$Target`""
 $CompileArgs = @(
     "-x", "hip",
     "--offload-arch=$Target",
+    "--rocm-path=$HipRoot",
     "-O3",
     "-std=c++17",
     $ExpectedDefine,
@@ -115,7 +117,7 @@ $CompileArgs = @(
     "-o", $Exe
 )
 
-& $Hipcc @CompileArgs
+& $Clang @CompileArgs
 
 if ($LASTEXITCODE -ne 0 -or -not (Test-Path $Exe)) {
     throw "Compilation failed before physical execution."
