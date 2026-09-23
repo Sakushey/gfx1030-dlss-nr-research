@@ -348,6 +348,10 @@ def _fill_defuse(ins: Insn):
             # v_cmp_*_e32 (VOPC) writes VCC implicitly -> not a textual dst
             if mn.startswith("v_cmp") and mn.endswith("_e32"):
                 ins.defs_special.append("vcc")
+            # V_DIV_SCALE_F32 has an SDST/VCC result in operand 1 (or the
+            # explicit `null` discard).  It is not an input operand.
+            if mn == "v_div_scale_f32" and len(ops) > 1:
+                vector_dst_positions.add(1)
 
     for pos, op in enumerate(ops):
         o = op.strip()
