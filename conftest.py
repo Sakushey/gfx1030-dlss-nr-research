@@ -3,10 +3,10 @@
 The host tooling was developed as one flat import namespace spread over
 several directories. This file puts every `src/*` directory on `sys.path`
 so intra-namespace imports resolve (`import emu`, `import p14d_kd`, ...)
-whether the code is driven by pytest or by a plain `python` invocation
-with this repository root as the working directory.
+when the code is driven by pytest.
 
-Set `PYTHONPATH` equivalently when running a script from elsewhere:
+Plain `python` does not load this file automatically. Set `PYTHONPATH` when
+running a script or direct import outside pytest:
 
     src/emulator;src/isa;src/oracle        (Windows)
     src/emulator:src/isa:src/oracle        (POSIX)
