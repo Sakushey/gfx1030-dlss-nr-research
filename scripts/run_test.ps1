@@ -39,6 +39,8 @@ if (-not (Test-Path $Source)) {
 }
 
 # Session-only environment. This does NOT change Machine/User environment variables.
+# On Windows, hipcc uses HIP_PATH. Do not also pass --hip-path with this
+# "Program Files" installation: ROCm 6.4 hipcc can split that wrapper argument.
 $env:HIP_PATH = $HipRoot
 $env:HIP_PLATFORM = "amd"
 $env:Path = "$($HipRoot)\bin;$env:Path"
@@ -106,7 +108,6 @@ $ExpectedDefine = "-DEXPECTED_GFX=`"$Target`""
 $CompileArgs = @(
     "-x", "hip",
     "--offload-arch=$Target",
-    "--hip-path=$HipRoot",
     "-O3",
     "-std=c++17",
     $ExpectedDefine,
