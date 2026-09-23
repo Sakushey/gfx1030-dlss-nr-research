@@ -2,7 +2,7 @@
 
 $HipRoot = "C:\Program Files\AMD\ROCm\6.4"
 $Here    = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Source  = Join-Path $Here "soft_wmma_test.cpp"
+$Source  = Join-Path (Split-Path -Parent $Here) "tests\soft_wmma_test.cpp"
 $Exe     = Join-Path $Here "soft_wmma_test.exe"
 
 Write-Host ""
