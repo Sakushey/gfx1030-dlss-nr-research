@@ -69,6 +69,24 @@ class TestF16(unittest.TestCase):
                             emu.f32_to_f16_bits(-2.0))
 
 
+class TestF32BitsToF16Rne(unittest.TestCase):
+    """Hand-derived IEEE-754 binary32-to-binary16 boundary vectors."""
+
+    def test_exact_midpoints_choose_even_half_significand(self):
+        self.assertEqual(emu.f32_bits_to_f16(0x3F801000), 0x3C00)
+        # Midpoint of odd 0x3C01 and even 0x3C02.
+        self.assertEqual(emu.f32_bits_to_f16(0x3F803000), 0x3C02)
+
+    def test_subnormal_normal_boundary_and_signed_zero(self):
+        self.assertEqual(emu.f32_to_f16_bits(1023.5 * 2.0 ** -24), 0x0400)
+        self.assertEqual(emu.f32_bits_to_f16(0x80000000), 0x8000)
+        self.assertEqual(emu.f32_bits_to_f16(0x80000001), 0x8000)
+
+    def test_overflow_tie_rounds_to_infinity(self):
+        self.assertEqual(emu.f32_to_f16_bits(65519.0), 0x7BFF)
+        self.assertEqual(emu.f32_to_f16_bits(65520.0), 0x7C00)
+
+
 class TestF32ClassBits(unittest.TestCase):
     """f32_class_bit takes *bits*, matching the hardware class operand."""
 

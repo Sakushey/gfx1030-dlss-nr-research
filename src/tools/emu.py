@@ -107,11 +107,10 @@ def f32_bits_to_f16(b):
     exp = e - 127                                   # unbiased
     if exp > 15:
         return sgn | 0x7C00                         # >= 2**16 -> infinity
-    # 27-bit integer significand: the 24 significant bits with three guard
-    # bits below them.  Dividing by 2**10 leaves a quotient on the binary16
-    # significand scale -- q = 0x400 is 1.0 at this exponent, so the 10-bit
-    # field is `q - 0x400` and `q == 0x800` is the carry out of it.
-    sig = (m | 0x800000) << 3
+    # Keep the 24-bit binary32 significand intact.  The 13 discarded bits
+    # below the binary16 grid determine round-to-nearest-even; adding a
+    # synthetic three-bit suffix and then shifting q again loses precision.
+    sig = m | 0x800000
     if exp >= -14:
         # `q` is the significand on the binary16 scale: q == 0x400 is 1.0 at
         # this exponent, so the 10-bit field is `q - 0x400` and q == 0x800
@@ -119,18 +118,18 @@ def f32_bits_to_f16(b):
         q, r = divmod(sig, 1 << 13)
         if r > 0x1000 or (r == 0x1000 and (q & 1)):
             q += 1
-        if exp == 15 and (q >> 3) >= 0x800:          # rounds up to 2**16
+        if exp == 15 and q >= 0x800:                  # rounds up to 2**16
             return sgn | 0x7C00
-        if q >> 3 == 0x800:
+        if q == 0x800:
             q >>= 1
             exp += 1
         if exp > 15:
             return sgn | 0x7C00
-        return sgn | ((exp + 15) << 10) | ((q >> 3) & 0x3FF)
-    # subnormal: the value is sig * 2**(exp-26), and reaching the binary16
-    # grid 2**-24 from there is a right shift by (2 - exp) bits.
-    shift = 2 - exp
-    if shift > 45:
+        return sgn | ((exp + 15) << 10) | (q & 0x3FF)
+    # Reaching the binary16 subnormal grid 2**-24 from sig*2**(exp-23)
+    # takes a right shift by -exp-1.
+    shift = -exp - 1
+    if shift > 42:
         return sgn
     q, r = divmod(sig, 1 << shift)
     half = 1 << (shift - 1)
