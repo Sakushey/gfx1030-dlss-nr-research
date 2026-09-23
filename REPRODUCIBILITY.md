@@ -47,10 +47,10 @@ Physical experiments are bounded and one-shot. Read
 running anything on hardware.
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\run_test.ps1
+powershell -ExecutionPolicy Bypass -File scripts\run_test.ps1 -Target gfx1030
 ```
 
-This compiles and runs one small gfx1030 workload. It does not change
+This compiles exactly one requested RDNA2 target and runs one small source-level workload. The runner defaults to `gfx1030`, rejects `HSA_OVERRIDE_GFX_VERSION`, requires the detected architecture to match the requested target, and refuses a multi-target output binary. `gfx1031`/`gfx1032` are separate qualification lanes, not aliases for `gfx1030`. It does not change
 clocks, voltage, power limits, firmware, BIOS, registry, or drivers, and it
 does not install anything.
 
