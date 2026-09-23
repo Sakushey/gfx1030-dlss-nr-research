@@ -226,8 +226,9 @@ python -m unittest discover -s tests/host -t tests/host
 # Publication audit (secrets, personal paths, manifest drift):
 python scripts/verify_publication.py
 
-# One bounded gfx1030 experiment (requires ROCm 6.4 + MSVC, no admin):
-powershell -ExecutionPolicy Bypass -File scripts\run_test.ps1
+# One bounded RDNA2 experiment (requires ROCm 6.4 + MSVC, no admin).
+# The default remains gfx1030; use -Target gfx1031/gfx1032 only on a matching detected device:
+powershell -ExecutionPolicy Bypass -File scripts\run_test.ps1 -Target gfx1030
 ```
 
 See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) for the full setup and
