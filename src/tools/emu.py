@@ -576,15 +576,28 @@ class Core:
         restore(base)
         if changed(left) or changed(right):
             raise NotImpl("VOPD half changed non-vector architectural state")
+        def write_set(ops):
+            if not ops or not ops[0].strip().startswith("v"):
+                raise NotImpl("VOPD half has no supported vector destination")
+            tok = ops[0].strip()
+            if not tok[1:].isdigit():
+                raise NotImpl("VOPD destination form is not modelled")
+            return {int(tok[1:])}
+
+        left_writes = write_set(left_ops)
+        right_writes = write_set(right_ops)
+        if left_writes & right_writes:
+            raise NotImpl("VOPD halves have overlapping vector writes")
+        writes = left_writes | right_writes
         for lane in range(self.lanes):
             for reg, old in enumerate(base[1][lane]):
-                a, b = left[1][lane][reg], right[1][lane][reg]
-                if a != old and b != old:
-                    raise NotImpl("VOPD halves have overlapping vector writes")
-                if a != old:
-                    self.v[lane][reg] = a
-                elif b != old:
-                    self.v[lane][reg] = b
+                if reg not in writes and (left[1][lane][reg] != old
+                                          or right[1][lane][reg] != old):
+                    raise NotImpl("VOPD half changed an undeclared vector destination")
+            for reg in left_writes:
+                self.v[lane][reg] = left[1][lane][reg]
+            for reg in right_writes:
+                self.v[lane][reg] = right[1][lane][reg]
 
     # ---------------- scalar ALU/control ----------------
     def op_s_mov_b32(self, ins, ops):

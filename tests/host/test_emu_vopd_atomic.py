@@ -39,6 +39,14 @@ class TestVopdAtomicPrestate(unittest.TestCase):
         with self.assertRaisesRegex(emu.NotImpl, "overlapping vector writes"):
             core.step()
 
+    def test_idempotent_overlapping_destinations_still_fail_closed(self):
+        core = self._core(
+            "v1, v0, 1 :: v_dual_add_u32 v1, v0, 1")
+        # Both halves write v1, but retain its old value (0 + 1 == 1).
+        core.v[0][0], core.v[0][1] = 0, 1
+        with self.assertRaisesRegex(emu.NotImpl, "overlapping vector writes"):
+            core.step()
+
     def test_exec_mask_applies_to_both_halves(self):
         core = self._core(
             "v1, v0, 1 :: v_dual_add_u32 v2, v0, 2", lanes=2)
