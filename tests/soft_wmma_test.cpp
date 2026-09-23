@@ -41,8 +41,8 @@ float rdna2_dot2(_Float16 a0, _Float16 a1,
 //   lane  0..15 -> columns 0..15, rows 0..7
 //   lane 16..31 -> columns 0..15, rows 8..15
 //
-// This is NOT yet a drop-in replacement for v_wmma.  It is a safe,
-// bounded proof that gfx1030 can reproduce the arithmetic using v_dot2.
+// This is NOT yet a drop-in replacement for v_wmma. It is a bounded
+// source-level proof of the arithmetic on the explicitly compiled RDNA2 target.
 __global__ void soft_wmma_16x16x16(
     const float* __restrict__ A,
     const float* __restrict__ B,
