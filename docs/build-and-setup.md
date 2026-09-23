@@ -54,18 +54,16 @@ The host-side Python modules were developed as **one flat import namespace** spr
 across several directories, not as an installed package. They are imported by bare
 module name — `import emu`, `import p14d_kd`, and so on.
 
-A root-level `conftest.py` makes this work: it puts every `src/*` directory on
-`sys.path`, so intra-namespace imports resolve whether the code is driven by
-`unittest`/pytest
-or by a plain `python` invocation with the repository root as the working directory.
+A root-level `conftest.py` makes the flat namespace available to pytest by
+putting every `src/*` directory on `sys.path`. Plain `python` does **not** load
+`conftest.py` automatically, even when the repository root is the working directory.
 
 **Two supported ways to run:**
 
-1. **From the repository root** — `conftest.py` handles `sys.path` for you. This
-   works for pytest and for scripts launched with the repository root as the working
-   directory.
-2. **From elsewhere, via `PYTHONPATH`** — set it to the three source directories
-   explicitly:
+1. **The documented host test command from the repository root** configures its own
+   import path and runs without setting `PYTHONPATH`.
+2. **Plain Python scripts or direct imports** need `PYTHONPATH` set to the three
+   source directories explicitly:
 
    ```
    src/emulator;src/isa;src/oracle        (Windows)

@@ -50,12 +50,13 @@ jobs:
         run: python scripts/verify_publication.py --git-head
 
       - name: Confirm no personal git identity leaked
+        env:
+          AUDIT_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          email=$(git log -1 --format='%ae')
-          echo "committer email: ${email}"
+          email=$(git show -s --format='%ae' "$AUDIT_COMMIT")
           case "$email" in
-            *users.noreply.github.com) echo "OK: no-reply address" ;;
-            *) echo "FAIL: commit metadata carries a non-noreply address"; exit 1 ;;
+            *users.noreply.github.com) echo "OK: audited commit uses a no-reply address" ;;
+            *) echo "FAIL: audited commit metadata carries a non-noreply address"; exit 1 ;;
           esac
 
       - name: Confirm CI contains no GPU execution command
