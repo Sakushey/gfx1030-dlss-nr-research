@@ -94,10 +94,10 @@ Host-only checks are the appropriate place for nearly all contribution work — 
 This is the **one** supported physical entry point, and it is deliberately minimal:
 
 ```
-powershell -ExecutionPolicy Bypass -File scripts\run_test.ps1
+powershell -ExecutionPolicy Bypass -File scripts\run_test.ps1 -Target gfx1030
 ```
 
-What it is: a bounded, one-shot experiment. In outline it
+What it is: a bounded, one-shot experiment compiled for exactly one explicit RDNA2 target. The runner defaults to `gfx1030`; `-Target gfx1031` or `-Target gfx1032` is accepted only when HIP reports that same device architecture. Architecture overrides such as `HSA_OVERRIDE_GFX_VERSION` are rejected, and the built executable is checked to contain the requested bundle and no other gfx103x bundle. In outline it
 
 1. checks that the HIP 6.4 root, its compiler, and its device-info tool are present,
 2. performs a **device preflight** and stops if the device does not report `gfx1030`,
