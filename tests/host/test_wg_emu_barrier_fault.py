@@ -22,6 +22,20 @@ class _ReleaseFaultCore(_Core):
         raise RuntimeError("synthetic barrier release failure")
 
 
+class _EndedThenBarrierCore(_Core):
+    """Wave 0 ends; wave 1 alone reaches and releases the next barrier."""
+    def __init__(self, prog, *, wavebase=0, **kwargs):
+        super().__init__(prog, wavebase=wavebase, **kwargs)
+        self.prog = prog
+        self.pc = 0 if wavebase == 0 else 1
+
+    def step(self):
+        self.steps += 1
+        if self.prog[self.pc]["mnemonic"] == "s_endpgm":
+            self.terminated = True
+        self.pc += 1
+
+
 class TestBarrierFaultParticipation(unittest.TestCase):
     def _run(self, core, prog, waves):
         with (
@@ -50,3 +64,16 @@ class TestBarrierFaultParticipation(unittest.TestCase):
         self.assertEqual(result["outcome"][0], "FAULT")
         self.assertEqual(result["per_wave"][0]["state"], "FAULTED")
         self.assertEqual(result["per_wave"][0]["fault"][0], "RELEASE-EXC")
+        self.assertEqual(result["barrier_epochs"], [])
+
+    def test_ended_wave_is_not_a_faulted_barrier_participant(self):
+        result = self._run(_EndedThenBarrierCore, [
+            {"mnemonic": "s_endpgm", "address": 0},
+            {"mnemonic": "s_barrier", "address": 4},
+            {"mnemonic": "s_endpgm", "address": 8},
+        ], 2)
+        self.assertEqual(result["outcome"][0], "ALL_ENDED")
+        self.assertEqual(result["per_wave"][0]["state"], "ENDED")
+        self.assertEqual(result["per_wave"][1]["state"], "ENDED")
+        self.assertEqual(len(result["barrier_epochs"]), 1)
+        self.assertEqual(result["barrier_epochs"][0]["site"], 4)

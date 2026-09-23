@@ -129,6 +129,8 @@ def run_workgroup(prog, dw16_, label, grid, block, fields, text_path=None,
     """Run `wave_count` waves (wavebase w*32) of one workgroup together.
 
     prog: instruction list (house build_orig_program output, pc-indexed).
+    `barrier_epochs` records successfully released rendezvous only; a wave
+    arrival whose release-step faults is retained per-wave but not completed.
     Returns a result dict (see below).  Deterministic."""
     if not getattr(prog, "_normed_float_ops", False):
         _norm_float_ops(prog)
@@ -249,14 +251,6 @@ def run_workgroup(prog, dw16_, label, grid, block, fields, text_path=None,
                            sorted(s for s in sites if s))
                 break
             site = sites.pop()
-            barrier_epochs.append({"no": len(barrier_epochs) + 1,
-                                   "site": site,
-                                   "round": ticks,
-                                   "waves": [w["core"] and
-                                             int((w["core"].s[15] if False
-                                                  else 0)) for w in []],
-                                   "arrivals": [w["bar_epochs"][-1]
-                                                for w in alive]})
             release_fault = False
             for w in alive:
                 # release: execute the (no-op) barrier instruction
@@ -271,6 +265,14 @@ def run_workgroup(prog, dw16_, label, grid, block, fields, text_path=None,
             if release_fault:
                 outcome = ("FAULT", ticks)
                 break
+            barrier_epochs.append({"no": len(barrier_epochs) + 1,
+                                   "site": site,
+                                   "round": ticks,
+                                   "waves": [w["core"] and
+                                             int((w["core"].s[15] if False
+                                                  else 0)) for w in []],
+                                   "arrivals": [w["bar_epochs"][-1]
+                                                for w in alive]})
         elif alive and not any(w["state"] == "RUNNABLE" for w in alive):
             # alive waves: mixture of WAITING + FAULTED impossible here
             # (faulted are not alive); all waiting handled above -> any
