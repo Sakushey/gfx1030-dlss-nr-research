@@ -309,7 +309,7 @@ def s_lshr_b64(a, sh):
 @_s("s_bfe_u32")
 def s_bfe_u32(a, o, w):
     o = u32(o) & 31
-    w = u32(w) & 31
+    w = u32(w) & 0x3F
     if w == 0:
         return {"value": 0}
     return {"value": u32((u32(a) >> o) & ((1 << w) - 1))}
@@ -318,7 +318,7 @@ def s_bfe_u32(a, o, w):
 @_s("s_bfe_i32")
 def s_bfe_i32(a, o, w):
     o = u32(o) & 31
-    w = u32(w) & 31
+    w = u32(w) & 0x3F
     if w == 0:
         return {"value": 0}
     v = u32(a) >> o
