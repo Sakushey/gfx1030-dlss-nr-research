@@ -100,11 +100,12 @@ powershell -ExecutionPolicy Bypass -File scripts\run_test.ps1 -Target gfx1030
 What it is: a bounded, one-shot experiment compiled for exactly one explicit RDNA2 target. The runner defaults to `gfx1030`; `-Target gfx1031` or `-Target gfx1032` is accepted only when HIP reports that same device architecture. Architecture overrides such as `HSA_OVERRIDE_GFX_VERSION` are rejected, and the built executable is checked to contain the requested bundle and no other gfx103x bundle. In outline it
 
 1. checks that the HIP 6.4 root, its compiler, and its device-info tool are present,
-2. performs a **device preflight** and stops if the device does not report `gfx1030`,
-3. sets **session-only** environment variables (this does not change Machine or User
+2. performs a **device preflight** and stops unless the detected architecture exactly matches the requested `-Target`,
+3. rejects `HSA_OVERRIDE_GFX_VERSION` rather than accepting architecture spoofing,
+4. sets **session-only** environment variables (this does not change Machine or User
    environment variables),
-4. compiles the bounded soft-WMMA test program for `gfx1030`,
-5. runs **one tiny tile** — a single small thread block and a single matrix tile —
+5. compiles the bounded soft-WMMA test program for exactly that one requested target, verifies the emitted bundle identity and records the executable SHA-256,
+6. runs **one tiny tile** — a single small thread block and a single matrix tile —
    and exits.
 
 No loop, no retry, no escalation. It is not a benchmark and it is not a stress test.
@@ -119,7 +120,7 @@ No loop, no retry, no escalation. It is not a benchmark and it is not a stress t
   the complete output and *not* to change clocks, drivers, BIOS, or power settings.
 - Treat a driver-recovery message as a report about the host, not as kernel output.
 
-A physical run also requires the code object it embeds — see the next section.
+The soft-WMMA smoke path above is source-built locally and does not require a captured/proprietary code object. Separate research harnesses that embed a studied code object have the additional requirements in the next section.
 
 ### Note: harnesses that embed a code object
 
