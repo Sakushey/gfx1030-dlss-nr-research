@@ -1248,12 +1248,7 @@ class Core:
                 self.vset(lane, dst, val)
 
     def op_v_wmma_f32_16x16x16_f16(self, ins, ops):
-        # value-stub: no control impact; accumulate conservative junk so any
-        # later data-dependent compare still exercises all paths deterministically
-        dst = ops[0]
-        for lane in range(self.lanes):
-            if (self.exec_l >> lane) & 1:
-                pass  # leave accumulator as-is; control-neutral
+        raise NotImpl("v_wmma_f32_16x16x16_f16 is not modelled")
 
     def op_v_dot2c_f32_f16(self, ins, ops):
         """VDOT2C_F32_F16 -- the software-WMMA dot product.
@@ -1354,7 +1349,7 @@ class Core:
                 self.vset(lane, dst, fma_f32_bits(a, b, c))
 
     def op_v_wmma_stub(self, ins, ops):
-        pass
+        raise NotImpl("v_wmma_stub is not modelled")
 
     def op_v_cmp(self, ins, ops):  # placeholder, replaced below by dynamic
         raise NotImpl("unused")
