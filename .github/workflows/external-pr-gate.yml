@@ -78,7 +78,7 @@ jobs:
       - name: Import smoke test
         run: |
           python - <<'PY'
-          import importlib, pathlib, sys
+          import conftest, importlib, pathlib, sys
 
           modules = sorted(
               p.stem for d in ("emulator", "oracle", "isa")
