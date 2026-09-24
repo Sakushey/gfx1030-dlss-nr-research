@@ -10,10 +10,10 @@ Experimental open-source compatibility research investigating whether
 DLSS Neural Rendering workloads can be translated, validated, and
 executed on AMD RDNA2 / Navi21-class gfx1030 hardware.
 
-> **Development status: active research.**
-> No end-to-end DLSS-NR game frame has been demonstrated.
-> Host-side semantic validation is substantially developed; physical
-> gfx1030 kernel liveness remains under active investigation.
+> **Development status: active research, Phase 16BK.**
+> One source-built decoder-transition operation has narrow gfx1030 validation.
+> No complete neural-network run, cold output, game frame, or temporal sequence
+> has been demonstrated.
 
 ---
 
@@ -56,41 +56,21 @@ Concretely, the repository contains original work in four areas:
 
 ---
 
-## Development status
+## Current state — Phase 16BK
 
 | Area | State |
 | --- | --- |
-| gfx1030 ISA / code-object research | active development |
-| host semantic emulator / oracles | advanced experimental |
-| J3 host oracle | available |
-| J3 physical execution | kernel launches, but liveness failure under investigation |
-| T32 host model | experimental |
-| complete neural job | not qualified |
-| D3D12 / HIP interop | not demonstrated |
-| presented GTA V Enhanced neural frame | not demonstrated |
-| performance / gameplay | not applicable yet |
+| Host-connected graph execution | Primary validation path; host checks are not hardware qualification |
+| Source-built decoder-transition operation | Narrow gfx1030 validation only |
+| M0 authentic execution | Not established |
+| G8 cold output | Blocked; cold-start semantics unresolved |
+| G4 selection | Five-way ambiguity remains; no candidate is selected |
+| Graph coverage | 91 of 94 entries remain placeholders |
+| Candidate-F | Historical and frozen |
+| Complete network / cold output / game frame / temporal sequence | Not demonstrated |
 
-### The current physical problem
-
-A correctly parameterized one-workgroup gfx1030 translation currently
-reaches the physical HIP runtime but fails to complete before the
-Windows GPU watchdog recovers the engine. The latest B2 checkpoint
-diagnostic also triggered watchdog recovery, narrowing the first
-physical failure to the **first 3,547 modeled per-wave steps — about
-25.9% of the full J3 dispatch**. This is a localization result, not an
-identified root cause.
-
-Host-side descriptor, argument, address-layout, barrier, and waitcnt
-checks all pass for the modeled path, so those simple host-configuration
-errors are no longer the leading explanations. They do **not** rule out
-a physical synchronization, initialization, scheduling, or model-fidelity
-defect.
-
-Work is now focused on **bounded checkpoint diagnostics rather than
-blind retries**. If you work on RDNA2 execution semantics, wave32
-EXEC/VCC behaviour, waitcnt/barrier interaction, or AMDGPU backend code
-objects, this is the specific problem where specialist review would
-help most — see [Where contributors can help](#where-contributors-can-help).
+The recorded physical-launch authorization is 5 authorized, 5 spent, and 0
+remaining. Any further project-local GPU launch requires a new authorization.
 
 ---
 
@@ -174,11 +154,15 @@ computation of an expected value, a negative control that *should* fail
 and does, or a documented disagreement between the emulator and the
 oracle.
 
-Start with the live tracker: [physical liveness #2](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/2),
-[independent ISA review #3](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/3),
+Current contribution discussions include [independent instruction review #3](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/3),
 [ROCm post-watchdog semantics #4](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/4),
-[second-machine host reproduction #8](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/8), and
+[emulator performance #5](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/5),
+[neural-job graph bounds #6](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/6),
+[D3D12/HIP interop #7](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/7),
+[second-machine host validation #8](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/8), and
 [second-device validation #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9).
+[Candidate-F issue #2](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/2)
+remains a historical frozen record, not a current implementation target.
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
@@ -253,11 +237,14 @@ referenced by the research.
 | Document | Purpose |
 | --- | --- |
 | [STATUS.md](STATUS.md) | authoritative current state |
+| [docs/current-state.md](docs/current-state.md) | sanitized Phase 16BK state and evidence boundary |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | component design |
 | [ROADMAP.md](ROADMAP.md) | milestones M0–M9 |
 | [REPRODUCIBILITY.md](REPRODUCIBILITY.md) | how to reproduce results |
+| [docs/contribution-areas.md](docs/contribution-areas.md) | current contributor discussions and review areas |
 | [docs/proof-model.md](docs/proof-model.md) | the evidence ladder in detail |
 | [docs/hardware-testing-policy.md](docs/hardware-testing-policy.md) | bounded-experiment rules |
+| [docs/glossary.md](docs/glossary.md) | project evidence and status terms |
 | [docs/reverse-engineering-boundaries.md](docs/reverse-engineering-boundaries.md) | what this project will and will not do |
 | [docs/PROVENANCE.md](docs/PROVENANCE.md) | where the published code came from |
 | [docs/maintainer-publication-sync.md](docs/maintainer-publication-sync.md) | safe recurring private-to-public sync procedure |

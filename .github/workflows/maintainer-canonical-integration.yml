@@ -1,0 +1,266 @@
+name: Maintainer canonical integration
+
+# Issue #27 -- MAINTAINER canonical integration gate, part 2 of the CI split.
+#
+# WHAT THIS IS
+#   The ONLY place a private-source hash can be verified: it runs where the
+#   canonical private tree exists (a self-hosted runner labelled
+#   `canonical-tree`, or workflow_dispatch on the maintainer machine via the
+#   repository variable PRIVATE_SOURCE_ROOT).  It checks:
+#     1. private/public mapping (every manifest row source->public),
+#     2. source digest (sha256 of each private source == recorded),
+#     3. public digest (sha256 of each public file == recorded),
+#     4. declared transform (re-run DETERMINISTIC_TRANSFORM pipelines),
+#     5. status generation (PUBLIC_STATE/STATUS generated from the sanitised
+#        canonical-state projection, never hand-edited),
+#     6. full publication verifier (destination's own 11-check gate),
+#     7. privacy audit (tracked-tree personal-path/secret scan).
+#
+# WHAT THIS IS NOT
+#   - Not a fork-facing gate: forks never run this (no private tree there).
+#   - Not a weakening of anything: every check the old combined gate ran is
+#     still run somewhere -- gate A (external-pr-gate.yml) keeps functional +
+#     safety + identity with a CORRECTED subject; this gate keeps every
+#     private/provenance check the combined gate had.
+#   - Not a branch-protection change: no ruleset/rules modified by design.
+#
+# CHECK NAMES -- before/after (nothing existing renamed/removed/weakened)
+#   BEFORE (existing, untouched):
+#     "CI / Host-only checks"
+#     "Publication audit / Tracked-tree audit"
+#     "External PR gate / ..." (added by external-pr-gate.yml)
+#   AFTER (added by this file):
+#     "Maintainer canonical integration / mapping and digests"    NEW
+#     "Maintainer canonical integration / declared transforms"    NEW
+#     "Maintainer canonical integration / status generation"      NEW
+#     "Maintainer canonical integration / publication safety scan" NEW
+#     "Maintainer canonical integration / merge identity audit"   NEW
+#                                                    (merge identity gate C)
+#
+# Host-only: no GPU, no HIP kernel, no game, no deployment.
+
+on:
+  push:
+    branches: [main, "publication-sync/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: canonical-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  canonical:
+    name: Maintainer canonical integration / mapping and digests
+    # Only runnable where the private tree exists.  A repository variable
+    # PRIVATE_SOURCE_ROOT must point at the canonical checkout; on runners
+    # without it the job FAILS CLOSED (absence is blocking) rather than
+    # skipping green.
+    runs-on: [self-hosted, canonical-tree]
+    timeout-minutes: 30
+    steps:
+      - name: Checkout public tree
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Require the private source root (absence is blocking)
+        run: |
+          if [ -z "${PRIVATE_SOURCE_ROOT}" ] || [ ! -d "${PRIVATE_SOURCE_ROOT}" ]; then
+            echo "FAIL: PRIVATE_SOURCE_ROOT is unset or not a directory;"
+            echo "the canonical integration gate cannot verify private/public"
+            echo "mapping without the private tree -- refusing to pass vacuously."
+            exit 1
+          fi
+          echo "private source root present"
+        env:
+          PRIVATE_SOURCE_ROOT: ${{ vars.PRIVATE_SOURCE_ROOT }}
+
+      # Private/public mapping + source digest + public digest in one
+      # execution over BOTH trees: the manifest v2 verifier re-derives every
+      # row (EXACT_COPY byte equality, DETERMINISTIC_TRANSFORM re-run,
+      # NOT_PUBLISHABLE absence) instead of trusting recorded labels.
+      - name: Private/public mapping and source/public digests
+        run: |
+          python "${PRIVATE_SOURCE_ROOT}/tools/verify_publication_manifest.py" \
+            --doc "${PRIVATE_SOURCE_ROOT}/phase16bj/public/PUBLICATION_SCHEMA_MIGRATION_16BJ.json" \
+            --source-root "${PRIVATE_SOURCE_ROOT}" \
+            --public-root "${GITHUB_WORKSPACE}" \
+            --mutate-self \
+            --out "${RUNNER_TEMP}/manifest_v2_verification.json"
+          echo "manifest v2 verification passed (all rows re-derived)"
+        env:
+          PRIVATE_SOURCE_ROOT: ${{ vars.PRIVATE_SOURCE_ROOT }}
+
+  transforms:
+    name: Maintainer canonical integration / declared transforms
+    runs-on: [self-hosted, canonical-tree]
+    timeout-minutes: 30
+    steps:
+      - name: Checkout public tree
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      # Re-runs every declared DETERMINISTIC_TRANSFORM pipeline (sanitizer
+      # identity checked by sha256, line-ending normaliser, ...) over the
+      # private source and requires the output to equal the public bytes.
+      # A clause that did not produce the file fails here -- that is the
+      # 16BF false-clause defect made unrepresentable.
+      - name: Declared transform re-run verification
+        run: |
+          python "${PRIVATE_SOURCE_ROOT}/tools/verify_publication_manifest.py" \
+            --doc "${PRIVATE_SOURCE_ROOT}/phase16bj/public/PUBLICATION_SCHEMA_MIGRATION_16BJ.json" \
+            --source-root "${PRIVATE_SOURCE_ROOT}" \
+            --public-root "${GITHUB_WORKSPACE}" \
+            --out "${RUNNER_TEMP}/manifest_v2_transform_recheck.json"
+          echo "every declared transform re-ran and reproduced the public bytes"
+        env:
+          PRIVATE_SOURCE_ROOT: ${{ vars.PRIVATE_SOURCE_ROOT }}
+
+  status:
+    name: Maintainer canonical integration / status generation
+    runs-on: [self-hosted, canonical-tree]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout public tree
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      # Status surfaces (PUBLIC_STATE.json, STATUS.md, ...) must come from
+      # the generator over the sanitised canonical-state projection.  This
+      # step regenerates into a temp dir and compares -- a hand-edited stale
+      # token (the 16AY-vs-16BE defect) fails the byte comparison.  If the
+      # generator refuses (state record not yet regenerated for the phase),
+      # the refusal is a FAILURE here too: publishing a stale surface must
+      # never pass this gate green.
+      - name: Status generation from sanitised canonical-state projection
+        run: |
+          set -euo pipefail
+          OUT="${RUNNER_TEMP}/status_gen"
+          mkdir -p "${OUT}"
+          if python "${PRIVATE_SOURCE_ROOT}/phase16bb/publication/p16bb_public_state.py" \
+               > "${RUNNER_TEMP}/status_gen.log" 2>&1; then
+            echo "generator emitted:"
+            cat "${RUNNER_TEMP}/status_gen.log"
+          else
+            rc=$?
+            echo "FAIL: status generator exited ${rc} (refusal or error)."
+            echo "A refused/stale status generation must block canonical integration:"
+            cat "${RUNNER_TEMP}/status_gen.log"
+            exit 1
+          fi
+          # Compare each emitted surface against the public worktree copy
+          # when the generator produced one into the preview/emit dir.
+          python - <<'PY'
+          import hashlib, os, pathlib, sys
+
+          gen_dir = pathlib.Path(os.environ["PRIVATE_SOURCE_ROOT"]) / "phase16bb" / "publication"
+          public_root = pathlib.Path(os.environ["GITHUB_WORKSPACE"])
+          targets = ["PUBLIC_STATE.json", "STATUS.md"]
+          checked = 0
+          problems = []
+          for name in targets:
+              candidates = [gen_dir / "public_state_preview" / name, gen_dir / name]
+              gen = next((c for c in candidates if c.is_file()), None)
+              pub = public_root / name
+              if gen is None:
+                  problems.append(f"{name}: generator produced no file to compare")
+                  continue
+              if not pub.is_file():
+                  problems.append(f"{name}: missing from public tree")
+                  continue
+              gb = gen.read_bytes()
+              pb = pub.read_bytes()
+              checked += 1
+              if hashlib.sha256(gb).hexdigest() != hashlib.sha256(pb).hexdigest():
+                  problems.append(
+                      f"{name}: public copy differs from freshly generated "
+                      f"projection (stale or hand-edited status surface)"
+                  )
+          for p in problems:
+              print("  FAIL", p)
+          print(f"status generation compare: {checked} file(s) checked, {len(problems)} problem(s)")
+          sys.exit(1 if problems else 0)
+          PY
+        env:
+          PRIVATE_SOURCE_ROOT: ${{ vars.PRIVATE_SOURCE_ROOT }}
+
+  publication-safety:
+    name: Maintainer canonical integration / publication safety scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout public tree
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements-ci.txt
+
+      # The destination's own safety gate = personal-path/secret scan over
+      # BOTH the working tree and the committed blobs (the same scanner the
+      # publication audit uses, so there is one definition of "clean").
+      - name: Privacy audit (working tree)
+        run: python scripts/verify_publication.py
+
+      - name: Privacy audit (committed blobs)
+        run: python scripts/verify_publication.py --git-head
+
+  merge-identity:
+    name: Maintainer canonical integration / merge identity audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout main tip (subject = the ACTUAL landed commit)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      # Gate C of issue #42: audit the commit that ACTUALLY landed on main
+      # (not the PR head, not a synthetic merge ref).  Runs on push to main
+      # and publication-sync/**; fails/alerts if a personal non-noreply
+      # identity appeared in author, committer, or Co-authored-by trailers.
+      - name: Post-merge main identity (merge identity gate C)
+        if: github.ref == 'refs/heads/main'
+        run: python tools/merge_identity_audit.py --gate c --repo . --ref main
+
+      # On publication-sync branches: gate B -- the prospective canonical
+      # commit that is ABOUT to land must already be project-safe/noreply.
+      - name: Prospective canonical commit identity (merge identity gate B)
+        if: github.ref != 'refs/heads/main'
+        run: python tools/merge_identity_audit.py --gate b --repo . --commit HEAD

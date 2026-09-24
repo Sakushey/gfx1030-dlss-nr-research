@@ -32,12 +32,14 @@ it, and **passing one rung never implies the next**. The ladder is:
 10. Sustained gameplay
 11. Performance
 
-**Current position:** host-side semantic validation (rungs 1–2) is substantially
-developed. A correctly parameterized one-workgroup `gfx1030` translation reaches the
-physical HIP runtime but does not complete before the Windows GPU watchdog recovers
-the engine. That is a rung-3 attempt that has not yet passed. No end-to-end DLSS-NR
-game frame has been demonstrated. For the detailed, current picture see
-[current state](current-state.md).
+**Current position — Phase 16BK:** host-connected graph execution is the primary
+validation path. One source-built decoder-transition operation has narrow gfx1030
+validation. M0 authentic execution is not established, G8 cold output is blocked,
+G4 remains five-way ambiguous, and 91 of 94 graph entries remain placeholders.
+Candidate-F is historical and frozen. No complete neural-network run, cold output,
+game frame, or temporal sequence has been demonstrated. The recorded physical
+launch allowance is 5 authorized, 5 spent, and 0 remaining; another project-local
+GPU launch requires a new authorization. For details see [current state](current-state.md).
 
 ## What this project is not
 

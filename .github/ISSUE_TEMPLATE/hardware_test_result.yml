@@ -19,8 +19,9 @@ body:
           by the Windows GPU watchdog does not demonstrate kernel completion.
         * **Host evidence is not physical qualification.** Keep the two separate.
 
-        Do not include proprietary artifacts, credentials, or crash dumps
-        containing personal or system data.
+        Do not include proprietary artifacts, weights, code objects, captures,
+        raw private session reports, provider credentials, local settings, or
+        personal filesystem paths. Use a public-safe evidence reference instead.
 
   - type: input
     id: gpu
@@ -125,6 +126,72 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: tested_object_sha256
+    attributes:
+      label: Exact tested object SHA-256
+      description: Use the digest of the exact source-built object tested; do not upload the object.
+      placeholder: 64 hexadecimal characters
+    validations:
+      required: true
+  - type: input
+    id: target_device
+    attributes:
+      label: Exact target device / architecture
+      description: Identify the device class and architecture used for this run.
+    validations:
+      required: true
+  - type: input
+    id: authorization_reference
+    attributes:
+      label: Public-safe authorization identity or reference
+      description: Give a role or authorization ID and its approved scope. Do not enter personal contact information.
+    validations:
+      required: true
+  - type: textarea
+    id: completion_mechanism
+    attributes:
+      label: Completion mechanism and observed event
+      description: State what ended the run and what event proves completion.
+    validations:
+      required: true
+  - type: textarea
+    id: guard_results
+    attributes:
+      label: Sentinel, written-set, guard, and immutability results
+      description: Report each result separately; use unknown where it was not measured.
+    validations:
+      required: true
+  - type: input
+    id: numerical_comparison_count
+    attributes:
+      label: Numerical comparison count
+      description: Number of compared values and the comparison method; enter zero if none.
+    validations:
+      required: true
+  - type: dropdown
+    id: reset_device_loss_state
+    attributes:
+      label: Reset or device-loss state
+      options:
+        - no reset or device loss
+        - watchdog / TDR recovery
+        - device or context loss
+        - other failure
+        - unknown
+    validations:
+      required: true
+  - type: dropdown
+    id: architecture_override_state
+    attributes:
+      label: Architecture override state
+      description: Identify whether an architecture override was enabled for this run.
+      options:
+        - disabled
+        - enabled
+        - unknown
+    validations:
+      required: true
   - type: checkboxes
     id: raw_evidence_attached
     attributes:

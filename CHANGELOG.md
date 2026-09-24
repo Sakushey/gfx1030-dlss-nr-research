@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Phase 16BK status refresh
+
+- Clarified that one source-built decoder-transition operation has narrow gfx1030 validation; full network execution, cold output, a game frame, and a temporal sequence remain unproven.
+- Recorded the host-connected validation path, unresolved M0/G4/G8 state, graph placeholders, and the exhausted 5/5/0 physical-launch allowance.
+- Replaced dead initial-issue references with live GitHub issue links and expanded hardware-result evidence fields.
+- Documented the guarded session-end publication workflow and its branch/PR-only boundary.
+
 ### Added
 
 * **Citation metadata** — `CITATION.cff` (CFF 1.2.0) so the research software can

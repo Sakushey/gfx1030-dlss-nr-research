@@ -233,7 +233,7 @@ See also: *DS (data share)*, *workgroup*.
 The AMD GPU die family (RDNA2) to which the `gfx1030` target belongs — the RX 6000
 series desktop parts. Used here as a hardware family name; it is not a claim that all
 Navi21 parts behave identically, which is precisely why a second-device check is a
-worthwhile task (see `docs/initial-issues/08-second-navi21-gfx1030-device.md`).
+worthwhile task (see [issue #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9)).
 
 See also: *gfx1030*, *RDNA2*.
 
@@ -400,3 +400,32 @@ level quietly become a claim at a higher level.
 
 Full ladder: [current state](current-state.md) and
 [evidence and reproducibility](evidence-and-reproducibility.md).
+
+
+## Phase 16BK terms
+
+### M0 authentic execution
+
+Execution backed by the required authentic input and producer evidence. It is
+not established in Phase 16BK.
+
+### G4 ambiguity
+
+A gate with five plausible candidates and no supported selection. An unresolved
+selection must refuse execution.
+
+### G8 cold output
+
+The cold-output gate. It remains blocked while cold-start semantics are
+unresolved.
+
+### Narrow gfx1030 validation
+
+Evidence limited to one source-built decoder-transition operation. It does not
+establish a complete network, cold output, game frame, temporal sequence, or
+end-to-end presentation.
+
+### Physical-launch allowance 5/5/0
+
+Five authorized launches, all five spent, and none remaining. Another
+project-local GPU launch requires a new authorization.
