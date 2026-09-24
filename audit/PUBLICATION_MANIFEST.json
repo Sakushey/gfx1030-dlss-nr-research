@@ -1,7 +1,7 @@
 {
  "generated_by": "audit/_build/build_public.py",
  "total_source_files": 10931,
- "included_files": 115,
+ "included_files": 116,
  "license": "Apache-2.0",
  "newly_authored": [],
  "files": [
@@ -1488,17 +1488,30 @@
    "reason": "Refresh the current public project surface with Phase 16BK scope and evidence limits."
   },
   {
-   "source_path": "phase16bk/public/release-16bk/audit/TRACKED_FILES.txt",
+   "source_path": "phase16bk/public/PUBLIC_TRACKED_FILES_16BK_WITH_IDENTITY_AUDIT.txt",
    "public_path": "audit/TRACKED_FILES.txt",
-   "source_sha256": "c0f933dc1b665c6f32f846a6f83fba537b5ddec82f3d1291ac9489ec8cd41d43",
-   "public_sha256": "c0f933dc1b665c6f32f846a6f83fba537b5ddec82f3d1291ac9489ec8cd41d43",
-   "bytes": 4177,
-   "source_bytes": 4177,
+   "source_sha256": "6f7be85a520e918059b72a8ff763c17545b4f36dd5d94c5cc03085937c3ca8db",
+   "public_sha256": "6f7be85a520e918059b72a8ff763c17545b4f36dd5d94c5cc03085937c3ca8db",
+   "bytes": 4207,
+   "source_bytes": 4207,
    "publication_category": "PUBLIC_DOCUMENTATION_SOURCE",
    "provenance": "Sanitized public current-state material curated from Phase 16BK records; exact-copy source. Private reports and raw machine evidence are excluded.",
    "license": "Apache-2.0",
    "modifications": "none",
    "reason": "Regenerate from the exact candidate file set so both missing and stale inventory entries are rejected."
+  },
+  {
+   "source_path": "tools/merge_identity_audit.py",
+   "public_path": "tools/merge_identity_audit.py",
+   "source_sha256": "e19a48b08761f22ec4e266d6d905941d711a3ac4fa566391de5bf515336b7bb5",
+   "public_sha256": "e19a48b08761f22ec4e266d6d905941d711a3ac4fa566391de5bf515336b7bb5",
+   "bytes": 20988,
+   "source_bytes": 20988,
+   "publication_category": "PUBLIC_ORIGINAL_TOOLING",
+   "provenance": "Read-only project identity audit tool required by the published CI workflows; exact source copy. It examines Git commit metadata, redacts identity addresses in findings, and does not access credentials or modify refs.",
+   "license": "Apache-2.0",
+   "modifications": "none",
+   "reason": "Include the required audit helper so the external PR and maintainer identity gates can execute in public checkouts."
   }
  ]
 }

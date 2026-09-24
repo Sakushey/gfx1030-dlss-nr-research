@@ -137,6 +137,7 @@ tests/soft_wmma_bench.cpp
 tests/soft_wmma_test.cpp
 tools/c_freeze.py
 tools/k_readiness.py
+tools/merge_identity_audit.py
 tools/p16g_census.py
 tools/p16g_kernarg.py
 tools/p16g_msgpack.py
