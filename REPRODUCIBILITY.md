@@ -94,3 +94,20 @@ changes what is being tested.
 - A GPU watchdog recovery can let a synchronization call return success
   even though the kernel never completed. **Sync success is not kernel
   success.** Corroborate with evidence that the kernel produced output.
+
+
+## Phase 16BK host checks
+
+The Phase 16BK neural tests are host-only. From a clean checkout with the
+listed Python dependencies installed, run:
+
+```text
+python scripts/verify_publication.py
+python -m unittest discover -s tests/host -t tests/host
+python -m unittest tests.neural.test_connected_executor tests.neural.test_input_dependency_structured
+python tests/neural/test_resolver_malformed_variant.py
+```
+
+These tests do not launch a GPU or promote host evidence to physical
+qualification. Current status and claim limits are recorded in
+[docs/current-state.md](docs/current-state.md).

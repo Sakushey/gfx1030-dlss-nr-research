@@ -1,0 +1,336 @@
+name: External PR gate
+
+# Issue #27 -- EXTERNAL (fork) PR gate, part 1 of the CI split.
+#
+# WHAT THIS IS
+#   A host-only gate for pull requests coming from forks/external
+#   contributors.  It audits functional code + publication SAFETY of the PR
+#   content, and audits the CONTRIBUTOR's own commits for identity (not
+#   GitHub's synthetic refs/pull/N/merge checkout -- that wrong subject was
+#   the measured issue-#27 defect: gate A must run against
+#   github.event.pull_request.head.sha).
+#
+# WHAT THIS IS NOT
+#   - Not the canonical provenance gate: private-source sha256 equality,
+#     transform re-runs, status generation and the full publication verifier
+#     live in maintainer-canonical-integration.yml (gate B).  A fork CANNOT
+#     see the private tree; demanding private hashes here is what made the
+#     old single gate unusable for external contributions.
+#   - Not a weakening: every check the old combined gate ran for PRs is
+#     either kept here (functional + safety + identity-on-the-right-subject)
+#     or moved to gate B (private/public mapping + transforms + full
+#     publication verifier).  Nothing is dropped.
+#   - Not a branch-protection change: installing these workflow files does
+#     not alter rules; required-check changes are a repo-settings action,
+#     deliberately NOT performed by this workstream.
+#
+# CHECK NAMES -- before/after (no existing check renamed, removed, or weakened)
+#   BEFORE (existing mirror workflows, untouched by this file):
+#     "CI / Host-only checks"            (ci.yml)
+#     "Publication audit / Tracked-tree audit" (publication-audit.yml)
+#   AFTER (added by this file; existing two remain byte-identical):
+#     "External PR gate / functional"            NEW
+#     "External PR gate / safety scans"          NEW
+#     "External PR gate / contributor identity"  NEW
+#     "External PR gate / reconciliation report" NEW (advisory, never fails
+#         solely on private-hash differences; emits
+#         CANONICAL_PUBLICATION_RECONCILIATION_REQUIRED)
+#   Workflow pin validation is a step inside the safety-scans job; it does not
+#   emit an independent GitHub check context.
+#
+# Host-only by design: no GPU, no HIP, no game, no secrets, no deployment.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: external-pr-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  functional:
+    name: External PR gate / functional
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout PR head (the contributor's actual commit, not the merge ref)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements-ci.txt
+
+      - name: Byte-compile host tooling
+        run: python -m compileall -q src tools scripts conftest.py
+
+      - name: Import smoke test
+        run: |
+          python - <<'PY'
+          import importlib, pathlib, sys
+
+          modules = sorted(
+              p.stem for d in ("emulator", "oracle", "isa")
+              for p in pathlib.Path("src", d).glob("*.py")
+          )
+          failed = []
+          for m in modules:
+              try:
+                  importlib.import_module(m)
+              except Exception as e:              # noqa: BLE001
+                  failed.append(f"{m}: {type(e).__name__}: {e}")
+          print(f"imported {len(modules) - len(failed)}/{len(modules)} modules")
+          for f in failed:
+              print("  FAIL", f)
+          sys.exit(1 if failed else 0)
+          PY
+
+      - name: Validate JSON and YAML
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          import yaml
+
+          bad = []
+          for p in pathlib.Path(".").rglob("*.json"):
+              if ".git" in p.parts:
+                  continue
+              try:
+                  json.loads(p.read_text(encoding="utf-8"))
+              except Exception as e:              # noqa: BLE001
+                  bad.append(f"{p}: {e}")
+          for pat in ("*.yml", "*.yaml"):
+              for p in pathlib.Path(".").rglob(pat):
+                  if ".git" in p.parts:
+                      continue
+                  try:
+                      yaml.safe_load(p.read_text(encoding="utf-8"))
+                  except Exception as e:          # noqa: BLE001
+                      bad.append(f"{p}: {e}")
+          for b in bad:
+              print("  FAIL", b)
+          print(f"structured-file validation: {len(bad)} problem(s)")
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Host functional test suite
+        run: python -m unittest discover -s tests/host -t tests/host -v
+
+  safety:
+    name: External PR gate / safety scans
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements-ci.txt
+
+      # Destination-policy safety scans over the PR's tracked tree:
+      # secrets, private paths, and the proprietary/extracted RECORD CLASS
+      # (vendor-derived weight bins, captures, vendor binaries -- keyed on
+      # suffix set + name pattern via src/publication/manifest_v2.py, NOT on
+      # one filename, so the next weights_preimage.bin is caught too).
+      - name: Secret / private-path / proprietary-class scan
+        run: python scripts/verify_publication.py
+
+      # License + provenance safety: every manifest row must carry a license
+      # and provenance fields consistent with the destination policy, and no
+      # tracked file may claim a license incompatible with the Apache-2.0
+      # core without an explicit third-party notice entry.
+      - name: License and provenance safety scan
+        run: |
+          python - <<'PY'
+          import json, pathlib, re, sys
+
+          problems = []
+          manifest = json.loads(pathlib.Path("audit/PUBLICATION_MANIFEST.json").read_text(encoding="utf-8"))
+          rows = manifest.get("files") or []
+          if not rows:
+              print("FAIL: publication manifest has no files list")
+              sys.exit(1)
+          allowed = {"Apache-2.0", "MIT", "Apache-2.0 OR MIT"}
+          for i, row in enumerate(rows):
+              lic = row.get("license")
+              prov = row.get("provenance")
+              if not lic:
+                  problems.append(f"files[{i}] ({row.get('public_path')}): missing license")
+              elif lic not in allowed:
+                  problems.append(f"files[{i}] ({row.get('public_path')}): license {lic!r} not in destination allowlist")
+              if not prov:
+                  problems.append(f"files[{i}] ({row.get('public_path')}): missing provenance")
+              src = row.get("source_path")
+              if isinstance(src, str) and ("/home/" in src or ":\\Users\\" in src or ":/Users/" in src):
+                  problems.append(f"files[{i}]: private absolute path in source_path")
+          for i, row in enumerate(manifest.get("newly_authored") or []):
+              if not row.get("license") or not row.get("provenance"):
+                  problems.append(f"newly_authored[{i}] ({row.get('public_path')}): missing license/provenance")
+          # GPL markers in tracked source would violate the Apache core
+          gpl = re.compile(r"(?i)SPDX-License-Identifier:\s*GPL|GNU GENERAL PUBLIC LICENSE")
+          for p in pathlib.Path("src").rglob("*"):
+              if p.is_file() and p.suffix in {".py", ".c", ".cpp", ".h", ".hpp"}:
+                  try:
+                      if gpl.search(p.read_text(encoding="utf-8", errors="ignore")):
+                          problems.append(f"GPL marker in Apache-core source: {p}")
+                  except OSError as e:
+                      problems.append(f"unreadable {p}: {e}")
+          for p in problems:
+              print("  FAIL", p)
+          print(f"license/provenance safety: {len(problems)} problem(s) over {len(rows)} mapped rows")
+          sys.exit(1 if problems else 0)
+          PY
+
+      # Workflow-pin safety: every `uses:` in every tracked workflow must be
+      # pinned to a full 40-hex commit SHA (moving tags can be re-pointed
+      # upstream and would run unreviewed code with this repo's CI token).
+      - name: Workflow pin checks
+        run: |
+          python - <<'PY'
+          import pathlib, re, sys
+
+          rx = re.compile(r"^\s*(?:-\s*)?uses:\s*(\S+)\s*(?:#.*)?$")
+          bad = []
+          n = 0
+          wf_dir = pathlib.Path(".github/workflows")
+          files = sorted(list(wf_dir.glob("*.yml")) + list(wf_dir.glob("*.yaml"))) if wf_dir.is_dir() else []
+          for f in files:
+              for i, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+                  m = rx.match(line)
+                  if not m:
+                      continue
+                  n += 1
+                  ref = m.group(1)
+                  if ref.startswith("./"):
+                      continue
+                  if "@" not in ref:
+                      bad.append(f"{f}:{i}: unpinned action {ref}")
+                      continue
+                  sha = ref.rsplit("@", 1)[1]
+                  if not re.fullmatch(r"[0-9a-f]{40}", sha):
+                      bad.append(f"{f}:{i}: action ref not a full 40-hex SHA: {ref}")
+          for b in bad:
+              print("  FAIL", b)
+          print(f"workflow pin check: {n} uses-ref(s) across {len(files)} file(s), {len(bad)} problem(s)")
+          sys.exit(1 if bad else 0)
+          PY
+
+  identity:
+    name: External PR gate / contributor identity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout PR head (subject = contributor commits, NOT refs/pull/N/merge)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      # Gate A of issue #42: audit the PR's OWN commits (author, committer,
+      # Co-authored-by trailers) against the noreply/project-safe identity
+      # policy.  The rule is unchanged from the old gate; only the SUBJECT
+      # is corrected (issue #27).
+      - name: Contributor commit identity (merge identity gate A)
+        run: |
+          python tools/merge_identity_audit.py \
+            --gate a \
+            --repo . \
+            --base "${{ github.event.pull_request.base.sha }}" \
+            --head "${{ github.event.pull_request.head.sha }}"
+
+  reconciliation:
+    name: External PR gate / reconciliation report
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+
+      # ADVISORY ONLY (exit 0 by design): if the PR touches manifest-tracked
+      # source, a maintainer must re-run gate B (canonical integration) after
+      # merge so private/public mapping, source/public digests, declared
+      # transforms and status generation are checked WITH the private tree
+      # available.  This step must NEVER fail a fork PR solely because
+      # private source hashes differ -- a fork cannot see them (issue #27).
+      - name: Canonical publication reconciliation report
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, subprocess, sys
+
+          base = os.environ["BASE_SHA"]
+          head = os.environ["HEAD_SHA"]
+          manifest = json.loads(pathlib.Path("audit/PUBLICATION_MANIFEST.json").read_text(encoding="utf-8"))
+          tracked = {row.get("public_path") for row in (manifest.get("files") or [])}
+          tracked.update(row.get("public_path") for row in (manifest.get("newly_authored") or []))
+          tracked.discard(None)
+          p = subprocess.run(
+              ["git", "diff", "--name-only", f"{base}...{head}"],
+              capture_output=True, text=True,
+          )
+          if p.returncode != 0:
+              print(f"git diff failed: {p.stderr.strip()}")
+              print("CANONICAL_PUBLICATION_RECONCILIATION_REQUIRED")
+              print("advisory: diff unavailable; maintainer gate B must run after merge")
+              sys.exit(0)
+          changed = [ln for ln in p.stdout.splitlines() if ln.strip()]
+          hits = sorted(set(changed) & tracked)
+          summary = os.environ.get("GITHUB_STEP_SUMMARY")
+          if hits:
+              msg = (
+                  "CANONICAL_PUBLICATION_RECONCILIATION_REQUIRED\n\n"
+                  "This PR changes manifest-tracked source:\n"
+                  + "\n".join(f"- `{h}`" for h in hits)
+                  + "\n\nFunctional validity is judged by the other External-PR-gate "
+                  "jobs. Private-source hash equality, declared transforms, status "
+                  "generation and the full publication verifier are checked by the "
+                  "maintainer canonical integration gate AFTER merge, where the "
+                  "private tree exists. No fork PR fails solely because private "
+                  "source hashes differ."
+              )
+              print(msg)
+              if summary:
+                  with open(summary, "a", encoding="utf-8") as f:
+                      f.write(msg + "\n")
+          else:
+              print("no manifest-tracked source changed; no reconciliation required")
+          # ADVISORY: always exit 0 -- this step reports, it never gates.
+          sys.exit(0)
+          PY
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}

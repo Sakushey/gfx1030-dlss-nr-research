@@ -319,15 +319,15 @@ def check_manifest(head: bool, files: list[str]) -> None:
         return
     tracked = set(files)
     listed = {f["public_path"] for f in man.get("files", [])}
+    newly_authored = {e["public_path"]
+                      for e in man.get("newly_authored", [])}
+    listed |= newly_authored
     # every manifest entry must be tracked
     absent = sorted(listed - tracked)
     # every tracked non-scaffolding file should be accounted for
     scaffolding_prefixes = (
         ".github/", "audit/", "docs/", "scripts/", "conftest.py",
     )
-    newly_authored = {e["public_path"]
-                      for e in man.get("newly_authored", [])}
-    listed |= newly_authored
     scaffolding_exact = {
         "README.md", "LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.md",
         "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md",
@@ -349,6 +349,31 @@ def check_manifest(head: bool, files: list[str]) -> None:
         detail.append("tracked files not in manifest: " + "; ".join(unaccounted[:10]))
     record(ok, "publication manifest",
            "; ".join(detail) if detail else f"{len(listed)} manifest entries match")
+
+
+def check_tracked_file_list(head: bool, files: list[str]) -> None:
+    data = blob_bytes(head, "audit/TRACKED_FILES.txt")
+    if not data:
+        record(False, "tracked-file inventory", "audit/TRACKED_FILES.txt missing")
+        return
+    listed_lines = [line.strip().replace("\\", "/")
+                    for line in data.decode("utf-8", "replace").splitlines()
+                    if line.strip()]
+    listed = set(listed_lines)
+    actual = set(files)
+    duplicates = sorted({p for p in listed_lines if listed_lines.count(p) > 1})
+    absent = sorted(listed - actual)
+    unlisted = sorted(actual - listed)
+    ok = not duplicates and not absent and not unlisted
+    detail = []
+    if duplicates:
+        detail.append("duplicate entries: " + "; ".join(duplicates[:10]))
+    if absent:
+        detail.append("listed paths absent from tree: " + "; ".join(absent[:10]))
+    if unlisted:
+        detail.append("tree paths missing from inventory: " + "; ".join(unlisted[:10]))
+    record(ok, "tracked-file inventory",
+           "; ".join(detail) if detail else f"all {len(actual)} tree paths listed exactly once")
 
 
 def check_readme_links(head: bool) -> None:
@@ -444,6 +469,7 @@ def main() -> int:
     check_yaml(args.git_head, files)
     check_required(files)
     check_manifest(args.git_head, files)
+    check_tracked_file_list(args.git_head, files)
     check_readme_links(args.git_head)
     check_workflow_pins(args.git_head, files)
     check_no_pycache(files)

@@ -81,3 +81,22 @@ result. A kernel that resets the engine, combined with a synchronization
 call that returns success, looks exactly like a passing test to anyone who
 checks only the return code. That is how a project reports progress it
 does not have.
+
+
+## Phase 16BK authorization and result fields
+
+The current recorded physical-launch allowance is 5 authorized, 5 spent, and
+0 remaining. Any further project-local GPU launch requires a new explicit
+authorization tied to a bounded operation, target, completion event, and stop
+condition. The current hardware claim remains limited to one source-built
+ decoder-transition operation with narrow gfx1030 validation.
+
+A hardware result must record the exact tested object SHA-256, target/device
+architecture, public-safe authorization identity or reference, approved scope,
+completion mechanism and event, sentinel result, written-set result, guard
+result, immutability result, numerical comparison count, reset/device-loss
+state, and architecture-override state. Use a role or public-safe authorization
+reference rather than personal contact details. Do not attach proprietary
+artifacts, captures, raw session reports, credentials, local settings, or
+personal filesystem paths; identify restricted evidence only by a public-safe
+reference when appropriate.

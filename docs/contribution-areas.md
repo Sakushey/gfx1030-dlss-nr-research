@@ -13,8 +13,15 @@ Before contributing, read [evidence and reproducibility](evidence-and-reproducib
 and the [glossary](glossary.md). The labels and the rules there are not optional
 style — they are the project's method.
 
-Draft tasks that correspond to specific known gaps are in `docs/initial-issues/`
-(these are drafts for the maintainer to open; do not open them yourself).
+Follow the live discussions for [independent instruction review (#3)](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/3),
+[ROCm synchronization semantics (#4)](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/4),
+[host emulator performance (#5)](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/5),
+[neural-job graph bounds (#6)](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/6),
+[D3D12/HIP interop (#7)](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/7),
+[second-machine host validation (#8)](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/8), and
+[second-device validation (#9)](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9).
+[Candidate-F (#2)](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/2) is a
+historical frozen record, not a request to resume that candidate.
 
 ---
 
