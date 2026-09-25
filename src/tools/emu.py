@@ -1091,7 +1091,10 @@ class Core:
 
     # ---- extra ops needed by the main (work) region ----
     def op_s_bfe_i32(self, ins, ops):
-        a = self.sget(ops[1]); o = self.sget(ops[2]) & 31; w = self.sget(ops[3]) & 0x3F
+        # The four-operand host form is already decoded as (offset, width).
+        # Scalar BFE encodes these as 6- and 7-bit fields respectively; do
+        # not inherit V_BFE's 5-bit vector-width rule here.
+        a = self.sget(ops[1]); o = self.sget(ops[2]) & 0x3F; w = self.sget(ops[3]) & 0x7F
         if w == 0:
             r = 0
         else:
@@ -1103,7 +1106,7 @@ class Core:
         self.sset(ops[0], r)
 
     def op_s_bfe_u32(self, ins, ops):
-        a = self.sget(ops[1]); o = self.sget(ops[2]) & 31; w = self.sget(ops[3]) & 0x3F
+        a = self.sget(ops[1]); o = self.sget(ops[2]) & 0x3F; w = self.sget(ops[3]) & 0x7F
         r = ((a >> o) & ((1 << w) - 1)) & U32 if w else 0
         self.sset(ops[0], r)
 
@@ -1478,12 +1481,13 @@ class Core:
         self._vbin3(ins, ops, lambda a, b, c: ((a << (b & 31)) + c) & U32)
 
     def op_v_bfe_u32(self, ins, ops):
-        self._vbin3(ins, ops, lambda a, o, w: ((a >> (o & 31)) & ((1 << (w & 0x3F)) - 1)) & U32)
+        # V_BFE's width is a 5-bit vector operand: 32 aliases to 0.
+        self._vbin3(ins, ops, lambda a, o, w: ((a >> (o & 31)) & ((1 << (w & 31)) - 1)) & U32)
 
     def op_v_bfe_i32(self, ins, ops):
         def f(a, o, w):
             o &= 31
-            w &= 0x3F
+            w &= 31
             if w == 0:
                 return 0
             v = (a >> o) & U32
