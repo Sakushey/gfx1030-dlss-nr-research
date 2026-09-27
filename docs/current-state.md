@@ -1,155 +1,342 @@
 # Current State
 
-**Status: active research.** This page describes where the project actually stands.
-It is written to be read as a limits statement first and a progress statement second.
-If a sentence here could be read as a stronger claim than the evidence supports, treat
-the weaker reading as the intended one.
+**Phase 16BO / A8C6 complete.**
 
-Nothing in this project constitutes a compatibility claim, a performance claim, or a
-statement that any particular game, mod, or workload works on `gfx1030`.
+This page describes the current canonical project state after the successful A8C6
+correctness-first frame campaign. If a sentence here could be read as a stronger
+claim than the evidence supports, use the narrower reading.
 
-## Status table
+The canonical/private campaign state is ahead of the old development-preview
+publication. Raw private receipts, proprietary-input-derived artifacts, machine-local
+identities and captures are not automatically public. The repository must never
+invent or synthesize a public receipt to fill that publication gap.
 
-| Area | Status | Evidence level | Notes |
-| --- | --- | --- | --- |
-| `gfx1030` ISA / code-object research | Active development | `HOST_STATIC` | Decode, rebuild, and memory-model gates exist; coverage tracks the traced workload, not the whole ISA. |
-| Host semantic emulator / oracles | Advanced experimental | `HOST_VALIDATED`, `HOST_INDEPENDENT_ORACLE` | Per-instruction records and an independently written scalar oracle; validated against each other on bounded cases. |
-| J3 host oracle | Available | `HOST_INDEPENDENT_ORACLE` | Runs host-only; no GPU needed. |
-| J3 physical execution | Kernel launches; liveness failure under investigation | `PHYSICAL_DIAGNOSTIC` | Reaches the physical HIP runtime; does not complete before the watchdog recovers the engine. |
-| T32 host model | Experimental | `HOST_STATIC` | An experimental host-side model; not qualified, not a basis for a physical claim. |
-| Complete neural job | Not qualified | `PROPOSED` | No complete neural job has been assembled and validated. |
-| D3D12/HIP interop | Not demonstrated | `PROPOSED` | Requirements are mapped only at the level of an open question; see [issue #7](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/7). |
-| Presented frame | Not demonstrated | `PROPOSED` | No frame has been produced, let alone presented. |
-| Performance / gameplay | Not applicable yet | — | Out of scope until far later rungs; no numbers should be inferred from anything here. |
+See [phase16bo-a8c6-state.md](phase16bo-a8c6-state.md).
 
-Evidence levels are defined in
-[evidence and reproducibility](evidence-and-reproducibility.md) and
-[glossary](glossary.md). A claim is classified at the **highest level actually
-established**, not the highest level attempted.
+## Current status table
 
-## The current physical problem
+| Area | Status | Current interpretation |
+| --- | --- | --- |
+| gfx1030 ISA / code-object research | active | Maintained selected objects pass current identity/register/wave-size admission; experimental/historical objects remain separately scoped |
+| Host semantic emulator / oracles | mature experimental | Used as authenticated host/reference layer with negative controls |
+| REAL implementation admission | closed for core | Production resolution is certificate-gated; missing admission refuses |
+| Graph weights | **73/73 applied** | No synthetic graph weight substitutes for an authentic core weight |
+| C1024 / ViT | active and closed for current core | Scale-first contract active; exact QKV view/packing used |
+| Decoder skips | authenticated | Transition outputs 4/8/14/22, consumed 22/14/8/4 |
+| Core placeholders | **0** | Core-required execution uses certified REAL bodies |
+| Authentic host core frame | **PASS** | Connected source/reference frame completes |
+| Representative gfx1030 families | **PASS** | A8C6 START 2 |
+| Complete standalone gfx1030 core frame | **PASS** | A8C6 START 3 with two different cold inputs |
+| GTA source capture | **PASS** | Immediate owned source capture and frame identity |
+| Captured-frame offline neural replay | **PASS** | A8C6 START 5 |
+| Presented GTA neural frame | **PASS** | A8C6 START 6 |
+| Second different matched GTA frame | **PASS** | A8C6 START 7 stale/hard-code control |
+| Warm temporal correctness | not qualified | next major correctness milestone |
+| Sustained gameplay | not qualified | later |
+| Performance/playability | not qualified | deliberately deferred |
+| Direct zero-copy D3D12/HIP | not qualified | correctness path used explicit CPU staging |
+| gfx103x `hipMallocAsync` | not qualified | plain allocation remains first-line policy |
 
-This is the project's live blocker and the focus of current work.
+## What the successful A8C6 path established
 
-### What happens
+### 1. State model and REAL admission
 
-A correctly parameterized one-workgroup translation of the workload reaches the
-physical HIP runtime. It **launches** — the runtime accepts the dispatch — but the
-kernel does not complete. The Windows GPU watchdog eventually fires and recovers the
-engine. After that recovery, the synchronization call on the host side returns
-without an error, and that return value is **not** kernel output and **not** evidence
-of success.
+The project no longer overloads “unresolved” to mean every kind of missing
+execution state.
 
-### What has been narrowed
+The current model distinguishes semantic resolution from execution certification:
 
-Host-side validation has ruled out a large class of simple host-configuration
-mistakes. The following have been checked on the modeled path and are not, at this
-point, the leading explanation:
+```
+semantic_state:
+    UNRESOLVED | RESOLVED
 
-- **Descriptor layout** — argument/descriptor placement and packing have been
-  validated against the expected entry contract.
-- **Barrier placement** — barrier sites and their ordering relative to the analyzed
-  control flow have been validated.
-- **`waitcnt` placement** — counter-wait placement relative to the memory operations
-  it is meant to cover has been validated.
-- **Argument layout** — kernarg layout has been validated against the expected ABI
-  shape for this code object.
-- **Address layout** — the address-space layout of the buffers the workload touches
-  has been validated.
+execution_state:
+    UNCERTIFIED | CERTIFIED_REAL | NONE_BY_DESIGN | REFUSED
+```
 
-The remaining problem is therefore being treated as **physical kernel liveness**.
-These host-side checks do not prove that every hardware-specific synchronization,
-initialization, scheduling, or model-fidelity hypothesis is impossible.
+A semantically resolved family is not relabelled unresolved merely because its REAL
+certificate has not been generated yet.
 
-A B2 post-barrier checkpoint diagnostic has now also triggered watchdog
-recovery. That narrows the first physical failure to the **first 3,547 modeled
-per-wave steps — about 25.9% of the full J3 dispatch**. It is a localization
-result, not a root-cause result. The same cut eliminated two of the three
-candidate `s_addc` sites by measurement; the remaining one is still inside the
-surviving interval.
+For the successful core path:
+- required semantics are resolved;
+- required REAL bodies are certified;
+- production execution does not silently fall back to an unadmitted raw body;
+- post-registration body replacement is a refusal condition.
 
-A cross-wave LDS write-after-write condition was measured in the host model:
-1,473 unsynchronised pairs write different values that a later read observes.
-It was tested for consequence rather than argued about — forcing the wave-issue
-order to the exact reverse of the frozen order on every tick, and separately
-rotating it by one, left every observable (image hash, barrier epochs,
-control-flow signature, tick count, liveness) unchanged across 34 reorderings.
-It is a real property of the modelled memory model, so the physical-cause
-hypothesis is **weakened** by host perturbation — not physically falsified.
+Python closure introspection is not treated as a security boundary. The required
+property is structural: the production executor cannot select the raw adapter without
+authenticated resolution.
 
-### How the problem is being approached
+### 2. Weight identity
 
-Work focuses on **bounded checkpoint diagnostics** rather than blind retries:
+An earlier project state had an incomplete graph→container mapping and invalid/default
+weight extents. That state is historical.
 
-- One bounded physical experiment per authorization; no automatic retries.
-- Checkpoints placed so that partial progress is observable rather than only a final
-  result.
-- Raw evidence preserved as produced; driver-reset output is recorded but never
-  treated as kernel output.
-- Each diagnostic is designed to be able to fail, and is tested against a known-bad
-  case before its "clean" result is believed. See
-  [evidence and reproducibility](evidence-and-reproducibility.md).
+The progression is:
 
-Live tasks that bear on this problem include
-[physical liveness #2](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/2),
-[independent ISA review #3](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/3),
-and [ROCm post-watchdog semantics #4](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/4).
+```
+early state: graph weight identity incomplete
+A8C5:       73/73 factually resolved, 72/73 applied
+A8C6:       73/73 applied
+```
 
-## Hardware safety policy
+The final graph-visible C512 view is:
 
-The physical path is deliberately constrained. In summary:
+```
+t_w_conv_res_views
+→ block30.layer3.layer
+→ [0, 263168)
 
-- **Bounded, one-shot physical experiments.** No loops intended to grind toward
-  success, and no automatic retries.
-- **No watchdog/TDR modification.** Tests must never be run with modified watchdog or
-  TDR settings.
-- **No clock, voltage, or power tricks.** No firmware, BIOS, registry, or driver
-  changes.
-- **Preflight first.** A physical run is preceded by checks that the environment is
-  what it is expected to be.
-- **Preserve raw evidence.** Outputs are kept as produced.
-- **Driver-reset output is not kernel output.** A recovery message is a report about
-  the host, not about the kernel.
-- **Host evidence is not physical qualification.** A host-valid result says nothing
-  about the device.
-- **Physical tests only when explicitly authorized.** The physical path is not
-  something to "just try".
+262144 B  = 512 x 512 E4M3 matrix
+1024 B    = 512 x FP16 skip
+```
 
-The full policy, including what a contributor may and may not do, is in
-[hardware testing policy](hardware-testing-policy.md).
+After extracting that record, the correct remaining `t_w_30` extent is
+**1,705,024 bytes**.
 
-## Host-valid does not mean hardware-valid
+The old **1,704,024** value is retained only as a known-bad control.
 
-This distinction is the single most important thing to take away from this page.
+Historical model manifests remain historical. The active maintained model state is
+not permitted to mutate a closed predecessor-stage manifest.
 
-A host-side result — whether from the emulator or from the independent oracle — is a
-statement about a **model** of `gfx1030` semantics as encoded in host software. It is
-not a statement about silicon. Between the two stand at least:
+### 3. C1024 / ViT QKV
 
-- **The model's fidelity.** The emulator implements the instruction forms the traced
-  workload executes. Unsupported or untraced forms are a coverage gap, and a coverage
-  gap is not a correctness result.
-- **The entry contract.** How arguments, descriptors, and addresses are presented to
-  the device at launch is a separate question from what the instructions mean.
-- **The runtime.** The HIP runtime's handling of the dispatch, and its behavior after
-  an abnormal condition, is a separate question again — see
-  [issue #4](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/4).
-- **The device.** Scheduling, wave occupancy, memory-system behavior, and interaction
-  with the watchdog are properties of the hardware and the platform, not of the
-  model.
-- **Liveness.** Even a semantically perfect description of what the kernel should
-  compute does not establish that the kernel actually runs to completion. That is
-  precisely the gap this project is currently sitting in.
+The current core uses an exact graph-visible QKV record/view rather than binding
+`vit_qkv` to the full coarse `t_w_31` aggregate.
 
-Consequently the project maintains the strict separation in the proof ladder:
-rungs 1–2 are host rungs, and reaching them says nothing about rung 3. Any
-documentation, issue, or commit message in this repository that appears to blur that
-line should be treated as a bug in the documentation, not as a stronger claim.
+External projects were deliberately useful because they disagreed on ordering:
+that disagreement was treated as a falsifier, not as an answer.
 
-## What is explicitly not claimed
+Local evidence established:
+- scale/auxiliary region;
+- matrix start;
+- logical orientation;
+- Q/K/V ordering;
+- packing;
+- consumer addressing.
 
-- No end-to-end DLSS-NR game frame has been demonstrated.
-- No D3D12/HIP interoperability has been demonstrated.
-- No temporal stability, no sustained gameplay, and no performance result exists.
-- The T32 host model is experimental and is not a qualification of anything.
-- The physical path reaches the runtime but has not completed a single workgroup.
+The exact record extent under the current contract is 3,145,856 bytes.
+
+### 4. Vendor-graph falsification
+
+The graph was challenged against independent contemporary reconstructions before
+spending a full-network physical start.
+
+Important questions included:
+- E4M3 publication before GEMM;
+- raw-vs-published residual splits;
+- C32 publication topology;
+- block30 raw-pool boundary;
+- C512 / ViT FFN publication;
+- dedicated ViT attention arithmetic;
+- decoder-transition skip identity.
+
+Local evidence remained authoritative.
+
+### 5. Mean is no longer a fake core blocker
+
+The `mean` node is classified as a Rec.709 luminance-mean reduction with a 32-bit
+float output store.
+
+Milestone membership is based on dependency and side-effect analysis.
+
+A leaf with no effect on the frame-producing core does not block
+`NEURAL_CORE_EXECUTION_READY` merely because an old node table counted it among all
+jobs. It remains tracked where required for game/live integration.
+
+### 6. Boundary types and milestone-specific readiness
+
+The project now keeps separate gates for:
+
+```
+NEURAL_CORE_SEMANTICS_READY
+NEURAL_CORE_HOST_READY
+NEURAL_CORE_DEVICE_READY
+LIVE_GAME_INPUT_READY
+GAME_COMPOSITION_READY
+```
+
+This prevents a game-boundary uncertainty from blocking an internal source-backend
+test and also prevents a project-owned source API type from being mislabeled as an
+authenticated vendor/game boundary type.
+
+Formal historical M0 remains governed by its original project definition rather than
+being edited to fit a desired result.
+
+## Physical campaign result
+
+The successful A8C6 campaign used bounded, serialized GPU work.
+
+### START 0 — environment sentinel
+
+PASS.
+
+The purpose was to prove the actual under-load environment:
+- pinned runtime identity;
+- expected gfx1030 adapter;
+- tiny allocation/H2D/D2H;
+- one tiny known-clean completion kernel;
+- guards/sentinels;
+- device health;
+- WHEA baseline.
+
+This start was intentionally allowed before full semantic closure because it did not
+exercise the neural graph.
+
+### START 2 — representative family qualification
+
+PASS.
+
+The selected set covered materially different maintained GPU implementations rather
+than running all 94 graph nodes independently.
+
+Where wave32 semantics were required, actual object metadata had to satisfy the
+wave-size contract; `gfx1030` alone was not treated as proof of wave size.
+
+### START 3 — complete standalone core frame
+
+PASS.
+
+Execution policy:
+- one HIP stream;
+- plain `hipMalloc`;
+- separate allocations;
+- no activation reuse;
+- node-by-node launch;
+- explicit synchronization;
+- no HIP graph;
+- no async memory pool.
+
+Two different deterministic cold inputs completed in one healthy session.
+
+That A/B control establishes:
+- not stale output;
+- not constant output;
+- not a single hard-coded frame.
+
+It does **not** establish warm temporal behavior.
+
+### START 4 — GTA capture and presentation-pattern path
+
+PASS.
+
+The game source was copied to owned D3D12 memory immediately. The path did not rely on
+later access to a transient/aliased game resource.
+
+Frame identity is non-null and mismatches refuse.
+
+### START 5 — captured-frame offline replay
+
+PASS.
+
+The exact captured source was replayed through:
+- canonical staging;
+- authenticated feature construction;
+- HIP core;
+- readback;
+- authenticated output/composition.
+
+This separated game-input semantics from live presentation/injection.
+
+### START 6 — first matched GTA neural frame
+
+PASS.
+
+The correctness-first transport was:
+
+```
+D3D12 source N
+→ CPU
+→ HIP
+→ CPU
+→ D3D12 result
+```
+
+Latency was irrelevant. The result remained tied to the exact source FrameIdentity.
+
+### START 7 — second independent matched GTA frame
+
+PASS.
+
+A materially different game frame M was captured and processed independently.
+
+The N/M pair requires:
+- distinct source identities;
+- distinct feature identities;
+- result N belongs to N;
+- result M belongs to M;
+- cross-frame substitution refuses.
+
+This rules out the most basic stale/cached/hard-coded success explanation.
+
+## What is not established
+
+### Warm temporal behavior
+
+The successful A8C6 campaign is deliberately a cold/correctness campaign.
+
+It does not establish:
+- history-valid multi-frame state;
+- motion/reprojection correctness across sustained frames;
+- scene-change behavior;
+- temporal stability;
+- cadence/reuse strategies.
+
+### Performance
+
+External same-target work has shown much faster translated execution and several
+cross-target projects report additional kernel optimizations.
+
+None of those numbers is a project performance claim.
+
+The first project-owned frame did not need to be fast.
+
+### Direct D3D12/HIP zero-copy
+
+The successful path used CPU staging.
+
+Direct shared-resource/fence interop remains an optional later engineering path. It
+must not be retroactively described as required for the first-frame result.
+
+### Async allocation
+
+Same-target external evidence remains sufficient to keep
+`hipMallocAsync` disallowed by default for gfx103x physical qualification until it
+is independently proven safe.
+
+## Historical watchdog work
+
+The Candidate-F/J3 watchdog-localization track remains part of project history and
+must not be erased.
+
+But it is no longer the live statement of where the project is stuck.
+
+The successful A8C6 selected package and source-level network path supersede that
+historical blocker for current development.
+
+## Current engineering priorities
+
+1. Sanitize/publish the A8C6 evidence package without exposing proprietary inputs or
+   private machine details.
+2. Qualify authentic warm temporal/history execution.
+3. Preserve exact FrameIdentity through longer sequences.
+4. Test sustained gameplay/resource lifetime.
+5. Independently reproduce the successful path on another RDNA2 device where useful.
+6. Qualify direct/zero-copy interoperability only if it improves engineering value.
+7. Begin performance optimization only with exact faithful controls retained.
+
+## Safety rules remain unchanged
+
+A successful campaign does not relax the hardware policy.
+
+Still prohibited without a new explicit authorization:
+- blind retries;
+- TDR/watchdog changes;
+- clocks/voltage/power changes;
+- runtime/driver switching as a convenience;
+- forced process kills;
+- forced GPU reset;
+- automatic stress loops.
+
+Every future physical result remains scoped to the exact runtime/device/object/path
+that earned it.
