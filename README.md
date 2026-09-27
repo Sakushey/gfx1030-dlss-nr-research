@@ -10,12 +10,12 @@ Experimental open-source compatibility research investigating whether
 DLSS Neural Rendering workloads can be translated, validated, and
 executed on AMD RDNA2 / Navi21-class gfx1030 hardware.
 
-> **Development status: Phase 16BO / A8C6 — first-frame boundary crossed.**
-> The canonical project state records a successful authentic host core frame,
-> a project-owned gfx1030 core frame, real GTA V Enhanced source capture,
-> captured-frame offline replay, and two different matched neural-frame
-> presentations. Warm temporal stability, sustained gameplay, zero-copy
-> interoperability and performance remain unqualified.
+> **Development status: Phase 16BO / A8C8 — public-state reconciliation in progress.**
+> The latest maintainer report of record does **not** support the earlier public
+> A8C6 first-frame claims. The native/recovered path remains incomplete; no
+> project-owned gfx1030 neural frame or GTA capture/presentation is currently
+> established by the authoritative local evidence. The immediate engineering
+> path is a separate, explicitly labeled source-canonical backend tracked in #76.
 
 ---
 
@@ -60,40 +60,43 @@ Concretely, the repository contains original work in four areas:
 
 ## Development status
 
-| Area | State |
+| Area | Current state |
 | --- | --- |
-| gfx1030 ISA / code-object research | active development |
-| host semantic emulator / oracles | advanced experimental |
-| REAL implementation admission | core path certified/fail-closed |
-| graph weights | 73/73 applied |
-| complete authenticated host core | demonstrated |
-| representative gfx1030 neural families | demonstrated in A8C6 |
-| complete standalone gfx1030 core frame | demonstrated |
-| GTA V Enhanced source capture | demonstrated |
-| captured-frame offline neural replay | demonstrated |
-| presented matched GTA neural frames | demonstrated on two different frames |
-| warm temporal stability | not qualified |
-| direct zero-copy D3D12/HIP | not qualified |
-| sustained gameplay | not qualified |
-| performance | intentionally not qualified |
+| Phase | **16BO / A8C8** |
+| native/recovered host graph | traversable but incomplete |
+| native core-required execution | **89/94 placeholder nodes remain across 25 families** |
+| native REAL certification | **4/30 families** in the latest report of record |
+| temporal host contract | implemented and host-tested |
+| project-owned gfx1030 neural frame | **not established** |
+| GTA V Enhanced capture | **not established** |
+| presented GTA neural frame | **not established** |
+| warm temporal/device sequence | not reached |
+| sustained gameplay | not reached |
+| performance | intentionally out of scope |
 
 ### The current engineering boundary
 
-The old Candidate-F/J3 watchdog-localization track remains historical
-evidence, but it is **no longer the current blocker**. Phase 16BO/A8C6
-progressed beyond it with a separately admitted source-level neural path.
+The earlier public A8C6 coordination text overstated the canonical state. A later
+local reconciliation found that the public success claims were not backed by the
+corresponding local implementation and receipts. The public repository must
+therefore treat those physical/game milestones as **not established** until a
+new evidenced path proves them.
 
-The correctness-first A8C6 transport deliberately used explicit staging
-rather than requiring zero-copy shared resources. Two different GTA source
-frames were captured, processed and presented with matching FrameIdentity,
-providing a stale/cached/hard-coded negative control.
+The historical native/recovered backend remains valuable research, but it must
+stay fail-closed where native layout/semantic evidence is absent. It is not a
+prerequisite for the practical rendering milestone.
 
-The next major correctness problem is **warm temporal/history behavior**,
-followed by sustained gameplay. Performance optimization is finally
-reachable, but external benchmark numbers remain external evidence and
-must not be transferred to gfx1030 without measurement.
+The current P0 path is [SOURCE_CANONICAL_BACKEND #76](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/76):
+a separately labeled project-controlled implementation of the recovered logical
+71-block network semantics using authenticated user-owned model weights,
+canonical project-owned activation layouts, an independent CPU reference, and
+simple correctness-first HIP kernels for gfx1030.
 
-See [the A8C6 state record](docs/phase16bo-a8c6-state.md).
+No source-backend success may be reported as native NVIDIA-kernel parity. No
+performance/async/reuse/zero-copy work is on the critical path until the
+faithful source backend first produces independently checked cold frames.
+
+See [the A8C8 state-repair note](docs/phase16bo-a8c8-state-repair.md).
 
 ---
 
@@ -178,9 +181,9 @@ computation of an expected value, a negative control that *should* fail
 and does, or a documented disagreement between the emulator and the
 oracle.
 
-Start with the live tracker: [warm temporal/history qualification #66](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66),
-[current A8C6 source publication #70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70),
-[A8C6 evidence publication #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68),
+Start with the live tracker: [SOURCE_CANONICAL_BACKEND #76](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/76),
+[state/publication reconciliation #70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70),
+[evidence publication #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68),
 [second-gfx1030 reproduction #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9),
 [direct D3D12/HIP interop #7](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/7), and
 [post-faithful optimization #58](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/58).
