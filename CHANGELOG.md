@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased — Phase 16BO / A8C6 state sync
+
+- Canonical project state advanced through an authentic host core frame, representative gfx1030 family qualification, a complete standalone gfx1030 core frame, GTA source capture, captured-frame offline replay, and two distinct matched GTA neural-frame presentations.
+- REAL implementation admission is treated as load-bearing for the production executor; unadmitted production resolution fails closed.
+- Graph weights advanced to 73/73 applied, including the authenticated 263,168-byte `block30.layer3.layer` view for `t_w_conv_res_views`.
+- C1024/ViT state now uses the locally established scale-first contract and an exact QKV record view/packing rather than the coarse aggregate.
+- Decoder skips are fixed to authenticated transition outputs 4/8/14/22.
+- Core TensorSpecs/addition semantics are separated from game-boundary/auxiliary semantics; the Rec.709 `mean` leaf no longer acts as a fake core blocker.
+- The old Candidate-F/J3 watchdog-localization track remains preserved as historical evidence but is no longer the live project blocker.
+- The first correctness transport deliberately uses explicit CPU staging between D3D12 and HIP; zero-copy is not claimed.
+- Warm temporal correctness, sustained gameplay, direct zero-copy interop and performance remain separate future qualifications.
+- Public documentation now distinguishes canonical project state from the subset of raw evidence that can be safely published.
+
+
 All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
