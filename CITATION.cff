@@ -14,7 +14,10 @@ abstract: >-
   Rendering workloads on AMD RDNA2 / gfx1030 hardware. It covers ISA
   translation, a host-side semantic emulator with an independent scalar
   reference oracle, proof-oriented validation, and bounded hardware testing.
-  This is early development research: there is no end-to-end game frame yet.
+  Phase 16BO/A8C6 has crossed the first-frame correctness boundary with a
+  project-owned gfx1030 core and two distinct matched GTA neural-frame
+  presentations; warm temporal stability, sustained gameplay, and performance
+  remain unqualified.
 keywords:
   - gfx1030
   - RDNA2
