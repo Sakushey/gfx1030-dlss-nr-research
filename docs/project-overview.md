@@ -32,12 +32,16 @@ it, and **passing one rung never implies the next**. The ladder is:
 10. Sustained gameplay
 11. Performance
 
-**Current position:** host-side semantic validation (rungs 1–2) is substantially
-developed. A correctly parameterized one-workgroup `gfx1030` translation reaches the
-physical HIP runtime but does not complete before the Windows GPU watchdog recovers
-the engine. That is a rung-3 attempt that has not yet passed. No end-to-end DLSS-NR
-game frame has been demonstrated. For the detailed, current picture see
-[current state](current-state.md).
+**Current position:** Phase 16BO/A8C6 has crossed the first-frame boundary.
+The canonical project state records a completed authenticated host core, representative
+gfx1030 family qualification, a complete standalone gfx1030 neural core frame, real
+GTA V Enhanced source capture, captured-frame offline replay, and two different
+matched presented neural frames.
+
+The correctness path used explicit D3D12→CPU→HIP→CPU→D3D12 staging; direct zero-copy
+interop is not implied. Warm temporal correctness, sustained gameplay and performance
+remain unqualified. For the detailed current picture see [current state](current-state.md)
+and [the A8C6 state record](phase16bo-a8c6-state.md).
 
 ## What this project is not
 
@@ -52,8 +56,9 @@ game frame has been demonstrated. For the detailed, current picture see
   clocks, voltages, power limits, firmware, BIOS, registry, or drivers, and it does
   not modify watchdog/TDR settings. See the hardware safety policy in
   [current state](current-state.md) and [hardware testing policy](hardware-testing-policy.md).
-- **Not a performance project.** Performance and gameplay are not applicable at the
-  current stage; nothing here should be read as a benchmark or a compatibility claim.
+- **Not a performance claim.** The project has now crossed the first-frame correctness
+  boundary, but warm temporal behavior, sustained gameplay and performance remain
+  separate qualification problems. External benchmark numbers are never local results.
 
 ## The four original contributions
 
