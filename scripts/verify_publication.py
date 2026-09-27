@@ -57,7 +57,7 @@ SECRET_PATTERNS = {
 }
 
 PERSONAL_PATTERNS = {
-    "windows_user_path": re.compile(rb"[Cc]:[\\\\/]+Users[\\\\/]+(?!<|path|your)", re.I),
+    "windows_user_path": re.compile(rb"[Cc]:[\\\\/]+Users[\\\\/]+(?![\\\\/]|<|path|your)", re.I),
     "posix_user_path": re.compile(rb"/(?:home|Users)/[A-Za-z0-9._-]+/"),
     "game_library_path": re.compile(rb"[A-Za-z]:[\\\\/]+(?:BattleNet|Games|SteamLibrary)"),
     "personal_email": re.compile(
