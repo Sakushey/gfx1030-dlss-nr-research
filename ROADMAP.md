@@ -1,100 +1,166 @@
 # Roadmap
 
-Milestones map one-to-one onto the proof ladder in
-[docs/proof-model.md](docs/proof-model.md). A milestone is complete only
-when its rung is established **with a negative control that fails
-correctly**.
+Milestones map onto the proof ladder in
+[docs/proof-model.md](docs/proof-model.md). A milestone is complete only when its
+claim is established with meaningful positive and negative controls.
 
-Current position: **between M0 and M1.**
+Current canonical position: **first matched GTA neural frames achieved in Phase 16BO / A8C6; temporal/sustained/performance work remains.**
 
 | Milestone | Rung | State |
 | --- | --- | --- |
-| **M0** Host semantic / reference closure | 1–2 | partial — substantial coverage, not closed |
-| **M1** Physical one-workgroup completion | 3 | **in progress — current blocker** |
-| **M2** Representative variant / T32 physical qualification | 3 | not started |
-| **M3** Multi-workgroup / authentic dispatch | 4–5 | not started |
-| **M4** Complete neural job | 6 | not started |
-| **M5** D3D12 / HIP interop | 7 | not started |
-| **M6** First presented neural-rendered frame | 8 | not started |
-| **M7** Temporal multi-frame stability | 9 | not started |
-| **M8** Sustained gameplay | 10 | not started |
-| **M9** Performance optimization | 11 | not started |
+| **M0** Host semantic / reference closure | 1–2 | core closure achieved; historical broader M0 clauses remain governed by their own definitions |
+| **M1** Physical one-workgroup completion | 3 | **complete / superseded by stronger A8C6 physical results** |
+| **M2** Representative family qualification | 3 | **complete for the A8C6 selected package** |
+| **M3** Multi-workgroup / authentic core dispatch | 4–5 | **complete for the A8C6 cold core** |
+| **M4** Complete neural core job | 6 | **complete for the authenticated cold core** |
+| **M5** D3D12/HIP correctness transport | 7 | **complete via explicit CPU staging; zero-copy direct interop not qualified** |
+| **M6** First presented neural-rendered frame | 8 | **complete — two different matched GTA frames in A8C6** |
+| **M7** Temporal multi-frame stability | 9 | next major correctness milestone |
+| **M8** Sustained gameplay | 10 | not qualified |
+| **M9** Performance optimization | 11 | now reachable, but still downstream of temporal correctness |
+
+See [docs/phase16bo-a8c6-state.md](docs/phase16bo-a8c6-state.md) for the A8C6 state
+summary and the distinction between canonical state and public evidence publication.
 
 ---
 
 ## M0 — Host semantic / reference closure
 
-**Done means:** every instruction form the workload actually executes is
-covered by the emulator, and the independent oracle agrees with the
-emulator on a per-record basis — with at least one negative control that
-demonstrably fails when the emulator is perturbed.
+The core now has the semantic/execution state needed for the successful A8C6 path:
 
-**Why it is not closed:** coverage is measured, not assumed, and the
-dynamically executed instruction set is still being enumerated. A form
-that is never executed does not need coverage; a form that is executed
-but unclassified is a live risk.
+- 73/73 graph weights applied;
+- C1024 active;
+- exact ViT QKV record/view/packing established;
+- decoder-transition skips authenticated;
+- core TensorSpecs/addition semantics sufficient;
+- core REAL bodies certified;
+- zero core placeholder nodes;
+- authentic connected host core frame completes.
+
+Formal historical M0 remains whatever the project's older definition actually
+requires. Do not edit that definition retroactively simply to make a label green.
 
 ## M1 — Physical one-workgroup completion
 
-**Done means:** a single workgroup on gfx1030 runs to completion, the
-result is read back from device memory, and the value is checked against a
-host-computed expectation. No watchdog reset occurs.
+This milestone is no longer the current blocker. The A8C6 campaign progressed beyond
+a single bounded workgroup to representative-family qualification and a complete
+standalone core frame.
 
-**Why it is blocked:** the kernel launches but does not complete before
-the watchdog recovers the engine. Host-side descriptor, argument,
-address-layout, barrier, and waitcnt checks pass on the modeled path, so
-simple host-configuration mistakes in those areas are no longer the
-leading explanation. That does not rule out hardware-specific
-synchronization or model-fidelity defects.
+The old Candidate-F/J3 watchdog-localization track remains historical evidence, not
+the live critical path.
 
-The latest checkpoint diagnostic (B2) also recovered through the
-watchdog, narrowing the first physical failure to the first 3,547 modeled
-per-wave steps — about 25.9% of the full J3 dispatch. This is a
-localization result, not a root cause.
+## M2 — Representative family qualification
 
-**Approach:** bounded checkpoint diagnostics. Each experiment answers one
-question, is authorized explicitly, and produces raw evidence that is
-preserved.
+A8C6 START 2 qualified the materially distinct maintained GPU body families selected
+for the campaign under object/register/wave-size admission.
 
-## M2 — Representative variant / T32 physical qualification
+This does not imply that every historical or experimental object is qualified.
 
-**Done means:** at least one additional workload variant and the T32 model
-reach rung 3 under the same discipline.
+## M3 — Multi-workgroup / authentic core dispatch
 
-## M3 — Multi-workgroup / authentic dispatch
+The complete A8C6 source/core path executed under the conservative policy:
 
-**Done means:** the geometry the real workload uses runs, not a synthetic
-one-workgroup stand-in. This is where synchronization hypotheses that a
-single workgroup cannot exercise get tested.
+- one HIP stream;
+- plain allocation;
+- separate allocations;
+- no activation reuse;
+- node-by-node launch;
+- explicit synchronization;
+- no HIP graph;
+- no async pool.
 
-## M4 — Complete neural job
+## M4 — Complete neural core job
 
-**Done means:** a whole neural job executes, with buffer dependencies
-resolved, and produces numbers comparable to a reference.
+A8C6 START 3 completed the standalone project-owned gfx1030 core for two materially
+different deterministic cold inputs.
 
-## M5 — D3D12 / HIP interop
+The A/B control is important: it demonstrates that the successful result was not
+merely a constant, stale or hard-coded frame.
 
-**Done means:** the interop requirements are mapped *and demonstrated* —
-device selection, shared resources, and synchronization across the
-D3D12/HIP boundary.
+Warm temporal/history behavior is a different milestone.
+
+## M5 — D3D12/HIP transport
+
+The first correctness path deliberately did **not** require zero-copy interoperability.
+
+The successful architecture is:
+
+```
+D3D12 owned source
+→ CPU staging
+→ HIP core
+→ CPU readback
+→ D3D12 result
+```
+
+This is enough for the first-frame correctness milestone. Shared-resource/fence
+zero-copy remains a separate optimization/engineering qualification.
 
 ## M6 — First presented neural-rendered frame
 
-**Done means:** a frame produced by the neural path is presented. This is
-the first milestone anyone outside the project would recognize as
-"it works".
+A8C6 crossed this milestone twice:
 
-## M7–M9
+- frame **N**: captured source and matching neural presentation;
+- frame **M**: a second different source and matching neural presentation.
 
-Temporal stability across frames, sustained interaction, and performance
-work. Nothing here should be discussed as reachable until M6 lands.
+The second frame is a stale/cached/hard-coded negative control. It is not a warm
+temporal sequence.
+
+## M7 — Warm temporal correctness
+
+**Next major correctness milestone.**
+
+Done means a real multi-frame sequence demonstrates:
+
+- correct carried history/state identity;
+- correct motion/reprojection inputs where required;
+- scene/reset semantics;
+- no frame-ID cross-association;
+- no stale history reuse;
+- stable output over a meaningful sequence;
+- explicit reset vs history-valid controls.
+
+Do not use multipass wrapper feedback as a substitute for the network's authentic
+temporal contract.
+
+## M8 — Sustained gameplay
+
+Done means the correctness path survives sustained interaction without:
+
+- device loss;
+- WHEA/DRED anomalies;
+- frame/resource identity drift;
+- stale output;
+- uncontrolled memory growth;
+- resource-lifetime errors.
+
+A slow correctness path can reach M8; FPS is not itself the milestone.
+
+## M9 — Performance
+
+Only now does optimization become legitimate project work.
+
+Candidate families include:
+
+- Praschke-style native E4M3 representation splicing;
+- wave/window fusion;
+- packed FP16 / dot2add candidates;
+- reduced-resolution or approximate profiles;
+- async one-frame-late execution;
+- zero-copy D3D12/HIP;
+- allocation/memory reuse;
+- persistent/fused kernels.
+
+Every optimization must preserve an exact/faithful control and remain independently
+toggleable and benchmarkable. Cross-target speedups never transfer automatically to
+gfx1030.
 
 ---
 
 ## Non-goals
 
-- Redistributing any proprietary artifact, game asset, or runtime binary.
-- Modifying clocks, voltage, power limits, firmware, BIOS, registry, or
-  drivers to make an experiment "work".
-- Disabling or extending the GPU watchdog.
-- Anti-cheat circumvention in any form.
+- Redistributing proprietary model weights, game assets, vendor runtimes, or private captures.
+- Modifying clocks, voltage, power limits, firmware, BIOS, registry, drivers, watchdog or TDR.
+- Using online/anti-cheat-protected game modes for integration testing.
+- Turning external benchmark numbers into local performance claims.
+- Rewriting historical evidence to make the current state look cleaner.
