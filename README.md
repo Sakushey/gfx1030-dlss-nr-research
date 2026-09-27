@@ -179,6 +179,7 @@ and does, or a documented disagreement between the emulator and the
 oracle.
 
 Start with the live tracker: [warm temporal/history qualification #66](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66),
+[current A8C6 source publication #70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70),
 [A8C6 evidence publication #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68),
 [second-gfx1030 reproduction #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9),
 [direct D3D12/HIP interop #7](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/7), and
