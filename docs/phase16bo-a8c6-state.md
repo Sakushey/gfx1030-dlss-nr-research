@@ -155,11 +155,12 @@ Milestone membership is dependency-based:
 
 The first-frame boundary is crossed. The next work should be evidence-driven and separated into:
 
-1. publish/sanitize the A8C6 evidence package where lawful;
-2. independent reproduction on another RDNA2 device where useful;
-3. warm temporal/history qualification;
-4. direct D3D12/HIP zero-copy qualification as an optimization, not a correctness prerequisite;
-5. sustained gameplay;
-6. only then performance work such as E4M3 splicing, packed FP16/dot2add, wave-owned fusion, reduced-resolution or async profiles.
+1. publish the current lawful A8C6 source subset and integrate approved frozen contributor work (#70);
+2. publish/sanitize the A8C6 evidence package where lawful (#68);
+3. independent reproduction on another RDNA2 device where useful;
+4. warm temporal/history qualification (#66);
+5. direct D3D12/HIP zero-copy qualification as an optimization, not a correctness prerequisite;
+6. sustained gameplay;
+7. only then performance work such as E4M3 splicing, packed FP16/dot2add, wave-owned fusion, reduced-resolution or async profiles.
 
 See the live GitHub issues for the current split.
