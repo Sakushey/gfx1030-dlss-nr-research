@@ -125,9 +125,15 @@ HMODULE backend()
 {
     static HMODULE module = [] {
         log_init();
-        HMODULE m = LoadLibraryExW(DLSSNR_BACKEND_PATH, nullptr,
-                                   LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR |
-                                       LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
+#ifdef DLSSNR_BRIDGE_TESTING
+        // The deterministic mock is app-local in host-only test builds.
+        // Production keeps the absolute, compile-time-pinned HIP path below.
+        constexpr DWORD kBackendLoadFlags = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS;
+#else
+        constexpr DWORD kBackendLoadFlags =
+            LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_DEFAULT_DIRS;
+#endif
+        HMODULE m = LoadLibraryExW(DLSSNR_BACKEND_PATH, nullptr, kBackendLoadFlags);
         if (m == nullptr) {
             log_line("BACKEND_LOAD_FAILED error=%lu", (unsigned long)GetLastError());
         } else {
