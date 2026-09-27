@@ -166,9 +166,10 @@ independent eyes.
 | EXEC / VCC / wave32 behaviour | the emulator's hardest correctness surface |
 | GPU synchronization / waitcnt | the leading hypothesis space for the liveness failure |
 | Compiler / binary translation | independent review of translated instruction forms |
-| Physical kernel debugging | bounded checkpoint diagnostics on gfx1030 |
-| D3D12 / HIP interoperability | mapping the interop requirements for rung 7 |
-| Python emulator performance | the emulator is the throughput bottleneck for host jobs |
+| Warm temporal/history correctness | the next major correctness frontier after the matched cold-frame milestone |
+| Independent RDNA2 reproduction | reproduce the qualified source/core path on another target device without transferring binaries |
+| D3D12 / HIP interoperability | qualify direct/zero-copy transport as an optional engineering optimization |
+| Performance engineering | optimize only against a faithful synchronous control with exactness + ABBA-style timing |
 | Reproducibility / CI | keeping host-only checks honest and portable |
 | Documentation | making the proof model legible to newcomers |
 
