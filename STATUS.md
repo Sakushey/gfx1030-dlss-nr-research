@@ -135,11 +135,11 @@ The project does **not** yet claim:
 
 ## Immediate next work
 
-1. Sanitize and publish the A8C6 proof package where lawful and useful.
-2. Preserve an independently reproducible project-owned source/core route.
-3. Qualify warm temporal/history behavior.
-4. Revisit direct D3D12/HIP zero-copy only as an optimization/engineering path.
-5. Pursue independent RDNA2 reproduction.
+1. Publish the current lawful A8C6 source subset and reconcile the frozen approved contributor queue ([#70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)).
+2. Sanitize/publish the A8C6 proof package where lawful ([#68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68)).
+3. Qualify warm temporal/history behavior ([#66](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66)).
+4. Preserve an independently reproducible project-owned source/core route on a second RDNA2 device.
+5. Revisit direct D3D12/HIP zero-copy only as an optimization/engineering path.
 6. Only after correctness/temporal work, optimize performance.
 
 Live coordination is in the GitHub Issues tab. Post-faithful optimization issues may
