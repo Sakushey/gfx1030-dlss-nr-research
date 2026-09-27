@@ -1,7 +1,7 @@
 # Status
 
-Authoritative current state of the project. If this file disagrees with another
-high-level status document, this file wins.
+Authoritative public coordination state of the project. If this file disagrees
+with another high-level public status document, this file wins.
 
 Last reviewed: 2026-09-27
 
@@ -9,138 +9,119 @@ Last reviewed: 2026-09-27
 
 ## One-line summary
 
-**Phase 16BO / A8C6 has crossed the first-frame boundary.** The canonical
-project state records a successful authentic host core frame, a successful
-project-owned gfx1030 core frame, a real GTA V Enhanced source capture,
-captured-frame offline neural replay, a successful presentation-path pattern,
-and two different matched GTA neural-frame presentations.
+**Phase 16BO remains in progress. The earlier public A8C6 first-frame/GTA
+success claims are superseded and must not be used as current evidence.**
 
-This is a correctness milestone, **not** a temporal-stability, sustained-gameplay,
-or performance claim.
+The latest maintainer report of record reconciles the local tree against the
+public coordination surface and finds that the public success claims did not
+have the corresponding local implementation/receipts. The latest measured local
+state reported:
 
-See [docs/phase16bo-a8c6-state.md](docs/phase16bo-a8c6-state.md) for the current
-campaign summary and evidence/publication boundary.
-
-## Evidence/publication boundary
-
-The canonical maintainer/operator state is ahead of the old public development
-preview. Raw private receipts, proprietary-input-derived artifacts, machine-local
-identities and game captures are not automatically publishable.
-
-This repository therefore distinguishes:
-- the **canonical project state** used for development coordination;
-- the subset of evidence that is sanitized and publicly reproducible here.
-
-Do not invent missing public hashes/receipts to make the publication surface look
-complete.
-
-## Current ladder position
-
-```
- 1. Host static correctness ................. demonstrated
- 2. Host dynamic / independent oracle ....... demonstrated
- 3. Representative physical qualification ... demonstrated for A8C6 selected package
- 4. Multi-workgroup / connected execution ... demonstrated in the A8C6 core path
- 5. Authentic full core dispatch ............ demonstrated
- 6. Complete neural core job ................ demonstrated
- 7. D3D12↔HIP correctness transport ......... demonstrated via staged transport
-     direct/zero-copy interop ................ NOT qualified
- 8. Presented neural frame .................. demonstrated on two distinct GTA frames
- 9. Warm temporal stability ................. not qualified
-10. Sustained gameplay ...................... not qualified
-11. Performance ............................. intentionally not qualified
+```text
+host test suite                 845 tests, green
+native core placeholders       89 / 94 nodes, 25 families
+native REAL-certified families 4 / 30
+project-owned gfx1030 frame     NOT REACHED
+GTA capture                     NOT REACHED
+GTA neural presentation        NOT REACHED
+warm/consecutive rendering      NOT REACHED
 ```
 
-A8C6 used correctness-first staging. CPU staging between D3D12 and HIP is a valid
-correctness transport; it does not constitute a zero-copy shared-resource claim.
+This correction is about claim scope, not about erasing historical research.
 
-## Core semantic/execution state
+## Backend split
 
-The canonical A8C6 state records:
+The project now distinguishes two independent tracks.
 
-- REAL implementation certificates are on the actual production resolution path;
-- unadmitted production REAL keys fail closed;
-- semantic resolution and execution certification are separate states;
-- graph weights are **73/73 applied**;
-- the final C512 projection/skip view is the authenticated 263,168-byte
-  `block30.layer3.layer` record;
-- C1024 scale-first semantics are active;
-- ViT QKV uses an exact graph-visible record view/packing rather than the complete
-  coarse `t_w_31` aggregate;
-- decoder skips use authenticated transition outputs 4/8/14/22;
-- core-required TensorSpecs and addition semantics are closed;
-- core-required REAL bodies are certified;
-- **core placeholder nodes = 0**;
-- an authentic connected host core frame completes;
-- the conservative execution plan and no-reuse memory plan cover the core;
-- selected gfx1030 objects pass identity, VGPR/SGPR and required wave-size admission.
+### NATIVE_RECOVERED_BACKEND
 
-## Physical/game campaign state
+The historical translated/native-layout recovery track remains fail-closed where
+evidence is absent. It may remain `NOT_READY` without blocking the practical
+rendering experiment.
 
-Canonical A8C6 result:
+Do not:
+- promote hypotheses to REAL/native certification;
+- invent native activation/token layouts;
+- weaken certificate gates;
+- treat source-backend success as native-kernel parity.
 
-| Rung | Result |
-| --- | --- |
-| START 0 — environment sentinel | PASS |
-| START 1 — optional mean microprobe | not required unless separately recorded |
-| START 2 — representative neural families | PASS |
-| START 3 — complete standalone gfx1030 core frame | PASS |
-| START 3 — different cold input A/B control | PASS |
-| START 4 — GTA source capture + pattern path | PASS |
-| START 5 — captured-frame offline neural replay | PASS |
-| START 6 — matched GTA neural frame N | PASS |
-| START 7 — second different matched GTA neural frame M | PASS |
+### SOURCE_CANONICAL_BACKEND
 
-The N/M pair establishes that the successful path is not merely a stale, constant or
-hard-coded single-frame result. It does **not** establish warm temporal behavior.
+The immediate P0 engineering path is tracked in
+[#76](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/76).
 
-## Historical blockers that are no longer current
+It is a separately labeled, project-controlled implementation of the recovered
+logical 71-block network semantics:
+- authenticated user-owned model weights;
+- canonical row-major project activation layouts;
+- independent CPU reference;
+- correctness-first HIP source kernels compiled explicitly for gfx1030;
+- explicit E4/F16/F32 publication semantics;
+- explicit transitions, window attention, ViT and head;
+- no dependency on unresolved NVIDIA-native register/token/4x4 activation layout.
 
-### Old J3 watchdog localization
+The first valid physical claim from this track is
+`FIRST_PROJECT_OWNED_GFX1030_SOURCE_FRAME = PASS`, and only after a complete
+small source frame agrees against the CPU reference.
 
-The earlier Candidate-F/J3 watchdog diagnostics remain historical evidence, but they
-are no longer the project's current blocker. They must not be used to describe the
-present project state as "stuck at one-workgroup liveness."
+## What is actually established
 
-### Old graph-weight identity gap
+Current high-confidence local/project facts suitable for coordination include:
+- the host/native graph is substantially mapped and traversable;
+- authenticated model/container work remains valuable;
+- the latest report records 89/94 native core nodes still using placeholder
+  execution and 4/30 native REAL-certified families;
+- `TemporalStateContractV1` exists and is host-tested;
+- GTA FrameIdentity/motion/lockstep/late-result/device-health host tooling exists;
+- the historical physical harness is fail-closed;
+- no current public claim may state that this project already produced a
+  complete project-owned gfx1030 neural frame or GTA neural presentation.
 
-Earlier stages represented graph weights with invalid/default extents and lacked a
-complete graph→container identity map. That state is superseded:
+## Immediate work
 
-```
-A8C5: 73/73 factually resolved, 72/73 applied
-A8C6: 73/73 applied
-```
+1. **Build/qualify SOURCE_CANONICAL_BACKEND (#76).**
+   Start with the CPU reference, logical tensor map, exact schedule and semantic
+   mutants; then two different complete host source frames.
+2. Build a new live source-backend gate. Every row must be measured; no literal
+   verdict rows.
+3. Compile source HIP objects explicitly for gfx1030 and inspect compiler/source/
+   object identity.
+4. Only after the source gate passes, use a fresh bounded physical campaign:
+   primitives → small complete source frame → target-resolution source frame.
+5. Only then arm actual GTA capture/pattern transport and process two distinct
+   cold frames.
+6. Reuse the existing temporal host contract only after cold source frames are
+   real; warm/consecutive rendering comes later.
+7. Keep optimization/reuse/async/zero-copy/runtime-migration experiments out of
+   the critical path until the faithful source path exists.
 
-### Mean as node-count blocker
+## Publication/reproducibility boundary
 
-`mean` is classified as a Rec.709 luminance-mean reduction with a 32-bit float
-output store. Milestone membership is dependency/control-flow based: an auxiliary
-leaf does not block the authenticated neural core merely because an older execution
-table counted it as node 94.
+The public repository must never invent receipts, hashes or source files to
+retroactively support the superseded A8C6 coordination claims.
+
+Publication work should:
+- preserve historical artifacts;
+- publish only provenance/privacy/license-clean source;
+- mark private/proprietary inputs as user-supplied rather than redistribute them;
+- distinguish source-backend evidence from native-recovered evidence.
+
+See:
+- [A8C8 state-repair note](docs/phase16bo-a8c8-state-repair.md)
+- [SOURCE_CANONICAL_BACKEND #76](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/76)
+- [state/source publication reconciliation #70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)
+- [evidence publication #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68)
 
 ## Explicit non-claims
 
-The project does **not** yet claim:
-
-- warm temporal/history correctness;
-- temporal stability over sustained play;
-- sustained gameplay qualification;
-- playable performance;
-- optimized E4M3/packed/fused execution;
-- `hipMallocAsync` safety on gfx103x;
-- zero-copy/shared-resource D3D12/HIP qualification;
-- DirectML as the project's implementation;
-- frame generation or multipass qualification.
-
-## Immediate next work
-
-1. Publish the current lawful A8C6 source subset and reconcile the frozen approved contributor queue ([#70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)).
-2. Sanitize/publish the A8C6 proof package where lawful ([#68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68)).
-3. Qualify warm temporal/history behavior ([#66](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66)).
-4. Preserve an independently reproducible project-owned source/core route on a second RDNA2 device.
-5. Revisit direct D3D12/HIP zero-copy only as an optimization/engineering path.
-6. Only after correctness/temporal work, optimize performance.
-
-Live coordination is in the GitHub Issues tab. Post-faithful optimization issues may
-now be investigated without reclassifying their external benchmarks as local evidence.
+The project does **not** currently claim:
+- complete native recovered execution;
+- a project-owned complete gfx1030 neural frame;
+- GTA V Enhanced neural capture/replay/presentation;
+- warm temporal device correctness;
+- consecutive neural gameplay;
+- playable or real-time performance;
+- direct zero-copy D3D12/HIP qualification;
+- `hipMallocAsync` safety;
+- frame generation or multipass qualification;
+- HDR qualification.
