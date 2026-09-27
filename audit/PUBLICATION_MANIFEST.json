@@ -57,6 +57,12 @@
    "reason": "host-only regression that external workflow actions are pinned to immutable commit SHAs",
    "license": "Apache-2.0",
    "provenance": "authored for the published repository"
+  },
+  {
+   "public_path": "tests/host/test_publication_privacy.py",
+   "reason": "host-only regression that privacy scanning rejects escaped Windows user paths without embedding personal data",
+   "license": "Apache-2.0",
+   "provenance": "authored for the published repository"
   }
  ],
  "files": [
@@ -415,13 +421,13 @@
    "source_path": "phase10_hip_bridge/amdhip64_7.cpp",
    "public_path": "src/bridge/amdhip64_7.cpp",
    "source_sha256": "3dd21a0ea290761180453a03d80d570035f4219f40b1b278bd15811ff405ea97",
-   "public_sha256": "3dd21a0ea290761180453a03d80d570035f4219f40b1b278bd15811ff405ea97",
-   "bytes": 16722,
+   "public_sha256": "bb6f0912f5b75462558aa5fe02471d2278721413d4146b610189c6407804eb80",
+   "bytes": 16994,
    "source_bytes": 16722,
    "publication_category": "PUBLIC_ORIGINAL_TOOLING",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "none",
+   "modifications": "privacy-safe publication transform: remove personal test path; preserve production runtime pin",
    "reason": "original interoperability/emulation/validation tooling"
   },
   {
@@ -519,13 +525,13 @@
    "source_path": "phase10_hip_bridge/bridge_config.h",
    "public_path": "src/bridge/bridge_config.h",
    "source_sha256": "7bbda2569378b037663831ee61316a60d2dd8da916027dac7cd2f77d82e9a868",
-   "public_sha256": "7bbda2569378b037663831ee61316a60d2dd8da916027dac7cd2f77d82e9a868",
-   "bytes": 668,
+   "public_sha256": "efab7c7581ff708a510575a82ad6b9ea355ed8ea987c45f54460889dc6fff5a5",
+   "bytes": 596,
    "source_bytes": 668,
    "publication_category": "PUBLIC_ORIGINAL_TOOLING",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "none",
+   "modifications": "privacy-safe publication transform: remove personal test path; preserve production runtime pin",
    "reason": "original interoperability/emulation/validation tooling"
   },
   {
@@ -571,13 +577,13 @@
    "source_path": "phase10_hip_bridge/tools/build_bridge.bat",
    "public_path": "src/bridge/tools/build_bridge.bat",
    "source_sha256": "015d1c98e8fab8403c85e110c95bb2af48922c2f1064545c874c73c6ec26c9d1",
-   "public_sha256": "015d1c98e8fab8403c85e110c95bb2af48922c2f1064545c874c73c6ec26c9d1",
-   "bytes": 1790,
+   "public_sha256": "e21ec32eb6e8a4687d226f6fcbc6b1c861a1e986deff6f7c09ac132fe3a93e2c",
+   "bytes": 1789,
    "source_bytes": 1790,
    "publication_category": "PUBLIC_ORIGINAL_TOOLING",
    "provenance": "project-owned original work",
    "license": "Apache-2.0",
-   "modifications": "none",
+   "modifications": "privacy-safe publication transform: remove personal test path; preserve production runtime pin",
    "reason": "original interoperability/emulation/validation tooling"
   },
   {
