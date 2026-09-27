@@ -23,6 +23,25 @@ are not accepted as evidence.
 - **Only run physical tests when explicitly authorized.** "It would be
   interesting to know" is not authorization.
 
+## Post-A8C6 authorization rule
+
+Phase 16BO/A8C6 successfully crossed the first-frame physical/game boundary under a
+specific bounded campaign. **That success is not continuing authorization.**
+
+Future physical work still requires an explicit current authorization and must state:
+- the exact question/rung;
+- the selected runtime/device/object identities;
+- the maximum number of starts;
+- the hard device-failure stop condition;
+- whether any recovery start is permitted.
+
+A past PASS never licenses an automatic rerun, stress loop, optimization sweep, driver
+change, or “one more try.”
+
+The first successful frame path used conservative allocation and serialized GPU work.
+That does not qualify `hipMallocAsync`, zero-copy D3D12/HIP, alternate runtimes, warm
+temporal execution, or performance variants.
+
 ## Hard rules
 
 1. **Driver-reset output is not kernel output.**
