@@ -1,7 +1,7 @@
 @echo off
 rem Phase 10 bridge builds (host-only; MSVC 2022 Build Tools).
 rem   prod_build\amdhip64_7.dll - production bridge -> absolute HIP 6.4 DLL
-rem   test_build\amdhip64_7.dll - test bridge -> mock_hip6.dll (absolute)
+rem   test_build\amdhip64_7.dll - test bridge -> app-local mock_hip6.dll
 rem   mock_hip6.dll            - deterministic mock backend
 rem   hip_bridge_smoke.exe     - host test executable (no GPU)
 call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat" >nul 2>&1
