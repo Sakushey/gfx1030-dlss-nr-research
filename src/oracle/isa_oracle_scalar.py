@@ -308,10 +308,12 @@ def s_lshr_b64(a, sh):
 # ---- bit field -------------------------------------------------------------
 @_s("s_bfe_u32")
 def s_bfe_u32(a, o, w):
-    # This oracle receives the scalar control value already decoded by
-    # eval_scalar below; scalar offset and width are distinct 6-/7-bit fields.
-    o = u32(o) & 0x3F
-    w = u32(w) & 0x7F
+    # This oracle receives already-decoded controls from eval_scalar below.
+    # It therefore validates rather than masks the source-domain values.
+    o = u32(o)
+    w = u32(w)
+    if o >= 32 or w > 32:
+        raise ValueError("s_bfe_u32 decoded control outside 32-bit host model")
     if w == 0:
         return {"value": 0}
     return {"value": u32((u32(a) >> o) & ((1 << w) - 1))}
@@ -319,8 +321,10 @@ def s_bfe_u32(a, o, w):
 
 @_s("s_bfe_i32")
 def s_bfe_i32(a, o, w):
-    o = u32(o) & 0x3F
-    w = u32(w) & 0x7F
+    o = u32(o)
+    w = u32(w)
+    if o >= 32 or w > 32:
+        raise ValueError("s_bfe_i32 decoded control outside 32-bit host model")
     if w == 0:
         return {"value": 0}
     v = u32(a) >> o
@@ -666,9 +670,9 @@ def eval_scalar(vec):
         a = _read_scalar(src_toks[0], setup, exec_lo, scc)
         imm = _read_scalar(src_toks[1], setup, exec_lo, scc)
         # Scalar BFE is SOP2: its raw control operand carries offset in
-        # bits [5:0] and width in bits [22:16].  This follows LLVM AMDGPU's
+        # bits [4:0] and width in bits [22:16].  This follows LLVM AMDGPU's
         # scalar BFE lowering, independently of the host Core8 decoder.
-        off = imm & 0x3F
+        off = imm & 0x1F
         width = (imm >> 16) & 0x7F
         r = fn(a, off, width)
         return r if isinstance(r, dict) else {"value": r}

@@ -467,42 +467,30 @@ class Core8(Core):
     def _sbfe_imm(self, ops):
         """Decode the raw second scalar BFE control operand.
 
-        LLVM's AMDGPU selector documents S1[5:0] as the offset and
+        LLVM's AMDGPU selector documents S1[4:0] as the offset and
         S1[22:16] as the width.  This is deliberately separate from V_BFE,
         whose width operand has only five significant bits.
         """
         imm = self.sget(ops[2])
-        off = imm & 0x3F
+        off = imm & 0x1F
         w = (imm >> 16) & 0x7F
+        if w > 32:
+            raise emu_mod.NotImpl("s_bfe_u32/i32 packed width above 32 is not modelled")
         return off, w
 
     def op_s_bfe_u32(self, ins, ops):
         if len(ops) >= 4:
             Core.op_s_bfe_u32(self, ins, ops)
             return
-        a = self.sget(ops[1])
         off, w = self._sbfe_imm(ops)
-        if off >= 32 or w == 0:
-            r = 0
-        else:
-            width = min(w, 32 - off)
-            r = ((a >> off) & ((1 << width) - 1)) & U32
-        self.sset(ops[0], r)
+        Core.op_s_bfe_u32(self, ins, [ops[0], ops[1], str(off), str(w)])
 
     def op_s_bfe_i32(self, ins, ops):
         if len(ops) >= 4:
             Core.op_s_bfe_i32(self, ins, ops)
             return
-        a = self.sget(ops[1])
         off, w = self._sbfe_imm(ops)
-        if off >= 32 or w == 0:
-            r = 0
-        else:
-            width = min(w, 32 - off)
-            r = (a >> off) & ((1 << width) - 1)
-            if r & (1 << (width - 1)):
-                r |= (U32 << width) & U32
-        self.sset(ops[0], r)
+        Core.op_s_bfe_i32(self, ins, [ops[0], ops[1], str(off), str(w)])
 
     def op_s_cmp_eq_u64(self, ins, ops):
         self.scc = 1 if self.spair(ops[0]) == self.spair(ops[1]) else 0

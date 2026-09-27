@@ -34,13 +34,14 @@ class TestBfeWidthRules(unittest.TestCase):
             self.assertEqual(self.core.v[0][4], expected_u[width], width)
             self.assertEqual(self.core.v[0][5], expected_i[width], width)
 
-    def test_raw_scalar_packed_control_uses_offset_low6_width_22_16(self):
+    def test_raw_scalar_packed_control_uses_offset_low5_width_22_16(self):
         scalar = Core8([], lanes=1, vgprs=4)
         scalar.op_s_bfe_u32({}, ["s1", "0xDEADBEEF", "0x00200000"])
         self.assertEqual(scalar.s[1], 0xDEADBEEF)
-        # offset 33 / width 1: bit 33 is outside a 32-bit source.
-        scalar.op_s_bfe_u32({}, ["s1", "0xDEADBEEF", "0x00010021"])
-        self.assertEqual(scalar.s[1], 0)
+        # Bit 5 is not part of the 32-bit scalar offset field, so this is
+        # the same offset 0 / width 32 packed request.
+        scalar.op_s_bfe_u32({}, ["s1", "0xDEADBEEF", "0x00200020"])
+        self.assertEqual(scalar.s[1], 0xDEADBEEF)
 
     def test_raw_scalar_signed_width_32_and_oracle_agree_independently(self):
         scalar = Core8([], lanes=1, vgprs=4)
@@ -53,6 +54,24 @@ class TestBfeWidthRules(unittest.TestCase):
     def test_decoded_scalar_host_form_width_zero_is_still_zero(self):
         self.core.op_s_bfe_u32({}, ["s1", "0xDEADBEEF", "0", "0"])
         self.assertEqual(self.core.s[1], 0)
+
+    def test_scalar_out_of_range_controls_fail_closed(self):
+        scalar = Core8([], lanes=1, vgprs=4)
+        # Packed width 33 and bit 6 set (width 64) must not acquire an
+        # invented 32-bit result from the emulator or the independent oracle.
+        for packed in ("0x00210000", "0x00400000"):
+            with self.assertRaises(emu.NotImpl):
+                scalar.op_s_bfe_u32({}, ["s1", "0xDEADBEEF", packed])
+            vector = {"mnem": "s_bfe_u32", "setup": {"s0": 0xDEADBEEF},
+                      "operands": ["s1", "s0", packed]}
+            with self.assertRaises(ValueError):
+                oracle.eval_scalar(vector)
+        # The decoded host form is a different API boundary: invalid values
+        # must be rejected instead of being silently re-masked as packed bits.
+        with self.assertRaises(emu.NotImpl):
+            self.core.op_s_bfe_u32({}, ["s1", "0xDEADBEEF", "32", "1"])
+        with self.assertRaises(emu.NotImpl):
+            self.core.op_s_bfe_i32({}, ["s1", "0x80000001", "0", "33"])
 
 
 if __name__ == "__main__":
