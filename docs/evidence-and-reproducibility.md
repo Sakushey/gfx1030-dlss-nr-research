@@ -203,8 +203,8 @@ level it *can* support — which is often lower than the level the work was aime
 
 - [Architecture](architecture.md) — where the guards, gates, and the independent
   oracle live.
-- [Current state](current-state.md) — the live status, including the physical
-  liveness problem.
+- [Current state](current-state.md) — the live Phase 16BO/A8C6 status, including the
+  first-frame milestone and the remaining temporal/performance boundaries.
 - [Glossary](glossary.md) — definitions of oracle, negative control, rung, evidence
   label, host-valid vs hardware-valid.
 - [Hardware testing policy](hardware-testing-policy.md) — the physical-side rules.
