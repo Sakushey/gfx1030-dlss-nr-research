@@ -178,10 +178,10 @@ computation of an expected value, a negative control that *should* fail
 and does, or a documented disagreement between the emulator and the
 oracle.
 
-Start with the live tracker: [Phase 16BO/A8C6 coordination #59](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/59),
-[complete neural job #6](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/6),
-[direct D3D12 executor #40](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/40),
-[gfx1031 portability #26](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/26), and
+Start with the live tracker: [warm temporal/history qualification #66](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66),
+[A8C6 evidence publication #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68),
+[second-gfx1030 reproduction #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9),
+[direct D3D12/HIP interop #7](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/7), and
 [post-faithful optimization #58](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/58).
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
