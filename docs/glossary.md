@@ -56,8 +56,9 @@ order, packing, alignment, and size of its fields) is a common and quiet source 
 failure: a descriptor that is semantically right but laid out differently from what
 the consumer expects fails in ways that do not look like a layout problem.
 
-In this project, descriptor layout has been validated host-side and is not currently
-the leading explanation for the physical liveness problem. See
+Descriptor layout remains a separately validated contract. It was ruled out as the
+leading explanation for an earlier physical-liveness investigation and continues to
+be checked independently in the current source/core path. See
 [current state](current-state.md).
 
 ---
@@ -379,8 +380,10 @@ barrier. The workgroup is the unit the proof ladder uses for its physical rungs:
 "one-workgroup physical" (rung 3) means a single workgroup completed on the device,
 and "multi-workgroup" (rung 4) means more than one did.
 
-The current physical problem is a **one-workgroup** case that does not complete. That
-is why the project is at rung 3 rather than further up; see
+The project historically spent substantial time on a **one-workgroup** case that did
+not complete. Phase 16BO/A8C6 has since progressed beyond that historical blocker to
+a complete authenticated core and matched presented frames. The rung distinction
+still matters: the old one-workgroup evidence remains scoped to that artifact; see
 [current state](current-state.md).
 
 See also: *dispatch*, *LDS*, *s_barrier*, *rung*.
