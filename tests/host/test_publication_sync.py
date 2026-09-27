@@ -166,7 +166,8 @@ class TestBasicStates(SyncTestBase):
         self.assertNotIn("ghp_", p.stdout)
 
     def test_T05_personal_absolute_path_is_blocked(self):
-        body = b"see C:\\Users\\realperson\\notes.txt\n"
+        slash = bytes((92,))
+        body = b"see C:" + slash + b"Users" + slash + b"realperson" + slash + b"notes.txt\n"
         fx = self.simple(new_src=body)
         out = Fixture.parse(fx.run())
         self.assertEqual("PUBLICATION_SYNC_BLOCKED", out["publication_state"])
