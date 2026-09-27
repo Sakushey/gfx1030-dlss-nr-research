@@ -10,10 +10,12 @@ Experimental open-source compatibility research investigating whether
 DLSS Neural Rendering workloads can be translated, validated, and
 executed on AMD RDNA2 / Navi21-class gfx1030 hardware.
 
-> **Development status: active research.**
-> No end-to-end DLSS-NR game frame has been demonstrated.
-> Host-side semantic validation is substantially developed; physical
-> gfx1030 kernel liveness remains under active investigation.
+> **Development status: Phase 16BO / A8C6 — first-frame boundary crossed.**
+> The canonical project state records a successful authentic host core frame,
+> a project-owned gfx1030 core frame, real GTA V Enhanced source capture,
+> captured-frame offline replay, and two different matched neural-frame
+> presentations. Warm temporal stability, sustained gameplay, zero-copy
+> interoperability and performance remain unqualified.
 
 ---
 
@@ -62,35 +64,36 @@ Concretely, the repository contains original work in four areas:
 | --- | --- |
 | gfx1030 ISA / code-object research | active development |
 | host semantic emulator / oracles | advanced experimental |
-| J3 host oracle | available |
-| J3 physical execution | kernel launches, but liveness failure under investigation |
-| T32 host model | experimental |
-| complete neural job | not qualified |
-| D3D12 / HIP interop | not demonstrated |
-| presented GTA V Enhanced neural frame | not demonstrated |
-| performance / gameplay | not applicable yet |
+| REAL implementation admission | core path certified/fail-closed |
+| graph weights | 73/73 applied |
+| complete authenticated host core | demonstrated |
+| representative gfx1030 neural families | demonstrated in A8C6 |
+| complete standalone gfx1030 core frame | demonstrated |
+| GTA V Enhanced source capture | demonstrated |
+| captured-frame offline neural replay | demonstrated |
+| presented matched GTA neural frames | demonstrated on two different frames |
+| warm temporal stability | not qualified |
+| direct zero-copy D3D12/HIP | not qualified |
+| sustained gameplay | not qualified |
+| performance | intentionally not qualified |
 
-### The current physical problem
+### The current engineering boundary
 
-A correctly parameterized one-workgroup gfx1030 translation currently
-reaches the physical HIP runtime but fails to complete before the
-Windows GPU watchdog recovers the engine. The latest B2 checkpoint
-diagnostic also triggered watchdog recovery, narrowing the first
-physical failure to the **first 3,547 modeled per-wave steps — about
-25.9% of the full J3 dispatch**. This is a localization result, not an
-identified root cause.
+The old Candidate-F/J3 watchdog-localization track remains historical
+evidence, but it is **no longer the current blocker**. Phase 16BO/A8C6
+progressed beyond it with a separately admitted source-level neural path.
 
-Host-side descriptor, argument, address-layout, barrier, and waitcnt
-checks all pass for the modeled path, so those simple host-configuration
-errors are no longer the leading explanations. They do **not** rule out
-a physical synchronization, initialization, scheduling, or model-fidelity
-defect.
+The correctness-first A8C6 transport deliberately used explicit staging
+rather than requiring zero-copy shared resources. Two different GTA source
+frames were captured, processed and presented with matching FrameIdentity,
+providing a stale/cached/hard-coded negative control.
 
-Work is now focused on **bounded checkpoint diagnostics rather than
-blind retries**. If you work on RDNA2 execution semantics, wave32
-EXEC/VCC behaviour, waitcnt/barrier interaction, or AMDGPU backend code
-objects, this is the specific problem where specialist review would
-help most — see [Where contributors can help](#where-contributors-can-help).
+The next major correctness problem is **warm temporal/history behavior**,
+followed by sustained gameplay. Performance optimization is finally
+reachable, but external benchmark numbers remain external evidence and
+must not be transferred to gfx1030 without measurement.
+
+See [the A8C6 state record](docs/phase16bo-a8c6-state.md).
 
 ---
 
@@ -174,11 +177,11 @@ computation of an expected value, a negative control that *should* fail
 and does, or a documented disagreement between the emulator and the
 oracle.
 
-Start with the live tracker: [physical liveness #2](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/2),
-[independent ISA review #3](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/3),
-[ROCm post-watchdog semantics #4](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/4),
-[second-machine host reproduction #8](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/8), and
-[second-device validation #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9).
+Start with the live tracker: [Phase 16BO/A8C6 coordination #59](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/59),
+[complete neural job #6](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/6),
+[direct D3D12 executor #40](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/40),
+[gfx1031 portability #26](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/26), and
+[post-faithful optimization #58](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/58).
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
