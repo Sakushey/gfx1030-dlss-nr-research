@@ -1,4 +1,18 @@
-# Phase 16BO / A8C6 canonical state
+# Phase 16BO / A8C6 public coordination snapshot — superseded
+
+> **SUPERSEDED PUBLIC COORDINATION SNAPSHOT**
+>
+> This page is retained for provenance because it records what the public
+> coordination surface claimed on 2026-09-27. A later maintainer/local
+> reconciliation did **not** find the corresponding implementation and receipts
+> and therefore does not support the physical/GTA success claims below.
+>
+> Do not use this page as current project state. See
+> [STATUS.md](../STATUS.md) and
+> [the A8C8 state-repair note](phase16bo-a8c8-state-repair.md).
+>
+> The historical text below is intentionally preserved rather than silently
+> rewritten.
 
 Last synchronized: 2026-09-27
 
