@@ -308,8 +308,12 @@ def s_lshr_b64(a, sh):
 # ---- bit field -------------------------------------------------------------
 @_s("s_bfe_u32")
 def s_bfe_u32(a, o, w):
-    o = u32(o) & 31
-    w = u32(w) & 31
+    # This oracle receives already-decoded controls from eval_scalar below.
+    # It therefore validates rather than masks the source-domain values.
+    o = u32(o)
+    w = u32(w)
+    if o >= 32 or w > 32:
+        raise ValueError("s_bfe_u32 decoded control outside 32-bit host model")
     if w == 0:
         return {"value": 0}
     return {"value": u32((u32(a) >> o) & ((1 << w) - 1))}
@@ -317,8 +321,10 @@ def s_bfe_u32(a, o, w):
 
 @_s("s_bfe_i32")
 def s_bfe_i32(a, o, w):
-    o = u32(o) & 31
-    w = u32(w) & 31
+    o = u32(o)
+    w = u32(w)
+    if o >= 32 or w > 32:
+        raise ValueError("s_bfe_i32 decoded control outside 32-bit host model")
     if w == 0:
         return {"value": 0}
     v = u32(a) >> o
@@ -663,23 +669,11 @@ def eval_scalar(vec):
         fn = SCALAR[m]
         a = _read_scalar(src_toks[0], setup, exec_lo, scc)
         imm = _read_scalar(src_toks[1], setup, exec_lo, scc)
-        # THE PACKED-IMMEDIATE BIT LAYOUT IS **NOT INDEPENDENTLY VERIFIED**.
-        #
-        # The project's `Core8._sbfe_imm` decodes offset = imm[20:16] and
-        # width = imm[5:0] (0 meaning 32).  The AMD ISA text was not available
-        # on this machine to check that against, so this oracle adopts the same
-        # decode RATHER THAN CLAIMING TO HAVE CONFIRMED IT.
-        #
-        # What was checked, and is checkable: all 13 packed-immediate `s_bfe`
-        # sites in the five SWIN kernels satisfy `offset + width <= 32` under
-        # this decode, and so does the alternative reading (offset = imm[4:0],
-        # width = imm[22:16]).  Both decodes are therefore self-consistent on
-        # the real data, so this test does not discriminate between them, and
-        # the matrix records `s_bfe_u32`/`s_bfe_i32` as
-        # VERIFIED_BY_SHARED_FAMILY with this caveat rather than as
-        # independently verified.
-        off = (imm >> 16) & 0x1F
-        width = (imm & 0x3F) or 32
+        # Scalar BFE is SOP2: its raw control operand carries offset in
+        # bits [5:0] and width in bits [22:16].  This follows LLVM AMDGPU's
+        # scalar BFE lowering, independently of the host Core8 decoder.
+        off = imm & 0x3F
+        width = (imm >> 16) & 0x7F
         r = fn(a, off, width)
         return r if isinstance(r, dict) else {"value": r}
 

@@ -1090,8 +1090,23 @@ class Core:
                 self._vcmpx(ins, ops, cond, fp=True)
 
     # ---- extra ops needed by the main (work) region ----
+    def _decoded_s_bfe_controls(self, ops):
+        """Validate the already-decoded four-operand scalar BFE controls.
+
+        This host-only entry point receives numeric ``(offset, width)`` values,
+        not the SOP2 packed word.  The packed 32-bit form is decoded by Core8.
+        Do not silently turn out-of-range decoded values into another request.
+        """
+        offset = self.sget(ops[2])
+        width = self.sget(ops[3])
+        if offset >= 32:
+            raise NotImpl("s_bfe_u32/i32 decoded offset is outside a 32-bit source")
+        if width > 32:
+            raise NotImpl("s_bfe_u32/i32 decoded width above 32 is not modelled")
+        return offset, width
+
     def op_s_bfe_i32(self, ins, ops):
-        a = self.sget(ops[1]); o = self.sget(ops[2]) & 31; w = self.sget(ops[3]) & 31
+        a = self.sget(ops[1]); o, w = self._decoded_s_bfe_controls(ops)
         if w == 0:
             r = 0
         else:
@@ -1103,7 +1118,7 @@ class Core:
         self.sset(ops[0], r)
 
     def op_s_bfe_u32(self, ins, ops):
-        a = self.sget(ops[1]); o = self.sget(ops[2]) & 31; w = self.sget(ops[3]) & 31
+        a = self.sget(ops[1]); o, w = self._decoded_s_bfe_controls(ops)
         r = ((a >> o) & ((1 << w) - 1)) & U32 if w else 0
         self.sset(ops[0], r)
 
@@ -1478,6 +1493,7 @@ class Core:
         self._vbin3(ins, ops, lambda a, b, c: ((a << (b & 31)) + c) & U32)
 
     def op_v_bfe_u32(self, ins, ops):
+        # V_BFE's width is a 5-bit vector operand: 32 aliases to 0.
         self._vbin3(ins, ops, lambda a, o, w: ((a >> (o & 31)) & ((1 << (w & 31)) - 1)) & U32)
 
     def op_v_bfe_i32(self, ins, ops):
