@@ -467,12 +467,12 @@ class Core8(Core):
     def _sbfe_imm(self, ops):
         """Decode the raw second scalar BFE control operand.
 
-        LLVM's AMDGPU selector documents S1[4:0] as the offset and
+        LLVM's AMDGPU selector documents S1[5:0] as the offset and
         S1[22:16] as the width.  This is deliberately separate from V_BFE,
         whose width operand has only five significant bits.
         """
         imm = self.sget(ops[2])
-        off = imm & 0x1F
+        off = imm & 0x3F
         w = (imm >> 16) & 0x7F
         if w > 32:
             raise emu_mod.NotImpl("s_bfe_u32/i32 packed width above 32 is not modelled")

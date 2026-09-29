@@ -670,9 +670,9 @@ def eval_scalar(vec):
         a = _read_scalar(src_toks[0], setup, exec_lo, scc)
         imm = _read_scalar(src_toks[1], setup, exec_lo, scc)
         # Scalar BFE is SOP2: its raw control operand carries offset in
-        # bits [4:0] and width in bits [22:16].  This follows LLVM AMDGPU's
+        # bits [5:0] and width in bits [22:16].  This follows LLVM AMDGPU's
         # scalar BFE lowering, independently of the host Core8 decoder.
-        off = imm & 0x1F
+        off = imm & 0x3F
         width = (imm >> 16) & 0x7F
         r = fn(a, off, width)
         return r if isinstance(r, dict) else {"value": r}

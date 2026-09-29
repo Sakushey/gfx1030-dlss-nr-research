@@ -34,14 +34,18 @@ class TestBfeWidthRules(unittest.TestCase):
             self.assertEqual(self.core.v[0][4], expected_u[width], width)
             self.assertEqual(self.core.v[0][5], expected_i[width], width)
 
-    def test_raw_scalar_packed_control_uses_offset_low5_width_22_16(self):
+    def test_raw_scalar_packed_control_uses_offset_low6_width_22_16(self):
         scalar = Core8([], lanes=1, vgprs=4)
-        scalar.op_s_bfe_u32({}, ["s1", "0xDEADBEEF", "0x00200000"])
-        self.assertEqual(scalar.s[1], 0xDEADBEEF)
-        # Bit 5 is not part of the 32-bit scalar offset field, so this is
-        # the same offset 0 / width 32 packed request.
-        scalar.op_s_bfe_u32({}, ["s1", "0xDEADBEEF", "0x00200020"])
-        self.assertEqual(scalar.s[1], 0xDEADBEEF)
+        scalar.op_s_bfe_u32({}, ["s1", "0x1", "0x00010000"])
+        self.assertEqual(scalar.s[1], 1)
+        # Bit 5 is significant in the raw packed instruction.  It makes the
+        # offset 32, which the distinct decoded 32-bit host API rejects.
+        with self.assertRaises(emu.NotImpl):
+            scalar.op_s_bfe_u32({}, ["s1", "0x1", "0x00010020"])
+        vector = {"mnem": "s_bfe_u32", "setup": {"s0": 1},
+                  "operands": ["s1", "s0", "0x00010020"]}
+        with self.assertRaises(ValueError):
+            oracle.eval_scalar(vector)
 
     def test_raw_scalar_signed_width_32_and_oracle_agree_independently(self):
         scalar = Core8([], lanes=1, vgprs=4)
