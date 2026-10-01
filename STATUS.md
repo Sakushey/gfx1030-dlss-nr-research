@@ -1,127 +1,164 @@
 # Status
 
-Authoritative public coordination state of the project. If this file disagrees
-with another high-level public status document, this file wins.
+Authoritative public **coordination** state of the project. If this file
+disagrees with another high-level public status document, this file wins for
+current milestone wording. Public reproducibility may lag the maintainer-local
+report; #70/#68 track that publication boundary.
 
-Last reviewed: 2026-09-27
+Last reviewed: 2026-10-01
 
 ---
 
 ## One-line summary
 
-**Phase 16BO remains in progress. The earlier public A8C6 first-frame/GTA
-success claims are superseded and must not be used as current evidence.**
+**Phase 16BO / A8C10 remains in progress. SOURCE_CANONICAL now passes two
+complete host fixtures and two complete physical gfx1030 device fixtures; the
+GTA/shipping path is blocked by `hipLaunchKernel` error 98, and no GTA neural
+frame has been captured or presented.**
 
-The latest maintainer report of record reconciles the local tree against the
-public coordination surface and finds that the public success claims did not
-have the corresponding local implementation/receipts. The latest measured local
-state reported:
+The earlier A8C6 first-frame/GTA claims remain superseded. A8C10 does not restore
+them: its physical successes are explicitly **device fixtures, not GTA frames**.
+
+## Latest maintainer-local measured boundary
 
 ```text
-host test suite                 845 tests, green
-native core placeholders       89 / 94 nodes, 25 families
-native REAL-certified families 4 / 30
-project-owned gfx1030 frame     NOT REACHED
-GTA capture                     NOT REACHED
-GTA neural presentation        NOT REACHED
-warm/consecutive rendering      NOT REACHED
+phase                              16BO / A8C10
+native/recovered backend           NOT_READY
+SOURCE_CANONICAL gate              ARMED 25/25, 186 comparisons
+Host A / Host B                    71/71 blocks each
+mutation discriminability          27/27 required mutants REJECTED
+independent audit                  27/27 attacks reached + REJECTED
+gfx1030 device fixture 320         PASS
+gfx1030 device fixture 512         PASS (682/682 receipts; 1,006 comparisons)
+GTA capture                        NOT REACHED
+GTA neural presentation            NOT REACHED
+consecutive frames                 0
+shipping-path hipLaunchKernel      error 98 on every measured START9/10 attempt
+physical masters                   3/3 CANCELLED_SECTION36
 ```
 
-This correction is about claim scope, not about erasing historical research.
+A8C10 also closes the A8C9 block-31 operand-domain defect and adds six explicit
+operand-domain rows to the source gate.
 
 ## Backend split
 
-The project now distinguishes two independent tracks.
-
 ### NATIVE_RECOVERED_BACKEND
 
-The historical translated/native-layout recovery track remains fail-closed where
-evidence is absent. It may remain `NOT_READY` without blocking the practical
-rendering experiment.
-
-Do not:
-- promote hypotheses to REAL/native certification;
-- invent native activation/token layouts;
-- weaken certificate gates;
-- treat source-backend success as native-kernel parity.
+The historical translated/native-layout recovery track remains fail-closed and
+is still `NOT_READY`. SOURCE_CANONICAL success must never be relabeled as
+native NVIDIA-kernel/layout parity.
 
 ### SOURCE_CANONICAL_BACKEND
 
-The immediate P0 engineering path is tracked in
-[#76](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/76).
+The source-canonical correctness path has crossed the host and standalone-device
+milestones:
 
-It is a separately labeled, project-controlled implementation of the recovered
-logical 71-block network semantics:
-- authenticated user-owned model weights;
-- canonical row-major project activation layouts;
-- independent CPU reference;
-- correctness-first HIP source kernels compiled explicitly for gfx1030;
-- explicit E4/F16/F32 publication semantics;
-- explicit transitions, window attention, ViT and head;
-- no dependency on unresolved NVIDIA-native register/token/4x4 activation layout.
+- two materially different host frames complete all 71 logical blocks;
+- the live source gate is ARMED 25/25;
+- semantic mutants and independent attacks are all rejected at their required
+  observers;
+- two complete gfx1030 device fixtures pass.
 
-The first valid physical claim from this track is
-`FIRST_PROJECT_OWNED_GFX1030_SOURCE_FRAME = PASS`, and only after a complete
-small source frame agrees against the CPU reference.
+The current proof ceiling is therefore **SOURCE_GFX1030_DEVICE_FIXTURE**, not
+`PRESENTED_FRAME`.
 
-## What is actually established
+Publication of the maintained implementation/evidence is tracked in #70/#68.
+Until that lands, these are maintainer-local coordination facts rather than a
+claim that every result is already independently reproducible from current
+`main`.
 
-Current high-confidence local/project facts suitable for coordination include:
-- the host/native graph is substantially mapped and traversable;
-- authenticated model/container work remains valuable;
-- the latest report records 89/94 native core nodes still using placeholder
-  execution and 4/30 native REAL-certified families;
-- `TemporalStateContractV1` exists and is host-tested;
-- GTA FrameIdentity/motion/lockstep/late-result/device-health host tooling exists;
-- the historical physical harness is fail-closed;
-- no current public claim may state that this project already produced a
-  complete project-owned gfx1030 neural frame or GTA neural presentation.
+## Current P0 — #80
+
+The active blocker is
+[#80](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80).
+
+The shipping bridge/game path has not observed a successful
+`hipLaunchKernel`:
+
+- START9: 2,879 / 2,879 attempts returned 98;
+- START10: 2,719 / 2,719 attempts returned 98;
+- kernel registration / host-function matching is measured healthy;
+- other instrumented HIP APIs return success;
+- `hipModule*` code-object load state is **CANNOT_SEE** because it is not yet
+  instrumented.
+
+Error 98 is `hipErrorInvalidDeviceFunction`. Before another GTA neural
+campaign, the module/code-object/function path must be made observable and at
+least one relevant bounded shipping-bridge launch must succeed.
+
+## GTA / hard-stop boundary
+
+Three A8C10 GTA starts on 2026-10-01 fired the project's §36 hard-stop rule.
+Every corresponding master authorization is permanently cancelled. A future
+physical campaign requires a **fresh operator ask and a new master id**.
+
+The current crash attribution remains intentionally incomplete:
+
+- the old default-deny launch door is excluded after its host-side fix;
+- START10 excludes capture-hook interaction because no injection occurred;
+- the measured launch-98 -> unfinished-job -> timeout/FAULT chain remains a
+  candidate;
+- a chronic same-bucket Kernel_141 host/driver pattern predating the campaign
+  remains another candidate.
+
+§36 fires on presence, not on proven causation.
+
+## Temporal boundary
+
+The temporal host contract remains useful, but physical warm/consecutive
+qualification is barred until #80 produces **two correctly paired and presented
+cold GTA SOURCE_CANONICAL frames**. See #66.
 
 ## Immediate work
 
-1. **Build/qualify SOURCE_CANONICAL_BACKEND (#76).**
-   Start with the CPU reference, logical tensor map, exact schedule and semantic
-   mutants; then two different complete host source frames.
-2. Build a new live source-backend gate. Every row must be measured; no literal
-   verdict rows.
-3. Compile source HIP objects explicitly for gfx1030 and inspect compiler/source/
-   object identity.
-4. Only after the source gate passes, use a fresh bounded physical campaign:
-   primitives → small complete source frame → target-resolution source frame.
-5. Only then arm actual GTA capture/pattern transport and process two distinct
-   cold frames.
-6. Reuse the existing temporal host contract only after cold source frames are
-   real; warm/consecutive rendering comes later.
-7. Keep optimization/reuse/async/zero-copy/runtime-migration experiments out of
-   the critical path until the faithful source path exists.
+1. **#80:** instrument `hipModule*` / code-object loading and isolate error 98.
+2. Prove at least one relevant bounded shipping-bridge kernel launch succeeds
+   before another neural GTA attempt.
+3. Continue host-side Kernel_141 attribution without weakening §36.
+4. **#70:** publish the actual maintained A8C10 source/integration state safely.
+5. **#68:** publish the largest lawful sanitized gate/mutation/audit/device-fixture
+   evidence subset.
+6. Only after a fresh operator authorization: arm capture at the menu before
+   Story Mode, then attempt the first cold GTA SOURCE_CANONICAL frame.
+7. Require a second materially different cold GTA frame before #66 warm work.
+8. Keep optimization/reuse/async/zero-copy outside the critical path.
 
-## Publication/reproducibility boundary
+## Publication / reproducibility boundary
 
-The public repository must never invent receipts, hashes or source files to
-retroactively support the superseded A8C6 coordination claims.
+Never publish or reconstruct:
 
-Publication work should:
-- preserve historical artifacts;
-- publish only provenance/privacy/license-clean source;
-- mark private/proprietary inputs as user-supplied rather than redistribute them;
-- distinguish source-backend evidence from native-recovered evidence.
+- proprietary model weights/private tensors;
+- vendor runtime binaries or extracted proprietary code objects;
+- game binaries/assets/raw private captures;
+- personal/machine paths;
+- credentials/provider config;
+- raw session prompts;
+- unsanitized crash dumps;
+- invented receipts/hashes.
 
-See:
-- [A8C8 state-repair note](docs/phase16bo-a8c8-state-repair.md)
-- [SOURCE_CANONICAL_BACKEND #76](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/76)
-- [state/source publication reconciliation #70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)
-- [evidence publication #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68)
+Historical A8C6/A8C8 records remain preserved as historical records.
 
 ## Explicit non-claims
 
 The project does **not** currently claim:
+
 - complete native recovered execution;
-- a project-owned complete gfx1030 neural frame;
-- GTA V Enhanced neural capture/replay/presentation;
+- native NVIDIA-kernel/layout parity;
+- a GTA V Enhanced neural capture or presented frame;
 - warm temporal device correctness;
 - consecutive neural gameplay;
+- sustained gameplay;
 - playable or real-time performance;
 - direct zero-copy D3D12/HIP qualification;
 - `hipMallocAsync` safety;
 - frame generation or multipass qualification;
 - HDR qualification.
+
+## Live trackers
+
+- [#80 — P0 runtime/GTA launch blocker](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80)
+- [#70 — publish maintained A8C10 implementation/current state](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)
+- [#68 — publish sanitized A8C10 evidence](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68)
+- [#66 — temporal host contract / warm qualification](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66)
+- [#57 — external research registry](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/57)
+- [#29 — independent whole-job/launch-contract cross-validation](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/29)
