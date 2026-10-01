@@ -10,12 +10,15 @@ Experimental open-source compatibility research investigating whether
 DLSS Neural Rendering workloads can be translated, validated, and
 executed on AMD RDNA2 / Navi21-class gfx1030 hardware.
 
-> **Development status: Phase 16BO / A8C8 — public-state reconciliation in progress.**
-> The latest maintainer report of record does **not** support the earlier public
-> A8C6 first-frame claims. The native/recovered path remains incomplete; no
-> project-owned gfx1030 neural frame or GTA capture/presentation is currently
-> established by the authoritative local evidence. The immediate engineering
-> path is a separate, explicitly labeled source-canonical backend tracked in #76.
+> **Development status: Phase 16BO / A8C10 — SOURCE_CANONICAL device fixtures pass; GTA is still blocked.**
+> The maintainer-local report of record now establishes the SOURCE_CANONICAL
+> host graph at 71/71 for two fixtures, an ARMED 25/25 source gate, and complete
+> physical gfx1030 device-fixture passes at 320×320 and 512×512 on the RX 6950 XT.
+> These are **device fixtures, not GTA/presented frames**. The current P0 is #80:
+> the shipping/game path has never observed a successful `hipLaunchKernel`;
+> measured START9/START10 attempts returned error 98 (`hipErrorInvalidDeviceFunction`).
+> No GTA capture, presented neural frame, consecutive sequence, or performance
+> qualification is claimed.
 
 ---
 
@@ -62,42 +65,61 @@ Concretely, the repository contains original work in four areas:
 
 | Area | Current state |
 | --- | --- |
-| Phase | **16BO / A8C8** |
-| native/recovered host graph | traversable but incomplete |
-| native core-required execution | **89/94 placeholder nodes remain across 25 families** |
-| native REAL certification | **4/30 families** in the latest report of record |
-| temporal host contract | implemented and host-tested |
-| project-owned gfx1030 neural frame | **not established** |
-| GTA V Enhanced capture | **not established** |
-| presented GTA neural frame | **not established** |
+| Phase | **16BO / A8C10** |
+| native/recovered backend | **NOT_READY**; intentionally not advanced |
+| SOURCE_CANONICAL host graph | **Host A 71/71 + Host B 71/71** |
+| SOURCE_CANONICAL gate | **ARMED 25/25**, 186 comparisons |
+| mutation / independent audit | **27/27 rejected + 27/27 rejected** |
+| physical gfx1030 device fixtures | **320 PASS + 512 PASS** |
+| shipping/game HIP launch path | **BLOCKED: hipLaunchKernel -> 98** |
+| GTA V Enhanced capture | **not reached** |
+| presented GTA neural frame | **not reached** |
+| consecutive frames | **0** |
 | warm temporal/device sequence | not reached |
-| sustained gameplay | not reached |
 | performance | intentionally out of scope |
 
 ### The current engineering boundary
 
-The earlier public A8C6 coordination text overstated the canonical state. A later
-local reconciliation found that the public success claims were not backed by the
-corresponding local implementation and receipts. The public repository must
-therefore treat those physical/game milestones as **not established** until a
-new evidenced path proves them.
+A8C10 materially advances the source-canonical track beyond the A8C8 repair
+checkpoint. The maintained SOURCE_CANONICAL implementation now has two complete
+71-block host fixtures, explicit operand-domain gate coverage, a 25/25 live gate,
+27/27 mutation-discriminability closure, a 27/27 independent attack audit, and
+two complete physical gfx1030 device fixtures.
 
-The historical native/recovered backend remains valuable research, but it must
-stay fail-closed where native layout/semantic evidence is absent. It is not a
-prerequisite for the practical rendering milestone.
+The two physical claims are deliberately narrow:
 
-The current P0 path is [SOURCE_CANONICAL_BACKEND #76](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/76):
-a separately labeled project-controlled implementation of the recovered logical
-71-block network semantics using authenticated user-owned model weights,
-canonical project-owned activation layouts, an independent CPU reference, and
-simple correctness-first HIP kernels for gfx1030.
+- `SOURCE_CANONICAL_GFX1030_FRAME_320 = PASS`;
+- `SOURCE_CANONICAL_GFX1030_FRAME_512 = PASS`.
 
-No source-backend success may be reported as native NVIDIA-kernel parity. No
-performance/async/reuse/zero-copy work is on the critical path until the
-faithful source backend first produces independently checked cold frames.
+They prove the source-canonical network on the target GPU at those fixture
+geometries. They **do not** prove GTA integration, frame presentation, temporal
+rendering, or native NVIDIA-kernel/layout parity.
 
-See [the A8C8 state-repair note](docs/phase16bo-a8c8-state-repair.md).
+The active P0 path is now
+[#80](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80):
+root-cause and repair the shipping/game-path `hipLaunchKernel` error 98 before
+spending another GTA neural attempt. The previous host-convergence tracker
+[#76](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/76) is closed
+as completed for its source/host/device-fixture objective.
 
+Three A8C10 GTA process starts ended under the project's §36 hard-stop rule.
+All three physical master IDs are cancelled permanently; any later physical
+campaign requires a fresh operator authorization. The current evidence does not
+yet separate the measured launch-98 stall chain from a chronic same-bucket
+Kernel_141 host/driver pattern, so crash causation remains intentionally
+unclaimed.
+
+Publication also lags the maintained local tree. [#70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)
+tracks publication of the actual maintained A8C10 implementation and
+[#68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68) tracks the
+sanitized evidence bundle. Public coordination text may summarize maintainer-local
+measurements, but must not fabricate missing public receipts or publish private
+model/game/crash artifacts.
+
+No performance/async/reuse/zero-copy work is on the critical path until the
+shipping path launches correctly and cold GTA frames exist.
+
+See [the historical A8C8 state-repair note](docs/phase16bo-a8c8-state-repair.md).
 ---
 
 ## The proof ladder
@@ -165,11 +187,11 @@ independent eyes.
 | --- | --- |
 | RDNA2 / GFX10 ISA | validating instruction-form coverage and control-operand selection |
 | AMDGPU backend / code object expertise | correctness of the produced gfx1030 code objects beyond ABI shape |
-| ROCm / HIP runtime | interop semantics, error propagation, and post-watchdog behaviour |
+| ROCm / HIP runtime | **P0:** module/code-object loading, `hipLaunchKernel` error 98, interop semantics and post-watchdog behaviour |
 | EXEC / VCC / wave32 behaviour | the emulator's hardest correctness surface |
 | GPU synchronization / waitcnt | the leading hypothesis space for the liveness failure |
 | Compiler / binary translation | independent review of translated instruction forms |
-| Warm temporal/history correctness | the next major correctness frontier after the matched cold-frame milestone |
+| Warm temporal/history correctness | gated behind two correctly paired/presented cold GTA SOURCE_CANONICAL frames (#66) |
 | Independent RDNA2 reproduction | reproduce the qualified source/core path on another target device without transferring binaries |
 | D3D12 / HIP interoperability | qualify direct/zero-copy transport as an optional engineering optimization |
 | Performance engineering | optimize only against a faithful synchronous control with exactness + ABBA-style timing |
@@ -181,11 +203,11 @@ computation of an expected value, a negative control that *should* fail
 and does, or a documented disagreement between the emulator and the
 oracle.
 
-Start with the live tracker: [SOURCE_CANONICAL_BACKEND #76](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/76),
-[state/publication reconciliation #70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70),
-[evidence publication #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68),
-[second-gfx1030 reproduction #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9),
-[direct D3D12/HIP interop #7](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/7), and
+Start with the live tracker: [runtime/GTA blocker #80](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80),
+[A8C10 publication #70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70),
+[sanitized evidence #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68),
+[temporal qualification #66](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66),
+[second-gfx1030 reproduction #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9), and
 [post-faithful optimization #58](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/58).
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
