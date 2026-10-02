@@ -9,7 +9,7 @@ inputs, it is not a result — it is an anecdote.
 | --- | --- | --- |
 | Host-only | Python 3.10+ | rungs 1–2 |
 | Build-only | MSVC v143 + Windows SDK | that C++ components compile |
-| Physical | + AMD ROCm with a gfx1030 device | rung 3+ |
+| Physical | + AMD ROCm with an explicitly compiled target matching the detected RDNA2 device | target-specific physical evidence; only primary-target gfx1030 evidence advances the main proof ladder |
 
 Most of the project is reproducible at the host-only tier. That is
 deliberate: it is the tier anyone can check.
@@ -47,10 +47,10 @@ Physical experiments are bounded and one-shot. Read
 running anything on hardware.
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\run_test.ps1
+powershell -ExecutionPolicy Bypass -File scripts\run_test.ps1 -Target gfx1030
 ```
 
-This compiles and runs one small gfx1030 workload. It does not change
+This compiles exactly one requested RDNA2 target and runs one small source-level workload. The runner defaults to `gfx1030`, rejects `HSA_OVERRIDE_GFX_VERSION`, requires the detected architecture to match the requested target, and refuses a multi-target output binary. `gfx1031`/`gfx1032` are separate qualification lanes, not aliases for `gfx1030`. It does not change
 clocks, voltage, power limits, firmware, BIOS, registry, or drivers, and it
 does not install anything.
 
@@ -87,10 +87,12 @@ changes what is being tested.
 
 ## Known environmental constraints
 
-- The physical path targets AMD ROCm 6.4 on Windows, which enumerates
-  gfx1030 on the reference machine. Other runtime versions may not
-  enumerate this device at all, and a harness that initializes against a
-  runtime that sees no GPU will fail before reaching the code under test.
+- The primary physical path targets AMD ROCm 6.4 on Windows, which enumerates
+  gfx1030 on the reference machine. The bounded source-level smoke runner also
+  exposes separate gfx1031/gfx1032 portability lanes, but those results remain
+  target-specific and do not advance the gfx1030 proof ladder. Other runtime
+  versions may not enumerate a given device at all, and a harness that initializes
+  against a runtime that sees no GPU will fail before reaching the code under test.
 - A GPU watchdog recovery can let a synchronization call return success
   even though the kernel never completed. **Sync success is not kernel
   success.** Corroborate with evidence that the kernel produced output.

@@ -1,14 +1,25 @@
-﻿$ErrorActionPreference = "Stop"
+[CmdletBinding()]
+param(
+    [ValidateSet("gfx1030", "gfx1031", "gfx1032")]
+    [string]$Target = "gfx1030"
+)
+
+$ErrorActionPreference = "Stop"
 
 $HipRoot = "C:\Program Files\AMD\ROCm\6.4"
 $Here    = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Source  = Join-Path $Here "soft_wmma_test.cpp"
+$Source  = Join-Path $Here "..\tests\soft_wmma_test.cpp"
 $Exe     = Join-Path $Here "soft_wmma_test.exe"
 
 Write-Host ""
-Write-Host "=== SAFE gfx1030 SOFT-WMMA PHASE 1 ===" -ForegroundColor Cyan
+Write-Host "=== SAFE RDNA2 SOFT-WMMA PHASE 1 ===" -ForegroundColor Cyan
+Write-Host "Requested target: $Target"
 Write-Host "No admin rights, no persistent environment changes, no clocks/voltage/BIOS changes."
 Write-Host "The GPU workload is one 32-thread block and one 16x16x16 matrix tile."
+
+if (Test-Path Env:HSA_OVERRIDE_GFX_VERSION) {
+    throw "STOP: HSA_OVERRIDE_GFX_VERSION is set. Clear it before target qualification; architecture overrides are not accepted evidence."
+}
 
 if (-not (Test-Path $HipRoot)) {
     throw "HIP 6.4 root not found: $HipRoot"
@@ -35,14 +46,19 @@ $env:Path = "$($HipRoot)\bin;$env:Path"
 Write-Host ""
 Write-Host "=== HIP 6.4 DEVICE CHECK ===" -ForegroundColor Cyan
 $HipText = (& $HipInfo 2>&1 | Out-String)
-$HipText | Select-String -Pattern "Name:|gcnArchName|gfx1030" | ForEach-Object { $_.Line }
+$HipText | Select-String -Pattern "Name:|gcnArchName|gfx103" | ForEach-Object { $_.Line }
 
-if ($HipText -notmatch "gfx1030") {
-    throw "STOP: HIP 6.4 did not report gfx1030. The test will not compile/run."
+$ArchMatches = [regex]::Matches($HipText, 'gcnArchName\s*[:=]\s*(gfx[0-9A-Za-z_:+-]+)')
+if ($ArchMatches.Count -lt 1) {
+    throw "STOP: could not parse gcnArchName from hipInfo output."
 }
 
-# AMD's Windows HIP compiler needs the MSVC/Windows SDK host toolchain.
-# If link.exe is not already visible, try to enter the latest VS developer shell.
+$DetectedTarget = ($ArchMatches[0].Groups[1].Value -split ':')[0]
+if ($DetectedTarget -ne $Target) {
+    throw "STOP: HIP reported $DetectedTarget but the requested compile target is $Target. Nothing will compile or run."
+}
+
+# AMD's Windows HIP driver needs the MSVC/Windows SDK host toolchain.
 if (-not (Get-Command link.exe -ErrorAction SilentlyContinue)) {
     try {
         $VS = Get-CimInstance MSFT_VSInstance |
@@ -77,21 +93,26 @@ if (-not (Get-Command link.exe -ErrorAction SilentlyContinue)) {
 
 Write-Host ""
 Write-Host "=== COMPILER ===" -ForegroundColor Cyan
-& $Clang --version | Select-Object -First 2
+& $Clang --version | Select-Object -First 3
 
 if (Test-Path $Exe) {
     Remove-Item $Exe -Force
 }
 
 Write-Host ""
-Write-Host "=== COMPILE FOR gfx1030 ===" -ForegroundColor Cyan
+Write-Host "=== COMPILE FOR $Target ONLY ===" -ForegroundColor Cyan
 
+# Use clang++ directly on Windows. ROCm 6.4 hipcc is a Perl wrapper and has
+# been observed to split a Program Files path passed through its CLI. Passing
+# --rocm-path as one PowerShell array element to clang++ preserves the path.
+$ExpectedDefine = "-DEXPECTED_GFX=`"$Target`""
 $CompileArgs = @(
     "-x", "hip",
-    "--offload-arch=gfx1030",
-    "--hip-path=$HipRoot",
+    "--offload-arch=$Target",
+    "--rocm-path=$HipRoot",
     "-O3",
     "-std=c++17",
+    $ExpectedDefine,
     $Source,
     "-o", $Exe
 )
@@ -99,11 +120,32 @@ $CompileArgs = @(
 & $Clang @CompileArgs
 
 if ($LASTEXITCODE -ne 0 -or -not (Test-Path $Exe)) {
-    throw "Compilation failed."
+    throw "Compilation failed before physical execution."
 }
 
+# Fail closed if the output does not carry exactly the requested gfx103x bundle.
+$Bytes = [System.IO.File]::ReadAllBytes($Exe)
+$Ascii = [System.Text.Encoding]::ASCII.GetString($Bytes)
+$ExpectedBundle = "hipv4-amdgcn-amd-amdhsa--$Target"
+
+if (-not $Ascii.Contains($ExpectedBundle)) {
+    throw "STOP: compiled executable does not contain the expected offload bundle $ExpectedBundle."
+}
+
+foreach ($OtherTarget in @("gfx1030", "gfx1031", "gfx1032")) {
+    if ($OtherTarget -ne $Target) {
+        $OtherBundle = "hipv4-amdgcn-amd-amdhsa--$OtherTarget"
+        if ($Ascii.Contains($OtherBundle)) {
+            throw "STOP: compiled executable also contains $OtherBundle. Qualification requires a single-target build."
+        }
+    }
+}
+
+$ExeHash = (Get-FileHash -Algorithm SHA256 $Exe).Hash
 Write-Host ""
-Write-Host "Compiled: $Exe" -ForegroundColor Green
+Write-Host "Compiled single-target executable: $Exe" -ForegroundColor Green
+Write-Host "Target bundle: $ExpectedBundle"
+Write-Host "Executable SHA-256: $ExeHash"
 
 Write-Host ""
 Write-Host "=== RUN ONE TINY GPU TILE ===" -ForegroundColor Cyan
@@ -112,12 +154,12 @@ $RunCode = $LASTEXITCODE
 
 Write-Host ""
 if ($RunCode -eq 0) {
-    Write-Host "PHASE 1 PASSED." -ForegroundColor Green
-    Write-Host "Next step: disassemble this gfx1030 kernel and then add a short bounded benchmark."
+    Write-Host "PHASE 1 PASSED for $Target." -ForegroundColor Green
+    Write-Host "Preserve this complete output and executable hash as the bounded evidence record."
 }
 else {
-    Write-Host "PHASE 1 did not pass (exit code $RunCode)." -ForegroundColor Yellow
-    Write-Host "Paste the complete output; do not change clocks, drivers, BIOS, or power settings."
+    Write-Host "PHASE 1 did not pass for $Target (exit code $RunCode)." -ForegroundColor Yellow
+    Write-Host "Preserve the complete output; do not retry blindly or change clocks, drivers, BIOS, TDR, or power settings."
 }
 
 exit $RunCode
