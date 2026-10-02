@@ -10,15 +10,16 @@ Experimental open-source compatibility research investigating whether
 DLSS Neural Rendering workloads can be translated, validated, and
 executed on AMD RDNA2 / Navi21-class gfx1030 hardware.
 
-> **Development status: Phase 16BO / A8C10 — SOURCE_CANONICAL device fixtures pass; GTA is still blocked.**
-> The maintainer-local report of record now establishes the SOURCE_CANONICAL
-> host graph at 71/71 for two fixtures, an ARMED 25/25 source gate, and complete
-> physical gfx1030 device-fixture passes at 320×320 and 512×512 on the RX 6950 XT.
-> These are **device fixtures, not GTA/presented frames**. The current P0 is #80:
-> the shipping/game path has never observed a successful `hipLaunchKernel`;
-> measured START9/START10 attempts returned error 98 (`hipErrorInvalidDeviceFunction`).
-> No GTA capture, presented neural frame, consecutive sequence, or performance
-> qualification is claimed.
+> **Development status: Phase 16BO / A8C11 — standalone canonical launch certified; authentic GTA Story Mode reached; first capture still blocked.**
+> The maintainer-local report of record retains the SOURCE_CANONICAL 71/71 host
+> and 320×320 / 512×512 gfx1030 device-fixture passes, and now adds a scoped
+> standalone launch certificate: two canonical symbols execute through
+> `MODULE_RESOLVED_LAUNCH_V1`. GTA V Enhanced also reached authentic Story Mode
+> in a true no-background-neural configuration with the isolated capture hook
+> operating in-game. The first Story-mode pattern claim then failed at
+> post-fence `Map(readback)`, froze presents and entered `ERR_GFX_STATE`;
+> §23 cancelled the GTA master. **No GTA frame was captured, CaptureArm never
+> armed, and no presented/temporal/performance claim is made.** Active P0: #82.
 
 ---
 
@@ -65,59 +66,70 @@ Concretely, the repository contains original work in four areas:
 
 | Area | Current state |
 | --- | --- |
-| Phase | **16BO / A8C10** |
+| Phase | **16BO / A8C11** |
 | native/recovered backend | **NOT_READY**; intentionally not advanced |
 | SOURCE_CANONICAL host graph | **Host A 71/71 + Host B 71/71** |
 | SOURCE_CANONICAL gate | **ARMED 25/25**, 186 comparisons |
 | mutation / independent audit | **27/27 rejected + 27/27 rejected** |
 | physical gfx1030 device fixtures | **320 PASS + 512 PASS** |
-| shipping/game HIP launch path | **BLOCKED: hipLaunchKernel -> 98** |
-| GTA V Enhanced capture | **not reached** |
-| presented GTA neural frame | **not reached** |
+| standalone canonical launch certificate | **PASS**, 2/33 symbols via `MODULE_RESOLVED_LAUNCH_V1` |
+| registered-static canonical path | **FAIL rc=98**, still open (#80) |
+| authentic GTA Story Mode | **reached** in true no-background-neural configuration |
+| isolated capture hook in-game | **operating**; menu pattern 3079 verified paints |
+| active GTA blocker | **Story-mode post-fence `Map(readback)` refusal** (#82) |
+| GTA capture / presented neural frame | **none / none** |
 | consecutive frames | **0** |
 | warm temporal/device sequence | not reached |
 | performance | intentionally out of scope |
 
 ### The current engineering boundary
 
-A8C10 materially advances the source-canonical track beyond the A8C8 repair
-checkpoint. The maintained SOURCE_CANONICAL implementation now has two complete
-71-block host fixtures, explicit operand-domain gate coverage, a 25/25 live gate,
-27/27 mutation-discriminability closure, a 27/27 independent attack audit, and
-two complete physical gfx1030 device fixtures.
+A8C11 supersedes A8C10 as the maintainer-local report of record.
 
-The two physical claims are deliberately narrow:
+The prior SOURCE_CANONICAL proof remains standing: two complete 71-block host
+fixtures, an ARMED 25/25 live gate, 27/27 mutation rejection, 27/27 independent
+attack rejection, and complete physical gfx1030 device-fixture passes at
+320×320 and 512×512.
 
-- `SOURCE_CANONICAL_GFX1030_FRAME_320 = PASS`;
-- `SOURCE_CANONICAL_GFX1030_FRAME_512 = PASS`.
+A8C11 adds a **claim-scoped standalone launch certificate**. The canonical
+gfx1030 image loads and resolves through the module API, and two of 33 canonical
+symbols dispatch and complete through `MODULE_RESOLVED_LAUNCH_V1`. The original
+registered-static canonical lookup path remains a separate failure
+(`rc=98 / hipErrorInvalidDeviceFunction`) tracked in
+[#80](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80).
+Do not summarize the certificate as “hipLaunchKernel fixed”.
 
-They prove the source-canonical network on the target GPU at those fixture
-geometries. They **do not** prove GTA integration, frame presentation, temporal
-rendering, or native NVIDIA-kernel/layout parity.
+The GTA boundary also advanced. A true no-background-neural campaign reached
+authentic Story Mode for the first time with quarantine intact and only the
+isolated capture DLL injected. The capture hook operated in-game; the menu
+pattern path produced 3079 verified paints and an exact 784/784/784
+present/claim/remain reconciliation.
 
-The active P0 path is now
-[#80](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80):
-root-cause and repair the shipping/game-path `hipLaunchKernel` error 98 before
-spending another GTA neural attempt. The previous host-convergence tracker
-[#76](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/76) is closed
-as completed for its source/host/device-fixture objective.
+The first Story-mode pattern claim then failed **after fence completion** at
+`Map(readback)`, which triggered the fail-closed refusal, froze presents and
+entered `ERR_GFX_STATE`. The specific HRESULT was not captured in this
+revision, and the queue-state-desynchronization idea remains an **unmeasured
+hypothesis**, not a root-cause claim. Active P0 is now
+[#82](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/82).
 
-Three A8C10 GTA process starts ended under the project's §36 hard-stop rule.
-All three physical master IDs are cancelled permanently; any later physical
-campaign requires a fresh operator authorization. The current evidence does not
-yet separate the measured launch-98 stall chain from a chronic same-bucket
-Kernel_141 host/driver pattern, so crash causation remains intentionally
-unclaimed.
+Most importantly, **no GTA frame exists yet**. `CaptureArm` was never armed,
+Q5 is `NOT_ATTEMPTED_BLOCKED_BY_23`, consecutive frame count is zero, and
+pattern paints are not captures.
 
-Publication also lags the maintained local tree. [#70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)
-tracks publication of the actual maintained A8C10 implementation and
+Physical authorization is closed: Master A is 6/6 exhausted; Master B was
+cancelled by §23 after two starts and its remaining two slots are void. No prior
+master/start id may be reopened. Any future device/GTA campaign requires a
+fresh operator ask and a new master.
+
+Publication still lags the maintained tree. [#70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)
+tracks A8C11 source/integration publication and
 [#68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68) tracks the
-sanitized evidence bundle. Public coordination text may summarize maintainer-local
-measurements, but must not fabricate missing public receipts or publish private
-model/game/crash artifacts.
+sanitized evidence bundle. Manifest-tracked historical/current-state surfaces
+must be regenerated from canonical provenance rather than hand-edited with
+invented hashes.
 
-No performance/async/reuse/zero-copy work is on the critical path until the
-shipping path launches correctly and cold GTA frames exist.
+No performance/async/reuse/zero-copy work belongs on the critical path before
+#82 closes and authentic cold GTA frames exist.
 
 See [the historical A8C8 state-repair note](docs/phase16bo-a8c8-state-repair.md).
 ---
@@ -187,7 +199,8 @@ independent eyes.
 | --- | --- |
 | RDNA2 / GFX10 ISA | validating instruction-form coverage and control-operand selection |
 | AMDGPU backend / code object expertise | correctness of the produced gfx1030 code objects beyond ABI shape |
-| ROCm / HIP runtime | **P0:** module/code-object loading, `hipLaunchKernel` error 98, interop semantics and post-watchdog behaviour |
+| D3D12 capture / queue ownership | **P0:** Story-mode readback, queue/backbuffer generation, fences, real HRESULT/device-removal diagnostics (#82) |
+| ROCm / HIP runtime | registered-static rc=98 remains a secondary fail-closed defect (#80); module-resolved standalone dispatch is certified |
 | EXEC / VCC / wave32 behaviour | the emulator's hardest correctness surface |
 | GPU synchronization / waitcnt | the leading hypothesis space for the liveness failure |
 | Compiler / binary translation | independent review of translated instruction forms |
@@ -203,9 +216,10 @@ computation of an expected value, a negative control that *should* fail
 and does, or a documented disagreement between the emulator and the
 oracle.
 
-Start with the live tracker: [runtime/GTA blocker #80](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80),
-[A8C10 publication #70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70),
-[sanitized evidence #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68),
+Start with the live tracker: [Story-mode capture blocker #82](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/82),
+[registered-static rc=98 #80](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80),
+[A8C11 publication #70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70),
+[sanitized A8C11 evidence #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68),
 [temporal qualification #66](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66),
 [second-gfx1030 reproduction #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9), and
 [post-faithful optimization #58](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/58).
