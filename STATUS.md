@@ -1,212 +1,185 @@
 # Status
 
-Authoritative public **coordination** state of the project. If this file
-disagrees with another high-level public status document, this file wins for
-current milestone wording. Public reproducibility may lag the maintainer-local
-report; #70/#68 track that publication boundary.
+Last coordination refresh: 2026-10-04
 
-Last reviewed: 2026-10-02
-
----
+> **Measured report of record: finalized Phase 16BO / A8C14.**
+> **Active continuation: A8C15 (authority/plan, not evidence).**
+> Active first-frame P0: [#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84).
 
 ## One-line summary
 
-**Phase 16BO / A8C11 remains in progress. SOURCE_CANONICAL host/device proof
-stands; a scoped standalone module-resolved canonical launch certificate now
-passes; authentic GTA Story Mode was reached with the isolated capture hook
-operating, but the first Story-mode readback failed and §23 cancelled the GTA
-master before any frame capture.**
+SOURCE_CANONICAL host/device-fixture proof and the scoped module-resolved gfx1030
+launch certificate remain standing; a later A8C13 campaign also established an
+authentic GTA 1920×1080 **source capture**. The first authentic **GTA-derived gfx1030
+neural device frame is not yet earned**: A8C14 closed with the genuine Frame-C host
+reference incomplete, its freeze incomplete and zero new physical starts.
 
-No GTA frame has been captured or presented. Pattern paints are not captures.
+## Authority split
 
-## Latest maintainer-local measured boundary
+Use three distinct layers:
 
-```text
-phase                              16BO / A8C11
-native/recovered backend           NOT_READY
-SOURCE_CANONICAL gate              ARMED 25/25, 186 comparisons
-Host A / Host B                    71/71 blocks each
-mutation discriminability          27/27 required mutants REJECTED
-independent audit                  27/27 attacks reached + REJECTED
-gfx1030 device fixture 320         PASS
-gfx1030 device fixture 512         PASS
-standalone launch certificate      PASS, 2/33 canonical symbols
-canonical launch route             MODULE_RESOLVED_LAUNCH_V1
-registered-static canonical path   FAIL rc=98, unchanged
-authentic GTA Story Mode           YES
-isolated capture hook in-game      YES
-menu pattern paints                3079 verified
-armed-window reconcile             784 / 784 / 784
-Story first pattern claim          PAT_REFUSED_COPY_FAILED
-post-refusal state                 presents frozen -> ERR_GFX_STATE
-specific Map HRESULT               NOT CAPTURED
-GTA CaptureArm                     NEVER ARMED
-GTA frame captured                 NO
-presented neural frame             NO
-consecutive frames                 0
-Master A                           CLOSED, 6/6 exhausted
-Master B                           CANCELLED_SECTION23, 2/4 consumed, 2 VOID
-```
+1. standing measured history — SOURCE_CANONICAL host/device evidence plus A8C13 capture;
+2. finalized measured report — **A8C14**;
+3. active execution authority — **A8C15**, which names future work but does not make it PASS.
 
-## Backend / launch split
+The broad private CURRENT_STATE record contains older carried Phase-16BL-era package
+and budget blocks. Those historical rows do not override later A8C13/A8C14 evidence.
 
-### NATIVE_RECOVERED_BACKEND
+## Current measured state
 
-The historical translated/native-layout recovery track remains fail-closed and
-`NOT_READY`. SOURCE_CANONICAL success must never be relabeled as native
-NVIDIA-kernel/layout parity.
+| Subject | State |
+| --- | --- |
+| phase | **16BO** |
+| finalized stage/report | **A8C14** |
+| active continuation | **A8C15** |
+| SOURCE_CANONICAL Host A/B | **71/71 + 71/71** |
+| source gate | **ARMED 25/25**, 186 comparisons |
+| mutation / independent attack controls | **27/27 + 27/27 rejected** |
+| gfx1030 device fixtures | **320 PASS + 512 PASS** |
+| module-resolved launch certificate | standing PASS at exact scope |
+| registered-static launch | historical **rc=98**, non-prerequisite; #80 closed |
+| authentic GTA 1920×1080 source capture | **PASS** (standing A8C13 fact) |
+| A8C14 reproducible capture build | **PROVEN** |
+| Frame-C artifact/routing/input/head binding | **PASS** |
+| PresentOwned SOURCE/DESTINATION repair | **D1–D5 REPAIRED**, control PASS |
+| sidecar/journal namespace | **REPAIRED**, mutation-proven |
+| genuine Frame-C host reference | **INCOMPLETE — Section 7 = 2/7** |
+| Class-B recheck | **FAIL by design** — real C plan absent |
+| bounded-f16 repair | host control PASS 20/20; **LIVE_UNTESTED** |
+| A8C14 freeze V1 | **INCOMPLETE**, 8/9 pending rebuild |
+| A8C14 physical starts | **0** |
+| authentic captured-frame gfx1030 device NR | **NOT RUN / NOT EARNED** |
+| device head / NR.png | **absent / absent** |
+| warm temporal / consecutive frames | not reached |
+| performance/playability | not qualified |
 
-### SOURCE_CANONICAL_BACKEND
+## A8C14 host attempt result
 
-The source-canonical correctness baseline remains:
+A8C14 landed the reproducible-build, Frame-C writer/routing, captured-input/head,
+PresentOwned, sidecar-namespace, state-aware-control, bounded-f16 and freeze-tooling
+repairs, but earned no new device/game neural rung.
 
-- two complete 71-block host fixtures;
-- ARMED 25/25 live source gate;
-- 27/27 mutation discrimination;
-- 27/27 independent attack rejection;
-- complete gfx1030 320 + 512 device fixtures.
+The four genuine C-host attempts were:
 
-### A8C11 launch certificate
+1. WinError 5 on atomic promotion of the ~849 MB QKV artifact;
+2. the same rename failure at **96.85%** (2,142,208 / 2,211,840 rows), with holder unmeasured;
+3. MemoryError from eager f16 argument construction; repaired/proven host-side;
+4. external background-shell reaper before reaching the repaired path.
 
-A8C11 proves a narrower additional fact:
+Attempt 4 therefore did not test the repair. Preserve the completed C checkpoint and
+journals; do not throw them away for a cosmetically fresh run.
 
-- ordinary registered-kernel resolution works;
-- the canonical gfx1030 inner image loads and resolves through the module API;
-- two canonical symbols execute end-to-end through
-  `MODULE_RESOLVED_LAUNCH_V1`;
-- the registered-static canonical path still returns rc=98.
+## Current P0 — #84
 
-Certificate headline `REGISTERED_GFX1030_LAUNCH_A8C11 = PASS` therefore means
-the directive's allowed module-resolved compatibility-dispatch route is
-certified at its exact standalone-host / 2-of-33 scope. It does **not** mean
-the original registered-static path is repaired. That secondary defect is #80.
+The required host order is:
 
-## Current P0 — #82
+~~~text
+retire attempt-4 stale liveness honestly
+→ measure rename holders / harden bounded atomic promotion
+→ verify 2,211,840-row C checkpoint + exact argv
+→ durable attempt 5
+→ SOURCE_HOST_FRAME_C + STAGE_BOUNDARIES_C + HEAD_A8C10_C
+→ genuine full-A
+→ genuine expected-C
+→ real start2_plan_C
+→ Class-B + 1920 valid/padded structural falsifiers
+→ final battery incl. 243 regression
+→ complete A8C15 V2 freeze
+→ fresh live device preflight
+~~~
 
-Active blocker:
-[#82](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/82).
+No earlier result is reopened to bypass this order.
 
-The first Story-mode pattern claim completed its fence wait and then failed at
-`Map(readback)`. The capture subsystem correctly failed closed:
+## A8C15 physical boundary
 
-```text
-Map(readback) failure
-    -> PAT_REFUSED_COPY_FAILED
-    -> HaltPattern
-    -> presents frozen
-    -> ERR_GFX_STATE
-    -> §23
-    -> Master B CANCELLED
-```
+A8C15 points to the existing immutable Master D:
+**maximum 4, used 0, remaining 4**. This is not a new or multiplied budget.
 
-The current queue-state-desynchronization idea is **UNMEASURED**. The specific
-HRESULT was not captured because the current diagnostic field is hardcoded to
-zero. Host work must first capture the real HRESULT/device-removal reason and
-mechanically bind queue, backbuffer, resource, fence and generation identity.
+D1 may spawn only after the final A8C15 freeze is COMPLETE and a fresh live preflight
+binds the exact C plan, expected outputs, source/features, model/weights, runtime,
+gfx1030 objects and result destinations.
 
-## GTA boundary actually reached
+Only a successful, fully received D1 may earn
+GTA_GAME_DERIVED_SOURCE_NR_FRAME_A8C15 = PASS and the preserved
+SOURCE.png / NR.png / DIFF.png result set.
 
-A8C11 did reach authentic Story Mode in a true no-background-neural
-configuration:
+D2 is optional and can only follow that preserved device result: one frozen-frame
+diagnostic presentation in GTA with independent observation.
 
-- quarantine stayed 5/5;
-- only the isolated capture DLL was injected;
-- hook initialization succeeded;
-- presents advanced in-game;
-- menu pattern path produced 3079 verified paints;
-- the armed menu interval reconciled exactly 784/784/784.
+No unchanged retry. Any device removal/hang/reset, UINT64_MAX completion, Kernel
+141/117, new WHEA, LiveKernelReport, bugcheck or unsafe guard corruption stops all
+A8C15 physical work pending operator review. Plain hipMalloc remains required.
 
-For navigation, the opaque pattern was deliberately disarmed and re-armed only
-after Story Mode was live. Mouse input worked; synthesized Enter did not.
+## Same-target structural falsifier
 
-This establishes game entry and capture-hook/pattern operation. It does **not**
-establish a capture. `CaptureArm` never armed and Q5 is
-`NOT_ATTEMPTED_BLOCKED_BY_23`.
+The active directive carries a non-authoritative Praschke cross-check:
 
-## Hard-stop / authorization boundary
+~~~text
+valid frame      1920 x 1080
+padded/pre       1920 x 1152
+import grid      8 x 1152
+pre grid         240 x 144
+post grid        240 x 135
+export grid      8 x 1080
+~~~
 
-Master A:
-- 6/6 starts consumed;
-- certificate complete;
-- CLOSED.
+Only the valid-vs-padded invariant is portable. External launch counts, arena layout,
+offsets and constants are not local authority. The real C plan must fail closed if
+it swaps the 1080 valid and 1152 padded roles.
 
-Master B:
-- START17 + START17R consumed 2/4;
-- §23 fired on the Story readback/ERR_GFX_STATE condition;
-- master CANCELLED;
-- remaining 2 starts VOID.
+## Closed historical blockers
 
-There is **no current physical/GTA authorization**. No existing master/start id
-may be reopened or routed around. Any future device/GTA start requires a fresh
-operator ask and a new master.
+- **#82** — A8C11 Story Map(readback) blocker: historically real, superseded by the later authentic capture.
+- **#80** — registered-static rc=98: historically real, explicitly non-prerequisite for A8C15.
 
-Readable OS channels in the A8C11 GTA campaign showed no bugcheck/TDR/display
-fault, WER, GTA crash, minidump or LiveKernelReports file. WHEA remains
-CANNOT_SEE because the channel is absent. §23 is presence-based on the in-game
-condition class; clean OS channels do not invalidate the cancellation.
+Closing them does not invent a root cause; their historical evidence stays intact.
 
-## Immediate work
+## Public documentation warning
 
-1. **#82:** host-only analysis/instrumentation of the Story `Map(readback)`
-   failure; capture the real HRESULT/device-removal reason and queue/resource/
-   fence/backbuffer identities.
-2. Add bounded synthetic controls for stale queue/backbuffer generation and
-   resource retirement where possible.
-3. Preserve fail-closed pattern refusal and the measured menu-first navigation
-   protocol.
-4. **#80:** continue registered-static rc=98 investigation separately; do not
-   block #82 on repairing a path the standalone certificate did not require.
-5. **#70:** publish the actual maintained A8C11 source/integration state safely.
-6. **#68:** publish the lawful sanitized A8C11 evidence subset.
-7. Only after a fresh operator authorization/new master: ask one narrow physical
-   question about surviving the first Story readback and reaching an authentic
-   nonempty capture.
-8. Two cold captured/presented GTA frames must precede #66 warm qualification.
-9. Keep performance/reuse/async/zero-copy outside the critical path.
+The public repository is currently **mid-reconciliation**. README and STATUS are the
+narrow live coordination surfaces.
 
-## Publication / reproducibility boundary
+These manifest-tracked pages still contain superseded A8C6 success language and must
+be regenerated from canonical provenance under
+[#70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70), not hand-edited
+around the publication manifest:
 
-Never publish or reconstruct:
+- ROADMAP.md
+- docs/current-state.md
+- docs/project-overview.md
+- docs/contribution-areas.md
+- docs/hardware-testing-policy.md
+- affected glossary/evidence pages
+- CHANGELOG.md
+- CITATION.cff
 
-- proprietary model weights/private tensors;
-- vendor runtime binaries or proprietary code objects;
-- game binaries/assets/raw private captures;
-- personal/machine paths;
-- credentials/provider configuration;
-- raw session prompts;
-- unsanitized crash/system dumps;
-- invented receipts/hashes.
+The A8C8 repair note already records why the old A8C6 “two matched GTA neural frames”
+coordination story is not current proof. The A8C6 document remains a historical,
+superseded snapshot.
 
-Historical A8C6/A8C8/A8C10 records remain historical records.
-
-Manifest-tracked live surfaces such as ROADMAP/current-state/project-overview
-must be regenerated/reconciled through #70 rather than hand-edited with invented
-manifest identities.
+Until #70 finishes canonical regeneration, use **README + STATUS + live issues** as
+the current public coordination layer.
 
 ## Explicit non-claims
 
-The project does **not** currently claim:
+The project does **not yet claim**:
 
-- complete native recovered execution;
-- native NVIDIA-kernel/layout parity;
-- repaired registered-static canonical launch;
-- certification of all 33 canonical symbols;
-- a GTA neural capture or presented neural frame;
-- warm temporal device correctness;
-- consecutive neural gameplay;
-- sustained gameplay;
-- playable or real-time performance;
-- direct zero-copy D3D12/HIP qualification;
-- `hipMallocAsync` safety;
-- frame generation/multipass qualification;
-- HDR qualification.
+- an authentic GTA-derived gfx1030 neural device frame;
+- NR.png from such a device result;
+- visible frozen neural presentation inside GTA;
+- realtime/native per-frame NR;
+- consecutive frames or temporal correctness;
+- shipping bridge completeness;
+- NVIDIA-exact GTA fidelity;
+- performance/playability.
 
 ## Live trackers
 
-- [#82 — P0 Story-mode readback/capture blocker](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/82)
-- [#80 — registered-static rc=98 defect](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80)
-- [#70 — publish maintained A8C11 implementation/current state](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)
-- [#68 — publish sanitized A8C11 evidence](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68)
-- [#66 — temporal host contract / warm qualification](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66)
+- [#84 — P0 Frame-C host truth/freeze → first GTA-derived device frame](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84)
+- [#70 — canonical/public current-state reconciliation](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)
+- [#68 — sanitized current evidence publication](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68)
+- [#66 — temporal/history contract; physical warm work downstream](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66)
 - [#57 — external research registry](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/57)
-- [#29 — independent whole-job/launch-contract cross-validation](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/29)
+- [#79 — protected-main owner-review governance](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/79)
+- [#27 — fork-friendly CI/provenance split](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/27)
+- [#42 — final squash-author identity/privacy](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/42)

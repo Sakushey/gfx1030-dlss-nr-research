@@ -10,16 +10,19 @@ Experimental open-source compatibility research investigating whether
 DLSS Neural Rendering workloads can be translated, validated, and
 executed on AMD RDNA2 / Navi21-class gfx1030 hardware.
 
-> **Development status: Phase 16BO / A8C11 — standalone canonical launch certified; authentic GTA Story Mode reached; first capture still blocked.**
-> The maintainer-local report of record retains the SOURCE_CANONICAL 71/71 host
-> and 320×320 / 512×512 gfx1030 device-fixture passes, and now adds a scoped
-> standalone launch certificate: two canonical symbols execute through
-> `MODULE_RESOLVED_LAUNCH_V1`. GTA V Enhanced also reached authentic Story Mode
-> in a true no-background-neural configuration with the isolated capture hook
-> operating in-game. The first Story-mode pattern claim then failed at
-> post-fence `Map(readback)`, froze presents and entered `ERR_GFX_STATE`;
-> §23 cancelled the GTA master. **No GTA frame was captured, CaptureArm never
-> armed, and no presented/temporal/performance claim is made.** Active P0: #82.
+> **Development status: Phase 16BO — A8C14 is the finalized measured report; A8C15 is the active continuation.**
+> SOURCE_CANONICAL host/device-fixture proof and the scoped module-resolved gfx1030
+> launch certificate remain standing. A later A8C13 campaign established an
+> authentic 1920×1080 GTA V Enhanced **source capture**. A8C14 landed the
+> prerequisite Frame-C/reproducibility/PresentOwned repairs but earned **no new
+> physical rung**: Section 7 is 2/7, freeze V1 is incomplete, and the bounded-f16
+> repair is host-proven but still live-untested after attempt 4 was externally reaped.
+> **No authentic captured-frame gfx1030 neural device result or NR.png exists yet.**
+> Active P0: [#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84).
+>
+> A8C15 is an execution directive, not a result: finish Frame-C host truth → complete
+> the C freeze → fresh live preflight → conditional captured-frame device execution →
+> optional one-shot frozen-frame GTA presentation.
 
 ---
 
@@ -66,73 +69,77 @@ Concretely, the repository contains original work in four areas:
 
 | Area | Current state |
 | --- | --- |
-| Phase | **16BO / A8C11** |
-| native/recovered backend | **NOT_READY**; intentionally not advanced |
+| Phase | **16BO** |
+| measured report of record | **A8C14 finalized** |
+| active continuation | **A8C15** — authority/plan, not evidence |
 | SOURCE_CANONICAL host graph | **Host A 71/71 + Host B 71/71** |
 | SOURCE_CANONICAL gate | **ARMED 25/25**, 186 comparisons |
-| mutation / independent audit | **27/27 rejected + 27/27 rejected** |
+| mutation / independent audit | **27/27 + 27/27 rejected** |
 | physical gfx1030 device fixtures | **320 PASS + 512 PASS** |
-| standalone canonical launch certificate | **PASS**, 2/33 symbols via `MODULE_RESOLVED_LAUNCH_V1` |
-| registered-static canonical path | **FAIL rc=98**, still open (#80) |
-| authentic GTA Story Mode | **reached** in true no-background-neural configuration |
-| isolated capture hook in-game | **operating**; menu pattern 3079 verified paints |
-| active GTA blocker | **Story-mode post-fence `Map(readback)` refusal** (#82) |
-| GTA capture / presented neural frame | **none / none** |
-| consecutive frames | **0** |
-| warm temporal/device sequence | not reached |
-| performance | intentionally out of scope |
+| module-resolved launch certificate | **standing PASS at its exact scoped certificate** |
+| registered-static path | historical **rc=98**, non-prerequisite (#80 closed) |
+| authentic GTA source capture | **PASS** as a standing A8C13 fact |
+| A8C14 Frame-C host reference | **INCOMPLETE — Section 7 = 2/7** |
+| bounded-f16 repair | host control PASS; **LIVE_UNTESTED** |
+| A8C14 freeze | **V1 INCOMPLETE**, not device-runnable |
+| real C plan | absent; Class-B recheck correctly fails |
+| authentic GTA-derived gfx1030 neural device frame | **NOT YET EARNED** |
+| NR.png / visible frozen neural presentation | **none / none** |
+| warm temporal / performance | not reached / not qualified |
 
-### The current engineering boundary
+### Current engineering boundary
 
-A8C11 supersedes A8C10 as the maintainer-local report of record.
+The immediate blocker is **host-oracle completion**, not GTA source capture and not
+registered-static HIP lookup. A8C14 ran the genuine C host reference four times:
+two runs hit the same Windows atomic-rename/share failure (the second at 96.85% of
+2,211,840 rows), attempt 3 exposed an eager f16 materialization and that defect was
+repaired/proven host-side, and attempt 4 was externally reaped before the repaired
+path was reached. The repair is therefore live-untested rather than failed.
 
-The prior SOURCE_CANONICAL proof remains standing: two complete 71-block host
-fixtures, an ARMED 25/25 live gate, 27/27 mutation rejection, 27/27 independent
-attack rejection, and complete physical gfx1030 device-fixture passes at
-320×320 and 512×512.
+The active dependency graph is [#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84):
 
-A8C11 adds a **claim-scoped standalone launch certificate**. The canonical
-gfx1030 image loads and resolves through the module API, and two of 33 canonical
-symbols dispatch and complete through `MODULE_RESOLVED_LAUNCH_V1`. The original
-registered-static canonical lookup path remains a separate failure
-(`rc=98 / hipErrorInvalidDeviceFunction`) tracked in
-[#80](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80).
-Do not summarize the certificate as “hipLaunchKernel fixed”.
+~~~text
+durable attempt 5
+→ Frame-C host truth
+→ genuine full-A + expected-C
+→ real C plan
+→ Class-B + structural falsifiers
+→ final host battery
+→ complete A8C15 freeze
+→ fresh live device preflight
+→ authentic captured GTA Frame-C device execution
+→ preserve NR.png
+→ optional one-shot frozen-frame presentation
+~~~
 
-The GTA boundary also advanced. A true no-background-neural campaign reached
-authentic Story Mode for the first time with quarantine intact and only the
-isolated capture DLL injected. The capture hook operated in-game; the menu
-pattern path produced 3079 verified paints and an exact 784/784/784
-present/claim/remain reconciliation.
+A8C15 points to the existing Master D budget (**4 maximum, 0 used, 4 remaining**),
+but this does not authorize an immediate GPU start. Device execution remains gated
+by the complete freeze + fresh live preflight, and unchanged retries are forbidden.
 
-The first Story-mode pattern claim then failed **after fence completion** at
-`Map(readback)`, which triggered the fail-closed refusal, froze presents and
-entered `ERR_GFX_STATE`. The specific HRESULT was not captured in this
-revision, and the queue-state-desynchronization idea remains an **unmeasured
-hypothesis**, not a root-cause claim. Active P0 is now
-[#82](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/82).
+### Public documentation warning
 
-Most importantly, **no GTA frame exists yet**. `CaptureArm` was never armed,
-Q5 is `NOT_ATTEMPTED_BLOCKED_BY_23`, consecutive frame count is zero, and
-pattern paints are not captures.
+The public tree is mid-reconciliation. README and STATUS are the narrow live
+coordination surfaces. Several **manifest-tracked** pages still contain the
+superseded A8C6 “matched GTA neural frames” story that the A8C8 reconciliation
+already withdrew.
 
-Physical authorization is closed: Master A is 6/6 exhausted; Master B was
-cancelled by §23 after two starts and its remaining two slots are void. No prior
-master/start id may be reopened. Any future device/GTA campaign requires a
-fresh operator ask and a new master.
+Until [#70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)
+regenerates them from canonical provenance, do **not** use ROADMAP.md,
+docs/current-state.md, docs/project-overview.md, docs/contribution-areas.md,
+docs/hardware-testing-policy.md, the affected glossary/evidence pages, CHANGELOG.md
+or CITATION.cff as current proof.
 
-Publication still lags the maintained tree. [#70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70)
-tracks A8C11 source/integration publication and
-[#68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68) tracks the
-sanitized evidence bundle. Manifest-tracked historical/current-state surfaces
-must be regenerated from canonical provenance rather than hand-edited with
-invented hashes.
+The historical docs/phase16bo-a8c6-state.md stays preserved as a superseded snapshot.
 
-No performance/async/reuse/zero-copy work belongs on the critical path before
-#82 closes and authentic cold GTA frames exist.
+### Current claim ceiling
 
-See [the historical A8C8 state-repair note](docs/phase16bo-a8c8-state-repair.md).
----
+Standing: SOURCE_CANONICAL host/reference closure at its measured scope, 320/512
+gfx1030 device fixtures, the scoped module-resolved launch certificate, and an
+authentic 1920×1080 GTA **source capture**.
+
+Not yet established: an authentic GTA-derived gfx1030 neural device result, NR.png
+from that result, visible frozen neural presentation, realtime/per-frame NR,
+consecutive/temporal correctness, shipping integration or performance/playability.
 
 ## The proof ladder
 
@@ -191,42 +198,27 @@ being promoted above the rung it actually reached.
 
 ## Where contributors can help
 
-Specialist review is welcome **even if you do not have the target GPU** —
-most of the ladder is host-side and is where the project most needs
-independent eyes.
+The live first-frame work is intentionally narrow. Start with
+[#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84).
 
-| Area | Why it matters here |
-| --- | --- |
-| RDNA2 / GFX10 ISA | validating instruction-form coverage and control-operand selection |
-| AMDGPU backend / code object expertise | correctness of the produced gfx1030 code objects beyond ABI shape |
-| D3D12 capture / queue ownership | **P0:** Story-mode readback, queue/backbuffer generation, fences, real HRESULT/device-removal diagnostics (#82) |
-| ROCm / HIP runtime | registered-static rc=98 remains a secondary fail-closed defect (#80); module-resolved standalone dispatch is certified |
-| EXEC / VCC / wave32 behaviour | the emulator's hardest correctness surface |
-| GPU synchronization / waitcnt | the leading hypothesis space for the liveness failure |
-| Compiler / binary translation | independent review of translated instruction forms |
-| Warm temporal/history correctness | gated behind two correctly paired/presented cold GTA SOURCE_CANONICAL frames (#66) |
-| Independent RDNA2 reproduction | reproduce the qualified source/core path on another target device without transferring binaries |
-| D3D12 / HIP interoperability | qualify direct/zero-copy transport as an optional engineering optimization |
-| Performance engineering | optimize only against a faithful synchronous control with exactness + ABBA-style timing |
-| Reproducibility / CI | keeping host-only checks honest and portable |
-| Documentation | making the proof model legible to newcomers |
+High-value parallel lanes that do **not** redefine that dependency chain:
 
-Good first contributions are usually on rungs 1–2: an independent
-computation of an expected value, a negative control that *should* fail
-and does, or a documented disagreement between the emulator and the
-oracle.
+- independent same-target / whole-job falsification: #29, #57;
+- second-device / gfx1031 / gfx1032 portability: #9, #26, #28, after a current published source identity;
+- Windows HIP compiler reproducibility: #41;
+- fork-friendly CI / provenance: #27;
+- merge-author privacy and owner-review governance: #42, #79;
+- temporal/history host contract: #66; physical warm work remains downstream;
+- direct D3D12/HIP interop: #7, optional/post-first-frame;
+- async allocator qualification: #43; hipMallocAsync remains prohibited for the active path;
+- post-faithful optimization: #44, #49, #58, #74, #75.
 
-Start with the live tracker: [Story-mode capture blocker #82](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/82),
-[registered-static rc=98 #80](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/80),
-[A8C11 publication #70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70),
-[sanitized A8C11 evidence #68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68),
-[temporal qualification #66](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/66),
-[second-gfx1030 reproduction #9](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/9), and
-[post-faithful optimization #58](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/58).
+Publication is tracked by
+[#70](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/70) and
+[#68](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/68).
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
-
----
+Historical A8C11 Story readback (#82) and registered-static rc=98 (#80) are closed
+as superseded/non-prerequisite tracks; their evidence remains preserved.
 
 ## Evidence labels
 
