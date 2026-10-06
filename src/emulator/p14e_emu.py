@@ -856,7 +856,10 @@ def _norm_float_ops(prog):
         if changed:
             ins["operands"] = ", ".join(out)
             ins["text"] = ins["mnemonic"] + " " + ins["operands"]
+            ins.pop("_ops", None)
+            ins.pop("_mnem", None)
             done = True
+    EMU.prep_program_decode(prog)
     return done
 
 
