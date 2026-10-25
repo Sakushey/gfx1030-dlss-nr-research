@@ -489,8 +489,15 @@ class Core:
             raise Halt("PCOVERRUN")
         ins = self.prog[self.pc]
         self.steps += 1
-        mnem = ins["mnemonic"].replace("_e32", "").replace("_e64", "")
-        ops = [o.strip() for o in ins["operands"].split(",")] if ins["operands"] else []
+        if "_mnem" in ins:
+            mnem = ins["_mnem"]
+        else:
+            mnem = ins["mnemonic"].replace("_e32", "").replace("_e64", "")
+        if "_ops" in ins:
+            ops = ins["_ops"]
+        else:
+            operands = ins.get("operands") or ""
+            ops = ([o.strip() for o in operands.split(",")] if operands else [])
         if self.steps % 256 == 0:
             key = (self.pc, self.exec_l, self.vcc_l, self.scc, tuple(self.s))
             if key in self._cyckeys:
@@ -515,7 +522,7 @@ class Core:
                 if key in self._cyckeys:
                     self._cyckeys_full[key] = self._v_signature()
         self.pc += 1
-        if mnem.startswith("v_dual_"):
+        if "_mnem" not in ins and mnem.startswith("v_dual_"):
             mnem = "v_" + mnem[len("v_dual_"):]
         if mnem.startswith("v_cmp_"):
             self._cmp_dispatch(mnem, ins, ops)
@@ -1920,6 +1927,22 @@ class Core:
     op_buffer_gl1_inv = _noop
 
 
+def prep_instruction_decode(ins):
+    """Tokenize operands and normalize mnemonic once (decode cache entry)."""
+    operands = ins.get("operands") or ""
+    ins["_ops"] = ([o.strip() for o in operands.split(",")] if operands else [])
+    mnem = ins.get("mnemonic", "").replace("_e32", "").replace("_e64", "")
+    if mnem.startswith("v_dual_"):
+        mnem = "v_" + mnem[len("v_dual_"):]
+    ins["_mnem"] = mnem
+
+
+def prep_program_decode(prog):
+    """Pre-decode every instruction in a program (safe to call repeatedly)."""
+    for ins in prog:
+        prep_instruction_decode(ins)
+
+
 def split_dual(r):
     """Split a dual-issue disassembly row into component instruction dicts."""
     ops = r["operands"]
@@ -1976,6 +1999,7 @@ def build_orig_program(rows):
             if cand is None:
                 raise ValueError(f"branch target {tgt:#x} not found (from {ins['address']:#x})")
             ins["target"] = cand
+    prep_program_decode(prog)
     return prog
 
 
@@ -2012,4 +2036,5 @@ def build_translated_program(rows):
                 raise ValueError(f"label {ins['_label']} past end")
             ins["target"] = t
             del ins["_label"]
+    prep_program_decode(prog)
     return prog

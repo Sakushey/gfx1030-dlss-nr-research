@@ -220,8 +220,8 @@ class AccessRecorder:
             if self.addr_max is None or addr > self.addr_max:
                 self.addr_max = addr
         s = rec_site if site is None else site
-        key = "0x%08X" % (s or 0)
-        self.by_pc[key] = self.by_pc.get(key, 0) + 1
+        pc_key = s if s is not None else 0
+        self.by_pc[pc_key] = self.by_pc.get(pc_key, 0) + 1
         if opcode:
             self.by_opcode[opcode] = self.by_opcode.get(opcode, 0) + 1
 
@@ -277,7 +277,7 @@ class AccessRecorder:
             "addr_max": self.addr_max,
             "n_distinct_pcs": len(self.by_pc),
             "n_distinct_opcodes": len(self.by_opcode),
-            "by_pc": dict(self.by_pc),
+            "by_pc": {"0x%08X" % k: v for k, v in self.by_pc.items()},
             "by_opcode": dict(self.by_opcode),
             "sample_cap": self.sample_cap,
             "max_events": self.max_events,

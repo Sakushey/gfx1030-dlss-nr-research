@@ -25,6 +25,7 @@ LDS image size; legacy-parameter runs must reproduce F7/F8 numbers
 """
 from __future__ import annotations
 
+import functools
 import os
 import re
 import sys
@@ -74,6 +75,7 @@ PAIR_RE = re.compile(r"offset([01]):(-?\d+)")
 OFF_RE = re.compile(r"offset:(-?0x[0-9a-fA-F]+|-?\d+)")
 
 
+@functools.lru_cache(maxsize=4096)
 def ds_form(mnem, ops_raw):
     """Return a form descriptor for one ds instruction text.
 
