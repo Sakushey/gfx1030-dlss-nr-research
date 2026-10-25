@@ -73,9 +73,9 @@ The four genuine C-host attempts were:
 Attempt 4 therefore did not test the repair. Preserve the completed C checkpoint and
 journals; do not throw them away for a cosmetically fresh run.
 
-## Current P0 — #84
+## First-frame blocker if work resumes — #84
 
-The required host order is:
+This is the previously documented dependency order **for any future resumed work**, not a running workflow:
 
 ~~~text
 retire attempt-4 stale liveness honestly
@@ -96,8 +96,7 @@ No earlier result is reopened to bypass this order.
 
 ## A8C15 physical boundary
 
-A8C15 points to the existing immutable Master D:
-**maximum 4, used 0, remaining 4**. This is not a new or multiplied budget.
+The historical A8C15 directive recorded Master D as **maximum 4, used 0, remaining 4**. These are **historical accounting values, not live permission**; all GPU/GTA experiments are paused. Any resumption requires a fresh, explicit operator authorization and evidence-bound live preflight. No old authorization automatically carries over.
 
 D1 may spawn only after the final A8C15 freeze is COMPLETE and a fresh live preflight
 binds the exact C plan, expected outputs, source/features, model/weights, runtime,
@@ -116,7 +115,7 @@ A8C15 physical work pending operator review. Plain hipMalloc remains required.
 
 ## Same-target structural falsifier
 
-The active directive carries a non-authoritative Praschke cross-check:
+The previous A8C15 directive carried a non-authoritative Praschke cross-check:
 
 ~~~text
 valid frame      1920 x 1080
@@ -140,8 +139,7 @@ Closing them does not invent a root cause; their historical evidence stays intac
 
 ## Public documentation warning
 
-The public repository is currently **mid-reconciliation**. README and STATUS are the
-narrow live coordination surfaces.
+The public repository was **mid-reconciliation when development paused**. README and STATUS are the narrow coordination surfaces; their statements are bounded by the 2026-10-25 hiatus notice and the last verified evidence, not a claim of ongoing active engineering.
 
 These manifest-tracked pages still contain superseded A8C6 success language and must
 be regenerated from canonical provenance under
