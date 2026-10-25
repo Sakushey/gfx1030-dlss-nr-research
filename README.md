@@ -1,5 +1,9 @@
 # DLSS Neural Rendering on AMD RDNA2 (gfx1030)
 
+> [!IMPORTANT]
+> **Maintainer hiatus — 2026-10-25.** I am **not currently working on this project** because of time constraints from my university studies. Development, experiments, PR reviews, merges and publication are paused until further notice, with no restart date. This research is **unfinished**, not abandoned or certified complete. See the [maintainer hiatus notice (#88)](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/88). The A8C14/A8C15 engineering detail below is a **last documented snapshot**, not evidence of work continuing now; a 2026-10-06 Frame-C run had no verified terminal result in the inspected public record. No new device/GTA execution is authorized.
+
+
 ### Experimental Compatibility Research
 
 [![CI](https://github.com/Sakushey/gfx1030-dlss-nr-research/actions/workflows/ci.yml/badge.svg)](https://github.com/Sakushey/gfx1030-dlss-nr-research/actions/workflows/ci.yml)
@@ -10,7 +14,7 @@ Experimental open-source compatibility research investigating whether
 DLSS Neural Rendering workloads can be translated, validated, and
 executed on AMD RDNA2 / Navi21-class gfx1030 hardware.
 
-> **Development status: Phase 16BO — A8C14 is the finalized measured report; A8C15 is the active continuation.**
+> **Development status: ON HIATUS since 2026-10-25 (university studies).** Measured report: A8C14; A8C15 is an unfinished continuation, not active work.
 > SOURCE_CANONICAL host/device-fixture proof and the scoped module-resolved gfx1030
 > launch certificate remain standing. A later A8C13 campaign established an
 > authentic 1920×1080 GTA V Enhanced **source capture**. A8C14 landed the
@@ -18,9 +22,9 @@ executed on AMD RDNA2 / Navi21-class gfx1030 hardware.
 > physical rung**: Section 7 is 2/7, freeze V1 is incomplete, and the bounded-f16
 > repair is host-proven but still live-untested after attempt 4 was externally reaped.
 > **No authentic captured-frame gfx1030 neural device result or NR.png exists yet.**
-> Active P0: [#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84).
+> Research blocker **on resumption**: [#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84).
 >
-> A8C15 is an execution directive, not a result: finish Frame-C host truth → complete
+> The A8C15 directive records a possible future sequence, **not ongoing execution or an earned result**: finish Frame-C host truth → complete
 > the C freeze → fresh live preflight → conditional captured-frame device execution →
 > optional one-shot frozen-frame GTA presentation.
 
