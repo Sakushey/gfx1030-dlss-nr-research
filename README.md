@@ -71,11 +71,11 @@ Concretely, the repository contains original work in four areas:
 
 ## Development status
 
-| Area | Current state |
+| Area | Last measured/known state at hiatus |
 | --- | --- |
 | Phase | **16BO** |
 | measured report of record | **A8C14 finalized** |
-| active continuation | **A8C15** — authority/plan, not evidence |
+| last continuation | **A8C15 paused** — nonterminal status; no verified completion |
 | SOURCE_CANONICAL host graph | **Host A 71/71 + Host B 71/71** |
 | SOURCE_CANONICAL gate | **ARMED 25/25**, 186 comparisons |
 | mutation / independent audit | **27/27 + 27/27 rejected** |
@@ -91,7 +91,7 @@ Concretely, the repository contains original work in four areas:
 | NR.png / visible frozen neural presentation | **none / none** |
 | warm temporal / performance | not reached / not qualified |
 
-### Current engineering boundary
+### Engineering boundary at the pause
 
 The immediate blocker is **host-oracle completion**, not GTA source capture and not
 registered-static HIP lookup. A8C14 ran the genuine C host reference four times:
@@ -100,7 +100,7 @@ two runs hit the same Windows atomic-rename/share failure (the second at 96.85% 
 repaired/proven host-side, and attempt 4 was externally reaped before the repaired
 path was reached. The repair is therefore live-untested rather than failed.
 
-The active dependency graph is [#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84):
+If work eventually resumes, follow the gated dependency graph in [#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84):
 
 ~~~text
 durable attempt 5
@@ -116,9 +116,7 @@ durable attempt 5
 → optional one-shot frozen-frame presentation
 ~~~
 
-A8C15 points to the existing Master D budget (**4 maximum, 0 used, 4 remaining**),
-but this does not authorize an immediate GPU start. Device execution remains gated
-by the complete freeze + fresh live preflight, and unchanged retries are forbidden.
+The *historical* A8C15 plan referred to a Master D budget (**4 maximum, 0 used, 4 remaining** as then recorded). **Those counts are historical, not available starts or current authorization.** All device/game starts remain paused. Resumption needs an explicit new operator authorization, fresh evidence-bound preflight and applicable safety gates; unchanged retries are forbidden.
 
 ### Public documentation warning
 
@@ -135,7 +133,7 @@ or CITATION.cff as current proof.
 
 The historical docs/phase16bo-a8c6-state.md stays preserved as a superseded snapshot.
 
-### Current claim ceiling
+### Evidence ceiling at the pause
 
 Standing: SOURCE_CANONICAL host/reference closure at its measured scope, 320/512
 gfx1030 device fixtures, the scoped module-resolved launch certificate, and an
@@ -201,6 +199,8 @@ being promoted above the rung it actually reached.
 ---
 
 ## Where contributors can help
+
+**Availability:** The maintainer is on a university-study hiatus. New PRs/issues can be submitted for future consideration, but **no review, response, integration or hardware test is scheduled or promised**. Contributions must continue to meet the evidence, safety and licensing conditions below and in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 The live first-frame work is intentionally narrow. Start with
 [#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84).
