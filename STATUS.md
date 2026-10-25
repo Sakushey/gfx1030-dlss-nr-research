@@ -1,10 +1,14 @@
 # Status
 
-Last coordination refresh: 2026-10-04
+> [!IMPORTANT]
+> **MAINTENANCE PAUSED — 2026-10-25.** I am currently unable to work on this project due to university studies. No active experiments, merges, releases or routine review are promised; no date for resumption is set. [Official hiatus / handoff record: #88](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/88). A8C14 is the last finalized measured report documented here, while the A8C15 continuation last observed publicly on 2026-10-06 was **nonterminal** (Frame-C host reference still running). Its current terminal result is unverified. Pending tasks and former physical budgets are not active authorization. Read all later "active" language below as **historical as of 2026-10-04** unless independently updated with provenance.
+
+
+Last coordination refresh: 2026-10-25 (pause notice; no new experiment)
 
 > **Measured report of record: finalized Phase 16BO / A8C14.**
-> **Active continuation: A8C15 (authority/plan, not evidence).**
-> Active first-frame P0: [#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84).
+> **Last continuation directive: A8C15; paused, with no verified terminal result.**
+> First-frame blocker on resumption: [#84](https://github.com/Sakushey/gfx1030-dlss-nr-research/issues/84).
 
 ## One-line summary
 
@@ -20,7 +24,7 @@ Use three distinct layers:
 
 1. standing measured history — SOURCE_CANONICAL host/device evidence plus A8C13 capture;
 2. finalized measured report — **A8C14**;
-3. active execution authority — **A8C15**, which names future work but does not make it PASS.
+3. last documented execution directive — **A8C15**; work is now paused, its terminal outcome has not been verified, and it does not make a PASS.
 
 The broad private CURRENT_STATE record contains older carried Phase-16BL-era package
 and budget blocks. Those historical rows do not override later A8C13/A8C14 evidence.
@@ -31,7 +35,7 @@ and budget blocks. Those historical rows do not override later A8C13/A8C14 evide
 | --- | --- |
 | phase | **16BO** |
 | finalized stage/report | **A8C14** |
-| active continuation | **A8C15** |
+| continuation | **A8C15 (paused; terminal outcome unverified)** |
 | SOURCE_CANONICAL Host A/B | **71/71 + 71/71** |
 | source gate | **ARMED 25/25**, 186 comparisons |
 | mutation / independent attack controls | **27/27 + 27/27 rejected** |
